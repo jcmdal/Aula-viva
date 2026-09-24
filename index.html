@@ -1,0 +1,2187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aula Viva</title>
+<style>
+  :root{
+    /* ---- Sistema visual nativo (iOS/macOS), traduzido pra web ---- */
+    --bg:#F2F2F7; --surface:#FFFFFF; --surface-2:rgba(120,120,128,.12);
+    --ink:#1C1C1E; --ink-soft:rgba(60,60,67,.6); --ink-tertiary:rgba(60,60,67,.3);
+    --line:rgba(60,60,67,.29);
+    --accent:#007AFF; --accent-deep:#0060DF; --accent-soft:rgba(0,122,255,.12);
+    --gold:#FFCC00; --gold-soft:rgba(255,204,0,.16);
+    --green:#34C759; --green-soft:rgba(52,199,89,.14);
+    --red:#FF3B30; --red-soft:rgba(255,59,48,.12);
+    --g1:#FF9500; --g2:#34C759; --g3:#FF3B30; --g4:#AF52DE; --g5:#32ADE6; --g6:#FF2D55;
+    --blur-bg:rgba(242,242,247,.78);
+    --radius:14px; --radius-sm:10px; --tabbar-h:58px; --sidebar-w:252px;
+    --shadow:0 1px 2px rgba(0,0,0,.05), 0 1px 1px rgba(0,0,0,.03);
+    --fs-scale:1;
+    /* ---- Movimento: curvas e durações (Emil Kowalski / Apple HIG, traduzidas pra web) ---- */
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+    --ease-sheet: cubic-bezier(0.32, 0.72, 0, 1);
+    --dur-modal-in: 260ms;
+    --dur-modal-out: 190ms;
+    --dur-view: 220ms;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#000000; --surface:#1C1C1E; --surface-2:rgba(120,120,128,.24);
+      --ink:#FFFFFF; --ink-soft:rgba(235,235,245,.6); --ink-tertiary:rgba(235,235,245,.3);
+      --line:rgba(84,84,88,.65);
+      --accent:#0A84FF; --accent-deep:#409CFF; --accent-soft:rgba(10,132,255,.18);
+      --gold:#FFD60A; --gold-soft:rgba(255,214,10,.18);
+      --green:#30D158; --green-soft:rgba(48,209,88,.18);
+      --red:#FF453A; --red-soft:rgba(255,69,58,.18);
+      --g1:#FF9F0A; --g2:#30D158; --g3:#FF453A; --g4:#BF5AF2; --g5:#64D2FF; --g6:#FF375F;
+      --blur-bg:rgba(28,28,30,.72);
+      --shadow:0 1px 3px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#000000; --surface:#1C1C1E; --surface-2:rgba(120,120,128,.24);
+    --ink:#FFFFFF; --ink-soft:rgba(235,235,245,.6); --ink-tertiary:rgba(235,235,245,.3);
+    --line:rgba(84,84,88,.65);
+    --accent:#0A84FF; --accent-deep:#409CFF; --accent-soft:rgba(10,132,255,.18);
+    --gold:#FFD60A; --gold-soft:rgba(255,214,10,.18);
+    --green:#30D158; --green-soft:rgba(48,209,88,.18);
+    --red:#FF453A; --red-soft:rgba(255,69,58,.18);
+    --g1:#FF9F0A; --g2:#30D158; --g3:#FF453A; --g4:#BF5AF2; --g5:#64D2FF; --g6:#FF375F;
+    --blur-bg:rgba(28,28,30,.72);
+    --shadow:0 1px 3px rgba(0,0,0,.5);
+  }
+  *{box-sizing:border-box;}
+  html{ font-size:calc(16px * var(--fs-scale)); }
+  body{ color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',Roboto,system-ui,sans-serif;
+    font-size:calc(15px * var(--fs-scale)); line-height:1.47; background:var(--bg); min-height:100vh; }
+  .app{ display:flex; align-items:stretch; min-height:100vh; }
+
+  /* ---- Navegação lateral (sidebar), inspirada em painéis SaaS ---- */
+  .sidebar{ position:fixed; top:0; left:0; bottom:0; width:var(--sidebar-w); z-index:35; display:flex; flex-direction:column;
+    background:var(--surface); border-right:.5px solid var(--line);
+    padding:calc(16px + env(safe-area-inset-top,0px)) 12px calc(14px + env(safe-area-inset-bottom,0px));
+    transition:transform .24s var(--ease-sheet); }
+  .sidebar-brand{ display:flex; align-items:center; gap:10px; padding:2px 8px 18px; }
+  .brand-mark{ flex:0 0 auto; width:34px; height:34px; border-radius:10px; background:var(--accent); color:#fff;
+    font-weight:750; font-size:.92rem; letter-spacing:-.02em; display:flex; align-items:center; justify-content:center; }
+  .brand-text{ display:flex; flex-direction:column; gap:3px; min-width:0; }
+  .brand-name{ font-weight:750; font-size:1.05rem; letter-spacing:-.02em; color:var(--ink); line-height:1.15; white-space:nowrap; }
+  .brand-pill{ align-self:flex-start; font-size:.6rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--accent);
+    background:var(--accent-soft); padding:2px 7px; border-radius:999px; }
+  .side-nav{ display:flex; flex-direction:column; gap:2px; flex:1 1 auto; overflow-y:auto; }
+  .side-nav-label{ font-size:.66rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-tertiary); padding:12px 10px 7px; }
+  .side-nav-label:first-child{ padding-top:2px; }
+  .sidebar .tab{ flex-direction:row; justify-content:flex-start; align-items:center; gap:11px; width:100%; text-align:left;
+    border:none; background:transparent; border-radius:10px; padding:9px 11px; cursor:pointer;
+    color:var(--ink-soft); transition:background-color .12s var(--ease-out), color .12s var(--ease-out); }
+  .sidebar .tab-icon{ flex:0 0 auto; display:flex; align-items:center; justify-content:center; width:19px; height:19px; }
+  .sidebar .tab-icon svg{ width:19px; height:19px; }
+  .sidebar .tab-label{ font-size:.87rem; font-weight:590; letter-spacing:-.01em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .sidebar .tab.active{ background:var(--accent-soft); color:var(--accent); }
+  @media (hover:hover) and (pointer:fine){ .sidebar .tab:not(.active):hover{ background:var(--surface-2); color:var(--ink); } }
+  .sidebar .tab:active{ opacity:.7; }
+  .sidebar-foot{ margin-top:auto; padding-top:12px; }
+  .sidebar-tip{ background:var(--accent-soft); border-radius:var(--radius-sm); padding:12px 13px; }
+  .sidebar-tip strong{ display:block; font-size:.78rem; font-weight:650; color:var(--accent-deep); margin-bottom:3px; }
+  :root[data-theme="dark"] .sidebar-tip strong{ color:var(--accent); } @media (prefers-color-scheme:dark){ .sidebar-tip strong{ color:var(--accent); } }
+  .sidebar-tip p{ margin:0; font-size:.74rem; color:var(--ink-soft); line-height:1.4; }
+  .sidebar-scrim{ position:fixed; inset:0; z-index:30; background:rgba(0,0,0,.32); }
+  .sidebar-scrim[hidden]{ display:none; }
+
+  .main-col{ flex:1 1 auto; min-width:0; margin-left:var(--sidebar-w); display:flex; flex-direction:column; }
+  .topbar{ position:sticky; top:0; z-index:20; padding:calc(10px + env(safe-area-inset-top,0px)) 20px 10px;
+    display:flex; align-items:center; gap:10px 14px; justify-content:space-between;
+    background:var(--blur-bg); -webkit-backdrop-filter:saturate(180%) blur(20px); backdrop-filter:saturate(180%) blur(20px);
+    border-bottom:.5px solid var(--line); }
+  .topbar::before, .topbar::after{ content:none; }
+  .topbar-left{ display:flex; align-items:center; gap:12px; min-width:0; flex:1 1 auto; }
+  .icon-btn.sidebar-toggle{ display:none; flex:0 0 auto; }
+  .topbar-title{ min-width:0; }
+  .topbar-title h1{ margin:0; font-size:1.12rem; font-weight:700; letter-spacing:-.02em; color:var(--ink);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .topbar-title p{ margin:1px 0 0; font-size:.78rem; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .access-bar{ display:flex; align-items:center; gap:6px; flex:0 0 auto; }
+  .icon-btn{ border:none; background:var(--surface-2); color:var(--accent); width:30px; height:30px;
+    border-radius:8px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; font:700 .78rem inherit;
+    transition:transform .1s var(--ease-out), opacity .1s var(--ease-out); }
+  @media (hover:hover) and (pointer:fine){ .icon-btn:hover{ opacity:.8; } }
+  .icon-btn:active{ transform:scale(.92); opacity:.7; }
+  .icon-btn svg{ width:16px; height:16px; }
+  .fs-group{ display:flex; align-items:center; gap:1px; background:var(--surface-2); border-radius:8px; padding:2px; }
+  .fs-group .icon-btn{ background:none; }
+  main{ display:flex; flex-direction:column; gap:16px; padding:16px 20px 40px; max-width:820px; width:100%; }
+
+  @media (max-width:899px){
+    .sidebar{ transform:translateX(-100%); box-shadow:0 6px 30px rgba(0,0,0,.2); }
+    .sidebar.open{ transform:translateX(0); }
+    .main-col{ margin-left:0; }
+    .icon-btn.sidebar-toggle{ display:inline-flex; }
+    main{ padding:14px 16px 40px; }
+  }
+  @keyframes viewEnter{ from{ opacity:0; transform:translateY(6px); } to{ opacity:1; transform:translateY(0); } }
+  .view{ animation:viewEnter var(--dur-view) var(--ease-out); display:flex; flex-direction:column; gap:16px; }
+  .view[hidden]{ display:none; }
+  @media (prefers-reduced-motion: reduce){ .view{ animation:none; } }
+  .card{ background:var(--surface); border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow); position:relative; }
+  .card h2{ font-weight:650; font-size:1.02rem; margin:0 0 3px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; color:var(--ink); }
+  .card .hint{ color:var(--ink-soft); font-size:.85rem; margin:0 0 14px; }
+  .step-num{ flex:0 0 auto; width:22px; height:22px; border-radius:50%; background:var(--accent); color:#fff;
+    font:700 .74rem inherit; display:inline-flex; align-items:center; justify-content:center; }
+  .help-btn{ flex:0 0 auto; width:19px; height:19px; border-radius:50%; border:none; background:var(--surface-2);
+    color:var(--ink-soft); font:700 .68rem inherit; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; margin-left:1px; }
+  @media (hover:hover) and (pointer:fine){ .help-btn:hover{ background:var(--accent-soft); color:var(--accent); } }
+  .help-btn:active{ transform:scale(.9); }
+  .setup-grid{ display:flex; flex-direction:column; }
+  .field{ display:flex; align-items:center; justify-content:space-between; gap:14px; padding:11px 0; border-bottom:.5px solid var(--line); }
+  .setup-grid > .field{ border-bottom:.5px solid var(--line); }
+  .card > .field:last-child, .setup-grid > .field:last-child{ border-bottom:none; padding-bottom:0; }
+  .field > span{ font-size:.92rem; font-weight:400; color:var(--ink); flex:0 0 auto; }
+  input[type="text"], input[type="number"], select, textarea{
+    font:inherit; font-size:.95rem; color:var(--ink); background:var(--surface-2); border:none;
+    border-radius:var(--radius-sm); padding:9px 11px; width:100%;
+    transition:box-shadow .12s var(--ease-out); }
+  input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:focus{
+    outline:none; box-shadow:0 0 0 3px var(--accent-soft); }
+  textarea{ min-height:68px; resize:vertical; }
+  .field input[type="text"], .field input[type="number"], .field select{
+    flex:1 1 auto; min-width:0; text-align:right; background:transparent; border:none; border-radius:0;
+    padding:0; color:var(--ink-soft); font-size:.92rem; }
+  .field input[type="text"]::placeholder, .field input[type="number"]::placeholder{ color:var(--ink-tertiary); text-align:right; }
+  .field input[type="text"]:focus, .field input[type="number"]:focus, .field select:focus{ box-shadow:none; color:var(--accent); }
+  .field select{ appearance:none; -webkit-appearance:none; cursor:pointer; }
+  .field:has(textarea){ flex-direction:column; align-items:stretch; gap:6px; }
+  .field:has(textarea) > span{ font-size:.76rem; font-weight:600; color:var(--ink-soft); }
+  .field textarea{ text-align:left; background:transparent; border:none; padding:0; color:var(--ink); }
+  .field textarea:focus{ box-shadow:none; }
+  .field textarea::placeholder{ color:var(--ink-tertiary); }
+  .methodology-desc{ margin-top:6px; font-size:.85rem; color:var(--ink-soft); background:var(--surface-2); border-radius:var(--radius-sm); padding:10px 12px; }
+  /* Galeria de cartões viráveis das metodologias ativas */
+  .methodo-gallery{ display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px; margin-bottom:14px; perspective:1200px; }
+  .mcard{ height:150px; cursor:pointer; }
+  .mcard-inner{ position:relative; width:100%; height:100%; transition:transform .4s var(--ease-in-out); transform-style:preserve-3d; }
+  .mcard.flipped .mcard-inner{ transform:rotateY(180deg); }
+  .mcard-face{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; border-radius:12px;
+    display:flex; flex-direction:column; padding:12px; background:var(--surface-2); }
+  .mcard-front{ align-items:center; justify-content:center; gap:8px; text-align:center; }
+  .mcard-icon{ width:38px; height:38px; border-radius:11px; flex:0 0 auto; background:var(--accent); color:#fff;
+    display:flex; align-items:center; justify-content:center; }
+  .mcard-icon svg{ width:20px; height:20px; }
+  .mcard-name{ font-weight:600; font-size:.86rem; color:var(--ink); line-height:1.2; }
+  .mcard-hint{ font-size:.68rem; color:var(--ink-tertiary); }
+  .mcard-back{ transform:rotateY(180deg); justify-content:space-between; gap:8px; }
+  .mcard-desc{ font-size:.74rem; color:var(--ink-soft); line-height:1.35; margin:0; overflow:hidden; display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; }
+  .mcard-choose{ width:100%; text-align:center; padding:7px 6px; font-size:.72rem; }
+  .mcard.selected .mcard-front{ background:var(--accent-soft); box-shadow:inset 0 0 0 1.5px var(--accent); }
+  .mcard.selected .mcard-front::after{ content:'Selecionada'; position:absolute; top:7px; right:7px; font-size:.58rem; font-weight:700;
+    color:#fff; background:var(--accent); padding:2px 7px; border-radius:999px; }
+  @media (prefers-reduced-motion: reduce){ .mcard-inner{ transition:opacity .15s ease; } }
+  .stage-row, .group-row{ display:flex; align-items:center; gap:8px; padding:8px 0; border-bottom:.5px solid var(--line); flex-wrap:wrap; }
+  #stages-list .stage-row:last-child, #groups-list .group-row:last-child{ border-bottom:none; }
+  .stage-row input[type="text"]{ flex:2 1 140px; }
+  .stage-row input[type="number"]{ flex:0 0 64px; }
+  .group-row input[type="text"]{ flex:1 1 140px; }
+  .unit{ font-size:.8rem; color:var(--ink-soft); }
+  .member-count{ font-size:.78rem; color:var(--ink-soft); white-space:nowrap; }
+  .qtd-stepper{ display:flex; align-items:center; gap:8px; }
+  .qtd-btn{ width:26px; height:26px; border-radius:8px; border:none; background:var(--surface-2); color:var(--accent);
+    font:700 .9rem inherit; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;
+    transition:transform .1s var(--ease-out), opacity .1s var(--ease-out); }
+  .qtd-btn:active{ transform:scale(.88); opacity:.75; }
+  .qtd-value{ min-width:20px; text-align:center; font-weight:600; font-size:.88rem; font-variant-numeric:tabular-nums; }
+  .age-chip-row{ display:flex; flex-wrap:wrap; gap:6px; }
+  .age-chip{ border:none; background:var(--surface-2); color:var(--ink-soft); border-radius:10px; padding:8px 12px;
+    cursor:pointer; display:flex; flex-direction:column; align-items:flex-start; gap:1px;
+    transition:background-color .15s var(--ease-out), color .15s var(--ease-out); }
+  .age-chip-nome{ font-size:.82rem; font-weight:600; }
+  .age-chip-sub{ font-size:.68rem; opacity:.75; }
+  @media (hover:hover) and (pointer:fine){ .age-chip:hover{ background:var(--accent-soft); } }
+  .age-chip.active{ background:var(--accent); color:#fff; }
+  .age-chip:active{ transform:scale(.97); }
+  .tool-presets{ display:flex; flex-wrap:wrap; gap:8px; margin-top:4px; }
+  .tool-preset-chip{ display:inline-flex; align-items:center; gap:6px; border:none; background:var(--surface-2); color:var(--ink);
+    border-radius:999px; padding:7px 12px 7px 8px; font-size:.82rem; font-weight:500; cursor:pointer;
+    transition:transform .1s var(--ease-out), opacity .1s var(--ease-out); }
+  .tool-preset-chip:active{ transform:scale(.96); }
+  .tool-preset-chip[disabled]{ opacity:.5; cursor:default; }
+  .tool-preset-icon{ width:18px; height:18px; flex:0 0 auto; display:inline-flex; color:var(--accent); }
+  .tool-preset-icon svg{ width:100%; height:100%; }
+  #tool-custom-form{ margin-top:10px; padding-top:4px; }
+  #tools-list .group-row{ gap:10px; }
+  .tools-card{ padding:12px 16px; }
+  .tools-bar{ display:flex; gap:10px; overflow-x:auto; padding-bottom:2px; -webkit-overflow-scrolling:touch; }
+  .tool-tile{ flex:0 0 auto; display:flex; flex-direction:column; align-items:center; gap:5px; width:66px;
+    text-decoration:none; color:var(--ink); transition:transform .1s var(--ease-out), opacity .1s var(--ease-out); }
+  .tool-tile:active{ transform:scale(.93); opacity:.75; }
+  .tool-tile-icon{ width:42px; height:42px; border-radius:13px; background:var(--accent-soft); color:var(--accent);
+    display:flex; align-items:center; justify-content:center; }
+  .tool-tile-icon svg{ width:22px; height:22px; }
+  .tool-tile-label{ font-size:.66rem; text-align:center; line-height:1.15; overflow:hidden; text-overflow:ellipsis;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  .btn{ border:none; border-radius:var(--radius-sm); padding:10px 16px; font:600 .87rem inherit; cursor:pointer;
+    transition:transform .1s var(--ease-out), opacity .1s var(--ease-out), filter .1s var(--ease-out); }
+  .btn-primary{ background:var(--accent); color:#fff; }
+  @media (hover:hover) and (pointer:fine){ .btn-primary:hover{ filter:brightness(1.08); } }
+  .btn-primary:active{ transform:scale(.97); filter:brightness(.92); }
+  .btn-ghost{ background:var(--surface-2); color:var(--accent); }
+  @media (hover:hover) and (pointer:fine){ .btn-ghost:hover{ filter:brightness(.97); } }
+  .btn-ghost:active{ transform:scale(.97); opacity:.75; }
+  .btn-danger{ background:transparent; color:var(--red); padding:6px 10px; }
+  @media (hover:hover) and (pointer:fine){ .btn-danger:hover{ background:var(--red-soft); } }
+  .btn-danger:active{ transform:scale(.96); }
+  .btn-sm{ padding:6px 12px; font-size:.78rem; border-radius:8px; }
+  .btn[disabled]{ opacity:.4; cursor:not-allowed; }
+  .btn[disabled]:active{ transform:none; }
+  .btn-row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+  .chips{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+  .chip{ display:inline-flex; align-items:center; gap:6px; background:var(--accent-soft); color:var(--accent-deep);
+    font-size:.82rem; font-weight:500; padding:6px 6px 6px 12px; border-radius:999px; }
+  .chip-remove{ border:none; background:rgba(0,0,0,.08); color:var(--accent-deep); font-size:1rem; line-height:1; cursor:pointer;
+    padding:2px 6px; border-radius:50%; }
+  @keyframes chipIn{ from{ opacity:0; transform:scale(.85); } to{ opacity:1; transform:scale(1); } }
+  .chip{ animation:chipIn .18s var(--ease-out) backwards; }
+  .chip:nth-child(2){ animation-delay:30ms; }
+  .chip:nth-child(3){ animation-delay:60ms; }
+  .chip:nth-child(4){ animation-delay:90ms; }
+  .chip:nth-child(5){ animation-delay:120ms; }
+  .chip:nth-child(n+6){ animation-delay:150ms; }
+  @media (prefers-reduced-motion: reduce){ .chip{ animation:none; } }
+  .bncc-add-row{ display:flex; gap:8px; margin-top:12px; }
+  .bncc-search-wrap{ position:relative; flex:1; }
+  .bncc-search-wrap input{ width:100%; }
+  .bncc-suggest{ position:absolute; left:0; right:0; top:calc(100% + 6px); z-index:15; background:var(--surface);
+    border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,.15); max-height:280px; overflow-y:auto; }
+  .bncc-suggest[hidden]{ display:none; }
+  .bncc-suggest-item{ display:block; width:100%; text-align:left; border:none; background:transparent; cursor:pointer;
+    padding:10px 12px; border-bottom:.5px solid var(--line); }
+  .bncc-suggest-item:last-child{ border-bottom:none; }
+  @media (hover:hover) and (pointer:fine){ .bncc-suggest-item:hover{ background:var(--surface-2); } }
+  .bncc-suggest-item:focus{ background:var(--surface-2); }
+  .bncc-suggest-code{ font-family:ui-monospace,'SF Mono',Menlo,monospace; font-weight:600; font-size:.8rem; color:var(--accent); }
+  .bncc-suggest-meta{ font-size:.7rem; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.03em; margin-left:8px; }
+  .bncc-suggest-text{ font-size:.83rem; color:var(--ink); margin-top:2px; display:-webkit-box; -webkit-line-clamp:2;
+    -webkit-box-orient:vertical; overflow:hidden; }
+  .bncc-suggest-note{ padding:12px; font-size:.83rem; color:var(--ink-soft); }
+  .bncc-credit{ font-size:.74rem; color:var(--ink-soft); margin-top:10px; }
+  .bncc-credit a{ color:var(--accent); }
+  .live-head{ display:flex; flex-direction:column; align-items:center; gap:6px; text-align:center; }
+  .live-subtitle{ color:var(--ink-soft); font-size:.88rem; }
+  .stage-dots{ display:flex; gap:7px; }
+  .dot{ width:7px; height:7px; border-radius:50%; background:var(--line); }
+  .dot.active{ background:var(--accent); }
+  .dot.done{ background:var(--green); }
+  .stage-name{ font-weight:650; font-size:1.2rem; letter-spacing:-.01em; }
+  .timer-card{ display:flex; flex-direction:column; align-items:center; gap:16px; padding:32px 20px; }
+  .timer-card[hidden]{ display:none; }
+  .timer-display{ font-family:ui-monospace,'SF Mono',Menlo,monospace; font-weight:600; font-size:clamp(2.8rem,13vw,5.5rem);
+    font-variant-numeric:tabular-nums; letter-spacing:.01em; color:var(--ink); }
+  .timer-display.alert{ color:var(--red); animation:pulse 1s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce){ .timer-display.alert{ animation:none; } }
+  @keyframes pulse{ 0%,100%{ opacity:1; } 50%{ opacity:.35; } }
+  .timer-pal{ display:flex; justify-content:center; }
+  .timer-pal[hidden]{ display:none; }
+  .timer-pal-svg{ width:84px; height:84px; transform-origin:50% 60%; animation:palBreathe 2.6s var(--ease-in-out) infinite; }
+  .pal-body{ fill:currentColor; opacity:.16; }
+  .pal-ear{ fill:currentColor; opacity:.16; }
+  .pal-antenna-tip{ fill:currentColor; opacity:.4; }
+  .pal-eye{ fill:var(--ink); }
+  .pal-mouth{ stroke:var(--ink); opacity:.75; }
+  .pal-ears, .pal-antenna, .pal-brows{ display:none; }
+  .pal-infantil .pal-ears{ display:block; }
+  .pal-fund1 .pal-antenna{ display:block; }
+  .pal-fund2 .pal-brows, .pal-medio .pal-brows, .pal-adulto .pal-brows{ display:block; }
+  .pal-infantil .timer-pal-svg{ color:var(--gold); }
+  .pal-fund1 .timer-pal-svg{ color:var(--accent); }
+  .pal-fund2 .timer-pal-svg{ color:var(--green); }
+  .pal-medio .timer-pal-svg, .pal-adulto .timer-pal-svg{ color:var(--g4); }
+  .pal-eyes{ transform-origin:50% 50%; animation:palBlink 4.4s ease-in-out infinite; }
+  @keyframes palBreathe{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.045); } }
+  @keyframes palBlink{ 0%,90%,100%{ transform:scaleY(1); } 95%{ transform:scaleY(.12); } }
+  .timer-pal.alert .timer-pal-svg{ animation:palShake .4s ease-in-out infinite; color:var(--red); }
+  @keyframes palShake{ 0%,100%{ transform:rotate(0deg); } 25%{ transform:rotate(-5deg); } 75%{ transform:rotate(5deg); } }
+  @media (prefers-reduced-motion: reduce){
+    .timer-pal-svg{ animation:none; }
+    .pal-eyes{ animation:none; }
+    .timer-pal.alert .timer-pal-svg{ animation:none; color:var(--red); }
+  }
+  .timer-controls{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+  .rank-item{ display:grid; grid-template-columns:28px minmax(76px,110px) 1fr auto auto; gap:9px; align-items:center; padding:8px 0; border-bottom:.5px solid var(--line); }
+  #ranking-list .rank-item:last-child{ border-bottom:none; }
+  .rank-badge{ width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font:700 .7rem inherit; color:#fff; background:var(--ink-soft); }
+  .rank-badge::after{ content:none; }
+  .rank-name{ font-weight:600; font-size:.87rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .rank-bar-track{ background:var(--surface-2); border-radius:6px; height:18px; overflow:hidden; min-width:0; }
+  .rank-bar-fill{ height:100%; border-radius:6px; position:relative; overflow:hidden;
+    transform-origin:left center; transition:transform .28s var(--ease-out); }
+  @starting-style{ .rank-bar-fill{ transform:scaleX(0); } }
+  .rank-bar-fill::after{ content:none; }
+  @media (prefers-reduced-motion: reduce){ .rank-bar-fill{ transition:none; } }
+  .rank-points{ font-family:ui-monospace,'SF Mono',Menlo,monospace; font-weight:600; font-variant-numeric:tabular-nums; white-space:nowrap; color:var(--ink-soft); font-size:.85rem; }
+  .rank-controls{ display:flex; gap:4px; }
+  .pt-btn{ width:30px; height:30px; border-radius:8px; border:none; background:var(--surface-2);
+    font:700 .8rem inherit; cursor:pointer; color:var(--accent);
+    transition:transform .1s var(--ease-out), opacity .1s var(--ease-out); }
+  @media (hover:hover) and (pointer:fine){ .pt-btn:hover{ background:var(--accent-soft); } }
+  .pt-btn:active{ transform:scale(.9); }
+  .tag{ display:inline-block; font-size:.7rem; font-weight:600; padding:4px 10px; border-radius:999px; margin-top:8px; }
+  .tag-low{ background:var(--accent-soft); color:var(--accent-deep); }
+  .tag-mid{ background:var(--surface-2); color:var(--ink-soft); }
+  .tag-high{ background:var(--gold-soft); color:#8a6d00; }
+  :root[data-theme="dark"] .tag-high{ color:var(--gold); }
+  @media (prefers-color-scheme:dark){ .tag-high{ color:var(--gold); } }
+  .nudge{ margin-top:12px; padding:10px 12px; border-radius:var(--radius-sm); background:var(--gold-soft); color:var(--ink); font-size:.83rem;
+    transition:opacity .2s var(--ease-out); }
+  @starting-style{ .nudge{ opacity:0; } }
+  @media (prefers-reduced-motion: reduce){ .nudge{ transition:none; } }
+  .ranking-toggle{ display:flex; align-items:center; gap:8px; font-size:.82rem; color:var(--ink-soft); margin-bottom:10px; }
+  .ranking-toggle input[type="checkbox"]{
+    appearance:none; -webkit-appearance:none; margin:0; width:40px; height:24px; border-radius:999px; position:relative; cursor:pointer; flex:0 0 auto;
+    background:var(--surface-2); transition:background-color .15s; }
+  .ranking-toggle input[type="checkbox"]::before{
+    content:''; position:absolute; top:2px; left:2px; width:20px; height:20px; border-radius:50%;
+    background:#fff; box-shadow:0 2px 4px rgba(0,0,0,.25); transition:transform .18s var(--ease-out); }
+  .ranking-toggle input[type="checkbox"]:checked{ background:var(--green); }
+  .ranking-toggle input[type="checkbox"]:checked::before{ transform:translateX(16px); }
+  .ranking-toggle input[type="checkbox"]:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  .noise-status{ flex:0 0 auto; font-weight:700; font-size:.8rem; padding:5px 12px; border-radius:999px; white-space:nowrap; }
+  .noise-status.off{ background:var(--surface-2); color:var(--ink-soft); }
+  .noise-status.ok{ background:var(--green-soft); color:var(--green); }
+  .noise-status.mid{ background:var(--gold-soft); color:#8a6d00; }
+  :root[data-theme="dark"] .noise-status.mid{ color:var(--gold); } @media (prefers-color-scheme:dark){ .noise-status.mid{ color:var(--gold); } }
+  .noise-status.high{ background:var(--red-soft); color:var(--red); }
+  .noise-canvas-wrap{ margin-top:14px; border-radius:var(--radius-sm); background:var(--surface-2); overflow:hidden; }
+  #noise-canvas{ width:100%; height:180px; display:block; }
+  .noise-controls{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-top:14px; }
+  .noise-sens{ display:flex; align-items:center; gap:7px; font-size:.82rem; color:var(--ink-soft); }
+  .noise-sens select{ width:auto; padding:6px 9px; font-size:.82rem; }
+  .noise-privacy{ font-size:.74rem; color:var(--ink-soft); margin-top:12px; }
+  .closing-field{ margin-bottom:12px; }
+  .closing-field:last-child{ margin-bottom:0; }
+  .closing-field textarea{ min-height:56px; }
+  .checklist{ display:flex; flex-direction:column; gap:2px; }
+  .check-row{ display:flex; align-items:center; gap:10px; font-size:.92rem; padding:7px 0; border-bottom:.5px solid var(--line); }
+  .checklist .check-row:last-child{ border-bottom:none; }
+  .check-row input[type="checkbox"]{
+    appearance:none; -webkit-appearance:none; margin:0; width:22px; height:22px; border-radius:50%; position:relative; cursor:pointer; flex:0 0 auto;
+    background:var(--surface-2); }
+  .check-row input[type="checkbox"]:checked{ background:var(--green); }
+  .check-row input[type="checkbox"]:checked::after{
+    content:''; position:absolute; left:7px; top:3px; width:5px; height:10px;
+    border-right:2px solid #fff; border-bottom:2px solid #fff; transform:rotate(40deg); }
+  .check-row input[type="checkbox"]:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  .context-lead{ font-size:1rem; font-weight:500; margin:0 0 8px; }
+  .context-list{ margin:0; padding-left:20px; color:var(--ink-soft); font-size:.9rem; display:flex; flex-direction:column; gap:4px; }
+  .poll-list{ display:flex; flex-direction:column; gap:2px; }
+  .poll-row{ display:grid; grid-template-columns:minmax(88px,160px) 1fr auto auto; gap:9px; align-items:center; padding:7px 0; }
+  .poll-label{ font-weight:600; font-size:.87rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .poll-pct{ font-family:ui-monospace,'SF Mono',Menlo,monospace; font-weight:600; font-variant-numeric:tabular-nums; white-space:nowrap; color:var(--ink-soft); font-size:.85rem; }
+  .report-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-bottom:6px; }
+  .report-stat{ background:var(--surface-2); border-radius:var(--radius-sm); padding:12px 14px; }
+  .report-stat .num{ font-family:ui-monospace,'SF Mono',Menlo,monospace; font-weight:700; font-size:1.25rem; color:var(--ink); }
+  .report-stat .lbl{ font-size:.7rem; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.05em; margin-top:2px; }
+  table{ width:100%; border-collapse:collapse; }
+  th,td{ text-align:left; padding:9px 8px; border-bottom:.5px solid var(--line); font-size:.87rem; }
+  th{ color:var(--ink-soft); font-size:.7rem; text-transform:uppercase; letter-spacing:.05em; font-weight:600; }
+  .table-wrap{ overflow-x:auto; }
+  .section-title{ font-weight:650; font-size:.98rem; margin:16px 0 6px; color:var(--ink); }
+  .section-title:first-child{ margin-top:0; }
+
+  /* Documentos: lista simples por pasta */
+  .docs-grid{ display:flex; flex-direction:column; gap:2px; }
+  .docs-grid[hidden]{ display:none; }
+  .folder-card{ display:flex; align-items:center; gap:12px; border:none; background:transparent; padding:11px 2px;
+    border-bottom:.5px solid var(--line); cursor:pointer; text-align:left; width:100%;
+    transition:opacity .1s var(--ease-out); }
+  .docs-grid .folder-card:last-child{ border-bottom:none; }
+  @media (hover:hover) and (pointer:fine){ .folder-card:hover{ opacity:.65; } }
+  .folder-card:active{ opacity:.5; }
+  .folder-icon{ flex:0 0 auto; width:34px; height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center; }
+  .folder-icon svg{ width:18px; height:18px; }
+  .folder-text{ flex:1; display:flex; flex-direction:column; gap:1px; min-width:0; }
+  .folder-label{ font-weight:600; font-size:.92rem; color:var(--ink); }
+  .folder-sub{ font-size:.78rem; color:var(--ink-soft); }
+  .folder-chevron{ flex:0 0 auto; width:16px; height:16px; color:var(--ink-tertiary); }
+  .folder-chevron svg{ width:100%; height:100%; }
+  .folder-open{ display:flex; flex-direction:column; gap:12px; animation:viewEnter var(--dur-view) var(--ease-out); }
+  .folder-open[hidden]{ display:none; }
+  .folder-open-head{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .folder-open-head h3{ flex:1; margin:0; font-weight:650; font-size:1rem; min-width:120px; color:var(--ink); }
+  .doc-list{ display:flex; flex-direction:column; gap:2px; }
+  .doc-row{ display:flex; align-items:center; gap:10px; border:none; background:transparent; padding:11px 2px;
+    border-bottom:.5px solid var(--line); cursor:pointer; text-align:left; width:100%; }
+  .doc-list .doc-row:last-child{ border-bottom:none; }
+  @media (hover:hover) and (pointer:fine){ .doc-row:hover{ opacity:.65; } }
+  .doc-row:active{ opacity:.5; }
+  .doc-row-main{ flex:1; display:flex; flex-direction:column; gap:1px; min-width:0; }
+  .doc-row-title{ font-weight:600; font-size:.9rem; color:var(--ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .doc-row-snippet{ font-size:.78rem; color:var(--ink-soft); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .doc-row-chevron{ flex:0 0 auto; width:16px; height:16px; color:var(--ink-tertiary); }
+  .doc-row-chevron svg{ width:100%; height:100%; }
+  .doc-empty{ padding:32px 16px; text-align:center; color:var(--ink-soft); font-size:.88rem; line-height:1.5; }
+
+  /* Camada de acessibilidade: ajuda flutuante, glossário, onboarding */
+  .fab-help, .fab-noise, .fab-scribble{ position:fixed; z-index:30; width:48px; height:48px;
+    border-radius:50%; background:var(--accent); color:#fff; border:none; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 3px 10px rgba(0,0,0,.22);
+    transition:transform .1s var(--ease-out), opacity .1s var(--ease-out); }
+  .fab-help{ right:16px; bottom:calc(16px + env(safe-area-inset-bottom,0px)); font:700 1.05rem inherit; }
+  .fab-noise{ right:16px; bottom:calc(74px + env(safe-area-inset-bottom,0px)); }
+  .fab-scribble{ right:16px; bottom:calc(132px + env(safe-area-inset-bottom,0px)); }
+  .fab-help:active, .fab-noise:active, .fab-scribble:active{ transform:scale(.93); opacity:.85; }
+  .fab-noise[hidden], .fab-scribble[hidden]{ display:none; }
+  .fab-help svg, .fab-noise svg, .fab-scribble svg{ width:22px; height:22px; }
+  .fab-noise.ok{ background:var(--green); }
+  .fab-noise.mid{ background:var(--gold); color:#3a2e00; }
+  .fab-noise.high{ background:var(--red); animation:pulse 1s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce){ .fab-noise.high{ animation:none; } }
+  #noise-sheet-title{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .scribble-canvas-wrap{ margin-top:12px; border-radius:var(--radius-sm); overflow:hidden; background:var(--surface-2); transform-origin:50% 50%; }
+  #scribble-canvas{ width:100%; height:320px; display:block; touch-action:none; cursor:crosshair; }
+  .scribble-canvas-wrap.crumpling{ animation:crumpleOut .5s cubic-bezier(.5,0,.7,1) forwards; }
+  .scribble-canvas-wrap.popping{ animation:crumplePop .35s ease-out; }
+  @keyframes crumpleOut{
+    0%{ transform:scale(1) rotate(0deg); filter:brightness(1); }
+    35%{ transform:scale(.72) rotate(-6deg); filter:brightness(.85); }
+    70%{ transform:scale(.32) rotate(10deg); filter:brightness(.65); }
+    100%{ transform:scale(.12) rotate(-4deg); filter:brightness(.5); opacity:.3; }
+  }
+  @keyframes crumplePop{
+    0%{ transform:scale(.85); opacity:.6; }
+    60%{ transform:scale(1.02); opacity:1; }
+    100%{ transform:scale(1); opacity:1; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .scribble-canvas-wrap.crumpling{ animation:none; opacity:0; }
+    .scribble-canvas-wrap.popping{ animation:none; }
+  }
+  .scribble-toolbar{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:14px; }
+  .scribble-colors{ display:flex; gap:6px; }
+  .scribble-color{ width:24px; height:24px; border-radius:50%; border:2px solid transparent; cursor:pointer; padding:0; }
+  .scribble-color.active{ box-shadow:0 0 0 2px var(--surface), 0 0 0 4px var(--accent); }
+  .scribble-tool-btn{ width:32px; height:32px; border-radius:9px; border:none;
+    background:var(--surface-2); color:var(--ink); cursor:pointer;
+    display:inline-flex; align-items:center; justify-content:center; }
+  .scribble-tool-btn svg{ width:16px; height:16px; }
+  .scribble-tool-btn.active{ background:var(--accent); color:#fff; }
+  .scribble-tool-btn:active{ transform:scale(.93); }
+  .overlay-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.32); z-index:40; display:flex; align-items:flex-end; justify-content:center; }
+  .overlay-backdrop[hidden]{ display:none; }
+  .overlay-backdrop.center{ align-items:center; padding:16px; }
+  .sheet{ background:var(--blur-bg); -webkit-backdrop-filter:saturate(180%) blur(24px); backdrop-filter:saturate(180%) blur(24px);
+    width:100%; max-width:480px; border-radius:20px 20px 0 0; padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));
+    max-height:82vh; overflow-y:auto; position:relative; }
+  .overlay-backdrop:not(.center) .sheet::before{ content:''; position:absolute; top:8px; left:50%; width:36px; height:5px;
+    margin-left:-18px; border-radius:999px; background:var(--ink-tertiary); }
+  .overlay-backdrop:not(.center) .sheet{ padding-top:26px; }
+  .overlay-backdrop.center .sheet{ border-radius:18px; max-height:88vh; }
+  /* Entrada/saída dos modais e bottom sheets: a folha segue o mesmo caminho na ida e na volta */
+  @keyframes overlayFadeIn{ from{ opacity:0; } to{ opacity:1; } }
+  @keyframes overlayFadeOut{ from{ opacity:1; } to{ opacity:0; } }
+  @keyframes sheetRiseIn{ from{ transform:translateY(100%); } to{ transform:translateY(0); } }
+  @keyframes sheetRiseOut{ from{ transform:translateY(0); } to{ transform:translateY(100%); } }
+  @keyframes sheetPopIn{ from{ transform:scale(.95) translateY(8px); opacity:0; } to{ transform:scale(1) translateY(0); opacity:1; } }
+  @keyframes sheetPopOut{ from{ transform:scale(1) translateY(0); opacity:1; } to{ transform:scale(.97) translateY(4px); opacity:0; } }
+  .overlay-backdrop.entering{ animation:overlayFadeIn var(--dur-modal-in) var(--ease-out); }
+  .overlay-backdrop.entering .sheet{ animation:sheetRiseIn var(--dur-modal-in) var(--ease-sheet); }
+  .overlay-backdrop.center.entering .sheet{ animation:sheetPopIn var(--dur-modal-in) var(--ease-out); }
+  .overlay-backdrop.leaving{ animation:overlayFadeOut var(--dur-modal-out) var(--ease-out) forwards; }
+  .overlay-backdrop.leaving .sheet{ animation:sheetRiseOut var(--dur-modal-out) var(--ease-sheet) forwards; }
+  .overlay-backdrop.center.leaving .sheet{ animation:sheetPopOut var(--dur-modal-out) var(--ease-out) forwards; }
+  @media (prefers-reduced-motion: reduce){
+    .overlay-backdrop.entering{ animation:overlayFadeIn .12s linear; }
+    .overlay-backdrop.leaving{ animation:overlayFadeOut .12s linear forwards; }
+    .overlay-backdrop.entering .sheet, .overlay-backdrop.leaving .sheet{ animation:none; transform:none; }
+  }
+  .sheet-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:10px; }
+  .sheet-title{ font-weight:650; font-size:1.08rem; margin:0; color:var(--ink); }
+  .sheet-close{ flex:0 0 auto; width:28px; height:28px; border-radius:50%; border:none;
+    background:var(--surface-2); color:var(--ink); font:700 .95rem inherit; cursor:pointer; }
+  .sheet-close:active{ transform:scale(.9); }
+  .sheet-body{ color:var(--ink); font-size:.96rem; line-height:1.55; }
+  .sheet-body p{ margin:0 0 10px; }
+  .onboard-dots{ display:flex; gap:6px; justify-content:center; margin:16px 0 4px; }
+  .onboard-dots .dot{ width:7px; height:7px; }
+  .onboard-icon{ width:48px; height:48px; border-radius:50%; background:var(--accent); color:#fff;
+    display:flex; align-items:center; justify-content:center; margin:0 auto 14px; }
+  .onboard-icon svg{ width:24px; height:24px; }
+  .onboard-body{ text-align:center; }
+  .onboard-body .sheet-title{ margin-bottom:8px; }
+  .onboard-nav{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:18px; }
+  .link-btn{ border:none; background:transparent; color:var(--accent); font:600 .85rem inherit; cursor:pointer; padding:8px; }
+  @media (hover:hover) and (pointer:fine){ .link-btn:hover{ opacity:.7; } }
+  @media print{
+    .no-print{ display:none !important; }
+    .sidebar, .sidebar-scrim{ display:none !important; }
+    .main-col{ margin-left:0 !important; }
+    main{ max-width:100%; padding:0; }
+    html, body{ background:#fff !important; color:#000; }
+    .topbar, .card, .sheet, .report-stat{ background:#fff !important; box-shadow:none !important; -webkit-backdrop-filter:none !important; backdrop-filter:none !important; }
+    .card{ border:1px solid #ccc; }
+    .brand-name{ color:#000; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar no-print" id="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-mark">AV</span>
+      <div class="brand-text">
+        <span class="brand-name">Aula Viva</span>
+        <span class="brand-pill">Versão piloto</span>
+      </div>
+    </div>
+    <nav class="side-nav">
+      <span class="side-nav-label">Menu</span>
+      <button class="tab active" data-tab="setup">
+        <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></span>
+        <span class="tab-label">Configurar</span>
+      </button>
+      <button class="tab" data-tab="live">
+        <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg></span>
+        <span class="tab-label">Ao vivo</span>
+      </button>
+      <button class="tab" data-tab="report">
+        <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg></span>
+        <span class="tab-label">Relatório</span>
+      </button>
+      <button class="tab" data-tab="docs">
+        <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></span>
+        <span class="tab-label">Documentos</span>
+      </button>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="sidebar-tip">
+        <strong>Dica rápida</strong>
+        <p>Abra "Ao vivo" pra ter suas ferramentas de apoio prontas na tela, sem sair da aula.</p>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-scrim no-print" id="sidebar-scrim" hidden></div>
+
+  <div class="main-col">
+    <header class="topbar no-print">
+      <div class="topbar-left">
+        <button type="button" class="icon-btn sidebar-toggle" id="sidebar-toggle" aria-label="Abrir menu" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+        <div class="topbar-title">
+          <h1 id="view-title">Configurar</h1>
+          <p id="view-subtitle">Prepare a aula antes de começar</p>
+        </div>
+      </div>
+      <div class="access-bar no-print">
+        <div class="fs-group">
+          <button type="button" class="icon-btn" id="fs-down" title="Diminuir tamanho do texto" aria-label="Diminuir tamanho do texto">A−</button>
+          <button type="button" class="icon-btn" id="fs-up" title="Aumentar tamanho do texto" aria-label="Aumentar tamanho do texto">A+</button>
+        </div>
+        <button type="button" class="icon-btn" id="help-open-btn" title="Como usar o Aula Viva" aria-label="Como usar o Aula Viva">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 2-3 4"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        </button>
+      </div>
+    </header>
+
+    <main>
+    <!-- SETUP -->
+    <section class="view" data-view="setup">
+      <div class="card">
+        <h2><span class="step-num">1</span>Turma e atividade</h2>
+        <p class="hint">Funciona para qualquer disciplina — preencha com a sua próxima aula.</p>
+        <div class="setup-grid">
+          <label class="field"><span>Turma / seção</span><input type="text" id="f-turma"></label>
+          <label class="field"><span>Disciplina</span><input type="text" id="f-disciplina"></label>
+          <label class="field" style="grid-column:1/-1"><span>Atividade / tema da aula</span><input type="text" id="f-atividade"></label>
+          <label class="field"><span>Produto esperado dos alunos</span><input type="text" id="f-producao" placeholder="Ex.: cartaz com a cadeia alimentar da região"></label>
+          <label class="field"><span>Tempo de preparo desta aula (min)</span><input type="number" min="0" id="f-custo-preparo" placeholder="Ex.: 25"></label>
+          <div class="field" style="flex-direction:column; align-items:stretch; gap:8px;">
+            <span>Faixa etária da turma</span>
+            <div class="age-chip-row" id="age-chip-row"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2><span class="step-num">2</span>Metodologia ativa<button type="button" class="help-btn" data-help="metodologia" aria-label="O que é uma metodologia ativa?">?</button></h2>
+        <p class="hint">Sugestões prontas — toque num cartão pra virar e ler, e em "Usar esta metodologia" pra escolher.</p>
+        <div class="methodo-gallery" id="methodo-gallery"></div>
+        <p class="methodology-desc" id="metodologia-desc"></p>
+        <span class="tag" id="metodologia-badge"></span>
+        <label class="field" style="margin-top:12px;"><span id="contexto-label">Contexto</span>
+          <textarea id="f-contexto"></textarea>
+        </label>
+      </div>
+
+      <div class="card">
+        <h2><span class="step-num">3</span>Habilidades BNCC trabalhadas<button type="button" class="help-btn" data-help="bncc" aria-label="O que é a BNCC?">?</button></h2>
+        <p class="hint">Adicione o código e uma descrição curta — vai direto para o relatório final.</p>
+        <div class="bncc-add-row">
+          <div class="bncc-search-wrap">
+            <input type="text" id="bncc-input" autocomplete="off" placeholder="Digite o código (EF07CI08) ou busque por assunto, ex.: cadeia alimentar">
+            <div class="bncc-suggest" id="bncc-suggest" hidden></div>
+          </div>
+          <button class="btn btn-primary btn-sm" id="bncc-add-btn">Adicionar</button>
+        </div>
+        <div class="chips" id="bncc-chips"></div>
+        <p class="bncc-credit">Busca ao vivo na BNCC oficial via <a href="https://bncc.dev" target="_blank" rel="noopener">bncc.dev</a> (dados abertos, CC BY 4.0). Se estiver sem internet, digite o código e a descrição à mão e toque em "Adicionar".</p>
+      </div>
+
+      <div class="card">
+        <h2><span class="step-num">4</span>Cronômetro por etapa<button type="button" class="help-btn" data-help="etapas" aria-label="O que são as etapas da aula?">?</button></h2>
+        <p class="hint">Opcional — conduza a aula com etapas cronometradas, ou desligue e use o Ao vivo livremente.</p>
+        <label class="ranking-toggle no-print"><input type="checkbox" id="timer-ativo-toggle" checked><span>Usar cronômetro com etapas</span></label>
+        <div id="timer-config-wrap">
+          <div id="stages-list"></div>
+          <div class="btn-row"><button class="btn btn-ghost btn-sm" id="stage-add-btn">+ Adicionar etapa</button></div>
+          <label class="ranking-toggle no-print" style="margin-top:6px;"><input type="checkbox" id="timer-pal-toggle" checked><span>Mostrar personagem animado no cronômetro</span></label>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2><span class="step-num">5</span>Grupos e pontuação</h2>
+        <p class="hint">Defina os grupos e quantos integrantes cada um tem — sem precisar digitar nomes de alunos.</p>
+        <label class="ranking-toggle no-print"><input type="checkbox" id="ranking-ativo-toggle" checked><span>Usar ranking/pontuação ao vivo</span></label>
+        <div id="groups-list"></div>
+        <div class="btn-row"><button class="btn btn-ghost btn-sm" id="group-add-btn">+ Adicionar grupo</button></div>
+      </div>
+
+      <div class="card">
+        <h2><span class="step-num">6</span>Ferramentas de apoio<button type="button" class="help-btn" data-help="ferramentas" aria-label="O que são as ferramentas de apoio?">?</button></h2>
+        <p class="hint">Adicione atalhos pras ferramentas que você já usa — Google Sala de Aula, YouTube, Documentos... Eles aparecem prontos na tela Ao vivo, pra você não perder tempo procurando durante a aula.</p>
+        <div class="tool-presets" id="tool-presets"></div>
+        <div class="btn-row" style="margin-top:2px;"><button class="btn btn-ghost btn-sm" id="tool-custom-btn">+ Link personalizado</button></div>
+        <div id="tool-custom-form" hidden>
+          <label class="field"><span>Nome</span><input type="text" id="tool-custom-nome" placeholder="Ex.: Diário de classe"></label>
+          <label class="field"><span>Link</span><input type="text" id="tool-custom-url" placeholder="https://..."></label>
+          <div class="btn-row"><button class="btn btn-primary btn-sm" id="tool-custom-save">Adicionar</button><button class="btn btn-ghost btn-sm" id="tool-custom-cancel">Cancelar</button></div>
+        </div>
+        <div id="tools-list"></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="start-btn">Iniciar aula →</button>
+      </div>
+    </section>
+
+    <!-- LIVE -->
+    <section class="view" data-view="live" hidden>
+      <div class="card tools-card no-print" id="live-tools-card" hidden>
+        <div class="tools-bar" id="tools-bar"></div>
+      </div>
+
+      <div class="card live-head">
+        <div class="live-subtitle" id="live-subtitle"></div>
+        <div id="stage-info-wrap">
+          <div class="stage-dots" id="stage-dots"></div>
+          <div class="stage-name" id="stage-name"></div>
+        </div>
+      </div>
+
+      <div class="card" id="methodology-panel"></div>
+
+      <div class="card timer-card" id="timer-section">
+        <div class="timer-pal" id="timer-pal" hidden>
+          <svg class="timer-pal-svg" viewBox="0 0 120 120" aria-hidden="true">
+            <g class="pal-ears"><circle class="pal-ear" cx="28" cy="30" r="10"></circle><circle class="pal-ear" cx="92" cy="30" r="10"></circle></g>
+            <g class="pal-antenna"><line x1="60" y1="18" x2="60" y2="34" stroke="currentColor" stroke-width="4" stroke-linecap="round"></line><circle class="pal-antenna-tip" cx="60" cy="15" r="6"></circle></g>
+            <ellipse class="pal-body" cx="60" cy="66" rx="42" ry="38"></ellipse>
+            <g class="pal-brows">
+              <path d="M38 46 q8 -6 16 0" stroke="currentColor" stroke-width="3.5" fill="none" stroke-linecap="round"></path>
+              <path d="M66 46 q8 -6 16 0" stroke="currentColor" stroke-width="3.5" fill="none" stroke-linecap="round"></path>
+            </g>
+            <g class="pal-eyes"><circle class="pal-eye" cx="46" cy="60" r="6"></circle><circle class="pal-eye" cx="74" cy="60" r="6"></circle></g>
+            <path class="pal-mouth" d="M50 80 q10 8 20 0" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"></path>
+          </svg>
+        </div>
+        <div class="timer-display" id="timer-display">00:00</div>
+        <div class="timer-controls no-print">
+          <button class="btn btn-primary" id="btn-start-pause">Iniciar</button>
+          <button class="btn btn-ghost" id="btn-reset">Reiniciar etapa</button>
+          <button class="btn btn-ghost" id="btn-next-stage">Próxima etapa →</button>
+        </div>
+      </div>
+
+      <div class="card" id="ranking-card">
+        <h2>Ranking ao vivo<button type="button" class="help-btn" data-help="ranking" aria-label="Como funciona o placar dos grupos?">?</button></h2>
+        <p class="hint">Toque nos pontos para atualizar durante a aula.</p>
+        <label class="ranking-toggle no-print"><input type="checkbox" id="ranking-visivel" checked><span>Mostrar pontuação para a turma (desmarque para evitar comparação e constrangimento)</span></label>
+        <div id="ranking-nudge"></div>
+        <div id="ranking-list"></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="finish-btn">Finalizar aula e ver relatório →</button>
+      </div>
+    </section>
+
+    <!-- REPORT -->
+    <section class="view" data-view="report" hidden>
+      <div class="card">
+        <h2>Relatório da aula</h2>
+        <div class="report-grid" id="report-grid"></div>
+        <p class="hint" id="report-producao" style="margin-top:10px;"></p>
+
+        <div class="section-title">Habilidades BNCC trabalhadas</div>
+        <div class="chips" id="report-bncc"></div>
+
+        <div id="report-stages-section">
+          <div class="section-title">Etapas da aula</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Etapa</th><th>Duração planejada</th><th>Status</th></tr></thead>
+              <tbody id="report-stages"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="report-ranking-section">
+          <div class="section-title">Ranking final</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Posição</th><th>Grupo</th><th>Pontos</th></tr></thead>
+              <tbody id="report-ranking"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="section-title">Fechamento da aula</div>
+        <p class="hint">Preencha logo depois da aula — é o que mais ajuda a convencer a coordenação a apoiar metodologias ativas.</p>
+        <div class="closing-field"><label class="field"><span>Evidência de aprendizagem observada</span><textarea id="f-evidencia" placeholder="Ex.: 4 de 5 grupos identificaram corretamente os produtores e consumidores"></textarea></label></div>
+        <div class="closing-field"><label class="field"><span>Adaptação feita durante a aula</span><textarea id="f-adaptacao" placeholder="Ex.: reduzi o tempo da etapa 2 porque os grupos terminaram antes"></textarea></label></div>
+        <div class="closing-field"><label class="field"><span>Próximo passo sugerido</span><textarea id="f-proximo-passo" placeholder="Ex.: retomar o grupo Cometa na próxima aula com reforço individual"></textarea></label></div>
+      </div>
+
+      <div class="btn-row no-print">
+        <button class="btn btn-primary" id="print-btn">Imprimir / exportar PDF</button>
+        <button class="btn btn-ghost" id="newclass-btn">Nova aula</button>
+      </div>
+    </section>
+
+    <!-- DOCUMENTOS -->
+    <section class="view" data-view="docs" hidden>
+      <div class="card">
+        <h2>Documentos da aula<button type="button" class="help-btn" data-help="documentos" aria-label="Como funcionam os documentos?">?</button></h2>
+        <p class="hint" id="docs-hint">Organize planejamentos, relatórios e outros documentos por pasta. Toque numa pasta pra ver a lista, e toque num documento pra ler ou editar.</p>
+        <div class="docs-grid" id="docs-grid"></div>
+        <div class="folder-open" id="folder-open" hidden>
+          <div class="folder-open-head">
+            <button type="button" class="btn btn-ghost btn-sm" id="folder-back-btn">← Pastas</button>
+            <h3 id="folder-open-title"></h3>
+            <button type="button" class="btn btn-primary btn-sm" id="folder-add-btn">+ Novo documento</button>
+          </div>
+          <div class="doc-list" id="folder-stage"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+  </div>
+
+  <button type="button" class="fab-help no-print" id="fab-help-btn" title="Precisa de ajuda?" aria-label="Precisa de ajuda?">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 2-3 4"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+  </button>
+
+  <button type="button" class="fab-noise no-print" id="fab-noise-btn" hidden title="Medidor de barulho" aria-label="Abrir medidor de barulho">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+  </button>
+
+  <button type="button" class="fab-scribble no-print" id="fab-scribble-btn" hidden title="Bloco de anotações" aria-label="Abrir bloco de anotações">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path></svg>
+  </button>
+
+  <div class="overlay-backdrop center no-print" id="noise-backdrop" hidden aria-modal="true">
+    <div class="sheet" role="dialog" aria-labelledby="noise-sheet-title">
+      <div class="sheet-head">
+        <h3 class="sheet-title" id="noise-sheet-title">Medidor de barulho<button type="button" class="help-btn" data-help="ruido" aria-label="Como funciona o medidor de barulho?">?</button></h3>
+        <button type="button" class="sheet-close" id="noise-sheet-close" aria-label="Fechar">×</button>
+      </div>
+      <p class="hint">Ative o microfone e as bolinhas saltam mais alto quanto mais barulho a turma fizer — uma pista visual pra recuperar a atenção, parecida com o "bouncy balls". Funciona bem com turmas do Fundamental 1.</p>
+      <div class="noise-canvas-wrap"><canvas id="noise-canvas"></canvas></div>
+      <div class="noise-controls no-print">
+        <button type="button" class="btn btn-primary btn-sm" id="noise-toggle-btn">Ativar microfone</button>
+        <div class="noise-sens"><span>Sensibilidade</span>
+          <select id="noise-sensitivity">
+            <option value="0.7">Baixa</option>
+            <option value="1" selected>Média</option>
+            <option value="1.6">Alta</option>
+          </select>
+        </div>
+        <span class="noise-status off" id="noise-status">Desligado</span>
+      </div>
+      <div id="noise-message"></div>
+      <p class="noise-privacy">O áudio é processado só no seu navegador, em tempo real, e nada é gravado nem enviado para fora do computador — só serve pra medir o volume naquele instante. Fecha sozinho quando você sai da tela "Ao vivo".</p>
+    </div>
+  </div>
+
+  <div class="overlay-backdrop center no-print" id="scribble-backdrop" hidden aria-modal="true">
+    <div class="sheet" role="dialog" aria-labelledby="scribble-sheet-title">
+      <div class="sheet-head">
+        <h3 class="sheet-title" id="scribble-sheet-title">Bloco de anotações<button type="button" class="help-btn" data-help="scribble" aria-label="Como funciona o bloco de anotações?">?</button></h3>
+        <button type="button" class="sheet-close" id="scribble-sheet-close" aria-label="Fechar">×</button>
+      </div>
+      <p class="hint">Escreva ou rabisque à mão livre pra explicar algo rápido durante a aula. Nada fica salvo — quando amassar a folha, ela some.</p>
+      <div class="scribble-canvas-wrap" id="scribble-canvas-wrap"><canvas id="scribble-canvas"></canvas></div>
+      <div class="scribble-toolbar no-print">
+        <div class="scribble-colors" id="scribble-colors">
+          <button type="button" class="scribble-color active" data-color="#2b2118" style="background:#2b2118" title="Tinta preta" aria-label="Tinta preta"></button>
+          <button type="button" class="scribble-color" data-color="#8c2f1b" style="background:#8c2f1b" title="Tinta vermelha" aria-label="Tinta vermelha"></button>
+          <button type="button" class="scribble-color" data-color="#2f5f3a" style="background:#2f5f3a" title="Tinta verde" aria-label="Tinta verde"></button>
+          <button type="button" class="scribble-color" data-color="#a9761f" style="background:#a9761f" title="Tinta dourada" aria-label="Tinta dourada"></button>
+        </div>
+        <button type="button" class="scribble-tool-btn active" id="scribble-pen-btn" title="Caneta" aria-label="Usar caneta">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path></svg>
+        </button>
+        <button type="button" class="scribble-tool-btn" id="scribble-eraser-btn" title="Borracha" aria-label="Usar borracha">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20H9L4 15a1 1 0 0 1 0-1.4l9-9a1 1 0 0 1 1.4 0l6 6a1 1 0 0 1 0 1.4L13 20"></path><path d="M6 12l6 6"></path></svg>
+        </button>
+        <button type="button" class="btn btn-ghost btn-sm" id="scribble-clear-btn">Amassar e limpar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay-backdrop no-print" id="help-backdrop" hidden aria-modal="true">
+    <div class="sheet" role="dialog" aria-labelledby="help-sheet-title">
+      <div class="sheet-head">
+        <h3 class="sheet-title" id="help-sheet-title"></h3>
+        <button type="button" class="sheet-close" id="help-sheet-close" aria-label="Fechar">×</button>
+      </div>
+      <div class="sheet-body" id="help-sheet-body"></div>
+    </div>
+  </div>
+
+  <div class="overlay-backdrop center no-print" id="onboard-backdrop" hidden aria-modal="true">
+    <div class="sheet" role="dialog" aria-labelledby="onboard-title">
+      <div class="sheet-head">
+        <span></span>
+        <button type="button" class="link-btn" id="onboard-skip">Pular</button>
+      </div>
+      <div class="onboard-body">
+        <div class="onboard-icon" id="onboard-icon"></div>
+        <h3 class="sheet-title" id="onboard-title"></h3>
+        <div class="sheet-body" id="onboard-body"></div>
+      </div>
+      <div class="onboard-dots" id="onboard-dots"></div>
+      <div class="onboard-nav">
+        <button type="button" class="btn btn-ghost btn-sm" id="onboard-back">← Voltar</button>
+        <button type="button" class="btn btn-primary" id="onboard-next">Avançar →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay-backdrop center no-print" id="doc-editor-backdrop" hidden aria-modal="true">
+    <div class="sheet" role="dialog" aria-labelledby="doc-editor-title">
+      <div class="sheet-head">
+        <h3 class="sheet-title" id="doc-editor-title">Novo documento</h3>
+        <button type="button" class="sheet-close" id="doc-editor-close" aria-label="Fechar">×</button>
+      </div>
+      <label class="field"><span>Título</span><input type="text" id="doc-editor-titulo" placeholder="Ex.: Planejamento — Cadeia alimentar"></label>
+      <label class="field"><span>Conteúdo</span><textarea id="doc-editor-conteudo" style="min-height:180px;" placeholder="Escreva ou cole o conteúdo do documento aqui…"></textarea></label>
+      <div class="btn-row">
+        <button type="button" class="btn btn-primary" id="doc-editor-save">Salvar</button>
+        <button type="button" class="btn btn-danger" id="doc-editor-delete">Excluir</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var METODOLOGIAS = {
+    invertida: { nome:'Sala de aula invertida', desc:'Os alunos estudam o conteúdo antes da aula (vídeo ou texto); o tempo em sala vira prática e tira-dúvidas.',
+      contextLabel:'O que os alunos deveriam ter estudado antes (um item por linha)', contextPlaceholder:'Ex.: Assistir ao vídeo sobre fotossíntese',
+      panelTitle:'Verificação do estudo prévio', evidTier:'mid', evidLabel:'Evidência moderada · depende de adesão prévia dos alunos' },
+    pbl: { nome:'Aprendizagem Baseada em Problemas (PBL)', desc:'A turma investiga um problema real ou simulado e constrói a solução em grupo.',
+      contextLabel:'Problema que os grupos vão resolver (1ª linha) e critérios (linhas seguintes)', contextPlaceholder:'Ex.: Como reduzir o desperdício de água na escola?',
+      panelTitle:'Problema da aula', evidTier:'high', evidLabel:'Evidência moderada · alto custo de planejamento' },
+    gamificacao: { nome:'Gamificação', desc:'Regras de jogo, pontos e desafios dão ritmo à atividade — combina direto com o ranking.',
+      contextLabel:'Missão da aula (1ª linha) e regras do jogo (linhas seguintes)', contextPlaceholder:'Ex.: Complete 3 desafios para ganhar o bônus final',
+      panelTitle:'Desafio de hoje', evidTier:'mid', evidLabel:'Forte no curto prazo · efeito cai após semanas, defina critério de saída' },
+    pares: { nome:'Peer Instruction', desc:'Pergunta conceitual, votação individual, discussão em duplas e nova votação.',
+      contextLabel:'Pergunta (1ª linha) e alternativas (uma por linha)', contextPlaceholder:'Pergunta\nA) alternativa 1\nB) alternativa 2\nC) alternativa 3',
+      panelTitle:'Peer Instruction — votação', evidTier:'low', evidLabel:'Evidência forte · baixo custo · recomendado para turmas grandes' },
+    estacoes: { nome:'Rotação por estações', desc:'A turma se divide em grupos que passam por estações com tarefas diferentes.',
+      contextLabel:'Estações (uma por linha)', contextPlaceholder:'Ex.: Estação 1 — Leitura dirigida',
+      panelTitle:'Mapa de rotação', evidTier:'high', evidLabel:'Evidência incipiente · alto custo de planejamento e logística' },
+    caso: { nome:'Estudo de caso', desc:'Um caso concreto é analisado em grupo para aplicar o conteúdo da aula.',
+      contextLabel:'Caso (1ª linha) e perguntas norteadoras (linhas seguintes)', contextPlaceholder:'Ex.: Descreva a situação e as perguntas que os grupos devem responder',
+      panelTitle:'Estudo de caso', evidTier:'mid', evidLabel:'Evidência moderada e heterogênea · custo médio de planejamento' }
+  };
+
+  var METHOD_ICONS = {
+    invertida: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="14" rx="2"></rect><path d="M10 9l5 3-5 3z" fill="currentColor" stroke="none"></path><path d="M8 21h8"></path></svg>',
+    pbl: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="6"></circle><path d="M10 7v3l2 2"></path><line x1="14.7" y1="14.7" x2="21" y2="21"></line></svg>',
+    gamificacao: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"></path><path d="M12 17v4"></path><path d="M7 4h10v5a5 5 0 0 1-10 0Z"></path><path d="M7 5H4v2a3 3 0 0 0 3 3"></path><path d="M17 5h3v2a3 3 0 0 1-3 3"></path></svg>',
+    pares: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h11v7H9l-3 3v-3H3Z"></path><path d="M13 9h8v6h-3v3l-3-3h-2"></path></svg>',
+    estacoes: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"></path><path d="M21 3v6h-6"></path></svg>',
+    caso: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z"></path><path d="M14 3v6h6"></path><line x1="8" y1="13" x2="14" y2="13"></line><line x1="8" y1="17" x2="12" y2="17"></line></svg>'
+  };
+
+  var state = {
+    turma:'7º A', disciplina:'Ciências', atividade:'Cadeia alimentar: caça ao erro',
+    metodologia:'estacoes', faixaEtaria:'fund2',
+    bncc:[
+      'EF07CI08 – Associar a produção de alimentos à transferência de energia entre os seres vivos',
+      'EF07CI09 – Interpretar cadeias e teias alimentares simples'
+    ],
+    timerAtivo:true, timerPalAtivo:true,
+    stages:[ {nome:'Explicação', min:10}, {nome:'Atividade em grupo', min:20}, {nome:'Discussão e fechamento', min:10} ],
+    rankingAtivo:true,
+    groups:[
+      {nome:'Nebulosa', pontos:0, qtd:4},
+      {nome:'Cometa', pontos:0, qtd:4},
+      {nome:'Estrela', pontos:0, qtd:4},
+      {nome:'Meteoro', pontos:0, qtd:4}
+    ],
+    liveTools:[
+      {nome:'Google Sala de Aula', url:'https://classroom.google.com', icon:'classroom'},
+      {nome:'YouTube', url:'https://youtube.com', icon:'youtube'}
+    ],
+    contexto:'Estação 1 — Leitura dirigida\nEstação 2 — Experimento simples\nEstação 3 — Quiz em grupo',
+    producao:'Cartaz com a cadeia alimentar da região', custoPreparoMin:null,
+    evidenciaFormativa:'', adaptacao:'', proximoPasso:'', rankingPublico:true,
+    checklist:[], poll:{ round:1, votes1:[], votes2:[] }, docs:[], reportSavedThisClass:false,
+    currentStage:0, secondsLeft:0, timerRunning:false, timerHandle:null
+  };
+
+  function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function $(id){ return document.getElementById(id); }
+
+  // ---- Movimento: abrir/fechar modais e bottom sheets com a mesma transição de ida e volta ----
+  function prefersReducedMotion(){ return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); }
+  var OVERLAY_IN_MS = 260, OVERLAY_OUT_MS = 190;
+  function overlayOpen(el){
+    clearTimeout(el._overlayT);
+    el.classList.remove('leaving');
+    el.hidden = false;
+    if(prefersReducedMotion()){ el.classList.remove('entering'); return; }
+    el.classList.add('entering');
+    el._overlayT = setTimeout(function(){ el.classList.remove('entering'); }, OVERLAY_IN_MS);
+  }
+  function overlayClose(el, after){
+    if(el.hidden){ if(after) after(); return; }
+    clearTimeout(el._overlayT);
+    if(prefersReducedMotion()){
+      el.classList.remove('entering', 'leaving');
+      el.hidden = true;
+      if(after) after();
+      return;
+    }
+    el.classList.remove('entering');
+    el.classList.add('leaving');
+    el._overlayT = setTimeout(function(){
+      el.hidden = true;
+      el.classList.remove('leaving');
+      if(after) after();
+    }, OVERLAY_OUT_MS);
+  }
+
+  function saveLocal(){ try{ localStorage.setItem('aulaviva_config', JSON.stringify({
+    turma:state.turma, disciplina:state.disciplina, atividade:state.atividade, metodologia:state.metodologia,
+    faixaEtaria:state.faixaEtaria, timerAtivo:state.timerAtivo, timerPalAtivo:state.timerPalAtivo,
+    rankingAtivo:state.rankingAtivo, liveTools:state.liveTools,
+    bncc:state.bncc, stages:state.stages, groups:state.groups.map(function(g){ return {nome:g.nome, pontos:0, qtd:g.qtd}; }),
+    contexto:state.contexto, producao:state.producao
+  })); }catch(e){} }
+  function loadLocal(){ try{ var raw = localStorage.getItem('aulaviva_config'); if(raw){ var d = JSON.parse(raw); Object.assign(state, d); } }catch(e){} }
+
+  var VIEW_META = {
+    setup: { title:'Configurar', sub:'Prepare a aula antes de começar' },
+    live: { title:'Ao vivo', sub:'Conduza a aula em tempo real' },
+    report: { title:'Relatório', sub:'Revise e feche o registro da aula' },
+    docs: { title:'Documentos', sub:'Planejamentos, relatórios e anotações' }
+  };
+  function switchView(name){
+    document.querySelectorAll('.view').forEach(function(v){ v.hidden = v.dataset.view !== name; });
+    document.querySelectorAll('.tab').forEach(function(t){ t.classList.toggle('active', t.dataset.tab === name); });
+    var meta = VIEW_META[name];
+    if(meta){ $('view-title').textContent = meta.title; $('view-subtitle').textContent = meta.sub; }
+    $('fab-noise-btn').hidden = name !== 'live';
+    $('fab-scribble-btn').hidden = name !== 'live';
+    if(name !== 'live') closeNoiseOverlay();
+    if(name !== 'live') closeScribbleOverlay();
+    if(name !== 'docs' && folderOpenCat) closeFolder();
+    if(name === 'docs') renderDocsGrid();
+    closeSidebar();
+  }
+  function openSidebar(){ $('sidebar').classList.add('open'); $('sidebar-scrim').hidden = false; $('sidebar-toggle').setAttribute('aria-expanded', 'true'); }
+  function closeSidebar(){ $('sidebar').classList.remove('open'); $('sidebar-scrim').hidden = true; $('sidebar-toggle').setAttribute('aria-expanded', 'false'); }
+  $('sidebar-toggle').addEventListener('click', function(){
+    $('sidebar').classList.contains('open') ? closeSidebar() : openSidebar();
+  });
+  $('sidebar-scrim').addEventListener('click', closeSidebar);
+
+  function renderMetodologiaSelect(){
+    renderMetodologiaGallery();
+    renderMetodologiaDesc();
+  }
+  function renderMetodologiaGallery(){
+    var wrap = $('methodo-gallery');
+    wrap.innerHTML = Object.keys(METODOLOGIAS).map(function(key){
+      var cfg = METODOLOGIAS[key];
+      return '<div class="mcard" data-key="' + key + '" tabindex="0" role="button" aria-label="' + esc(cfg.nome) + ' — toque pra ver detalhes">' +
+        '<div class="mcard-inner">' +
+          '<div class="mcard-face mcard-front">' +
+            '<div class="mcard-icon">' + METHOD_ICONS[key] + '</div>' +
+            '<div class="mcard-name">' + esc(cfg.nome) + '</div>' +
+            '<div class="mcard-hint">toque pra ver mais</div>' +
+          '</div>' +
+          '<div class="mcard-face mcard-back">' +
+            '<p class="mcard-desc">' + esc(cfg.desc) + '</p>' +
+            '<button type="button" class="btn btn-primary btn-sm mcard-choose" data-key="' + key + '">Usar esta metodologia</button>' +
+          '</div>' +
+        '</div></div>';
+    }).join('');
+  }
+  function syncMetodologiaGallerySelection(key){
+    document.querySelectorAll('#methodo-gallery .mcard').forEach(function(card){
+      card.classList.toggle('selected', card.dataset.key === key);
+    });
+  }
+  $('methodo-gallery').addEventListener('click', function(e){
+    var chooseBtn = e.target.closest ? e.target.closest('.mcard-choose') : null;
+    if(chooseBtn){
+      state.metodologia = chooseBtn.dataset.key;
+      renderMetodologiaDesc();
+      var card = chooseBtn.closest('.mcard'); if(card) card.classList.remove('flipped');
+      return;
+    }
+    var card2 = e.target.closest ? e.target.closest('.mcard') : null;
+    if(card2) card2.classList.toggle('flipped');
+  });
+  $('methodo-gallery').addEventListener('keydown', function(e){
+    if(e.key !== 'Enter' && e.key !== ' ') return;
+    var card = e.target.closest ? e.target.closest('.mcard') : null;
+    if(card && e.target === card){ e.preventDefault(); card.classList.toggle('flipped'); }
+  });
+  function renderMetodologiaDesc(){
+    var key = state.metodologia;
+    var cfg = METODOLOGIAS[key];
+    $('metodologia-desc').textContent = cfg ? cfg.desc : '';
+    var badge = $('metodologia-badge');
+    if(cfg){
+      $('contexto-label').textContent = cfg.contextLabel; $('f-contexto').placeholder = cfg.contextPlaceholder;
+      badge.textContent = cfg.evidLabel; badge.className = 'tag tag-' + cfg.evidTier;
+    }
+    syncMetodologiaGallerySelection(key);
+  }
+
+  function renderBnccChips(){
+    var wrap = $('bncc-chips'); wrap.innerHTML = '';
+    state.bncc.forEach(function(item, i){
+      var chip = document.createElement('span'); chip.className = 'chip';
+      chip.innerHTML = esc(item) + ' <button class="chip-remove" data-act="remove-bncc" data-idx="' + i + '">×</button>';
+      wrap.appendChild(chip);
+    });
+  }
+
+  function renderStages(){
+    var wrap = $('stages-list'); wrap.innerHTML = '';
+    state.stages.forEach(function(s, i){
+      var row = document.createElement('div'); row.className = 'stage-row';
+      row.innerHTML =
+        '<input type="text" class="stage-nome" data-idx="' + i + '" value="' + esc(s.nome) + '">' +
+        '<input type="number" min="1" class="stage-min" data-idx="' + i + '" value="' + s.min + '"><span class="unit">min</span>' +
+        '<button class="btn btn-danger btn-sm" data-act="remove-stage" data-idx="' + i + '"' + (state.stages.length === 1 ? ' disabled' : '') + '>Remover</button>';
+      wrap.appendChild(row);
+    });
+  }
+
+  function renderGroups(){
+    var wrap = $('groups-list'); wrap.innerHTML = '';
+    state.groups.forEach(function(g, i){
+      var row = document.createElement('div'); row.className = 'group-row';
+      row.innerHTML =
+        '<input type="text" class="group-nome" data-idx="' + i + '" value="' + esc(g.nome) + '">' +
+        '<div class="qtd-stepper">' +
+          '<button type="button" class="qtd-btn" data-act="qtd-minus" data-idx="' + i + '" aria-label="Diminuir integrantes">−</button>' +
+          '<span class="qtd-value">' + (g.qtd || 0) + '</span>' +
+          '<button type="button" class="qtd-btn" data-act="qtd-plus" data-idx="' + i + '" aria-label="Aumentar integrantes">+</button>' +
+        '</div>' +
+        '<span class="unit">integrante(s)</span>' +
+        '<button class="btn btn-danger btn-sm" data-act="remove-group" data-idx="' + i + '"' + (state.groups.length === 1 ? ' disabled' : '') + '>Remover</button>';
+      wrap.appendChild(row);
+    });
+  }
+
+  function populateFormFromState(){
+    $('f-turma').value = state.turma;
+    $('f-disciplina').value = state.disciplina;
+    $('f-atividade').value = state.atividade;
+    $('f-contexto').value = state.contexto;
+    $('f-producao').value = state.producao;
+    $('f-custo-preparo').value = state.custoPreparoMin == null ? '' : state.custoPreparoMin;
+    $('timer-ativo-toggle').checked = state.timerAtivo;
+    $('timer-pal-toggle').checked = state.timerPalAtivo;
+    $('ranking-ativo-toggle').checked = state.rankingAtivo;
+    renderMetodologiaSelect();
+    renderAgeChips();
+    renderBnccChips();
+    renderStages();
+    updateTimerConfigVisibility();
+    renderGroups();
+    renderToolPresets();
+    renderToolsList();
+  }
+
+  function collectSetupIntoState(){
+    state.turma = $('f-turma').value.trim() || 'Turma';
+    state.disciplina = $('f-disciplina').value.trim() || 'Disciplina';
+    state.atividade = $('f-atividade').value.trim() || 'Atividade';
+    state.contexto = $('f-contexto').value;
+    state.producao = $('f-producao').value.trim();
+    var custo = parseInt($('f-custo-preparo').value, 10);
+    state.custoPreparoMin = isNaN(custo) ? null : custo;
+  }
+
+  // ---- Faixa etária (define o personagem do cronômetro) ----
+  var FAIXAS_ETARIAS = [
+    { key:'infantil', nome:'Educação infantil', sub:'4–6 anos' },
+    { key:'fund1', nome:'Fundamental I', sub:'7–10 anos' },
+    { key:'fund2', nome:'Fundamental II', sub:'11–14 anos' },
+    { key:'medio', nome:'Ensino médio', sub:'15–17 anos' },
+    { key:'adulto', nome:'Adultos / EJA', sub:'' }
+  ];
+  function renderAgeChips(){
+    var wrap = $('age-chip-row');
+    wrap.innerHTML = FAIXAS_ETARIAS.map(function(f){
+      return '<button type="button" class="age-chip' + (state.faixaEtaria === f.key ? ' active' : '') + '" data-key="' + f.key + '">' +
+        '<span class="age-chip-nome">' + esc(f.nome) + '</span>' +
+        (f.sub ? '<span class="age-chip-sub">' + esc(f.sub) + '</span>' : '') +
+        '</button>';
+    }).join('');
+  }
+  $('age-chip-row').addEventListener('click', function(e){
+    var btn = e.target.closest ? e.target.closest('.age-chip') : null;
+    if(!btn) return;
+    state.faixaEtaria = btn.dataset.key;
+    renderAgeChips();
+  });
+
+  // ---- Cronômetro/etapas e ranking: opcionais ----
+  function updateTimerConfigVisibility(){
+    $('timer-config-wrap').hidden = !$('timer-ativo-toggle').checked;
+  }
+  $('timer-ativo-toggle').addEventListener('change', function(e){
+    state.timerAtivo = e.target.checked;
+    updateTimerConfigVisibility();
+  });
+  $('timer-pal-toggle').addEventListener('change', function(e){ state.timerPalAtivo = e.target.checked; });
+  $('ranking-ativo-toggle').addEventListener('change', function(e){ state.rankingAtivo = e.target.checked; });
+
+  // ---- Ferramentas de apoio (ambiente Ao vivo personalizável) ----
+  var TOOL_ICON_SVGS = {
+    classroom: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5-10-5Z"></path><path d="M6 12v5c0 1.1 2.7 2 6 2s6-.9 6-2v-5"></path></svg>',
+    youtube: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="4"></rect><polygon points="10 9 15 12 10 15 10 9" fill="currentColor" stroke="none"></polygon></svg>',
+    docs: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"></path><path d="M14 2v6h6"></path><line x1="8" y1="13" x2="16" y2="13"></line><line x1="8" y1="17" x2="16" y2="17"></line></svg>',
+    slides: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="14" rx="2"></rect><line x1="8" y1="22" x2="16" y2="22"></line><line x1="12" y1="18" x2="12" y2="22"></line></svg>',
+    forms: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>',
+    search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
+    link: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>'
+  };
+  var TOOL_PRESETS = [
+    { nome:'Google Sala de Aula', url:'https://classroom.google.com', icon:'classroom' },
+    { nome:'YouTube', url:'https://youtube.com', icon:'youtube' },
+    { nome:'Google Docs', url:'https://docs.google.com', icon:'docs' },
+    { nome:'Google Apresentações', url:'https://slides.google.com', icon:'slides' },
+    { nome:'Google Formulários', url:'https://forms.google.com', icon:'forms' },
+    { nome:'Pesquisar no Google', url:'https://www.google.com', icon:'search' }
+  ];
+  function toolIcon(icon){ return TOOL_ICON_SVGS[icon] || TOOL_ICON_SVGS.link; }
+  function renderToolPresets(){
+    var wrap = $('tool-presets');
+    wrap.innerHTML = TOOL_PRESETS.map(function(p){
+      var added = state.liveTools.some(function(t){ return t.nome === p.nome; });
+      return '<button type="button" class="tool-preset-chip' + (added ? ' added' : '') + '" data-nome="' + esc(p.nome) + '" data-url="' + esc(p.url) + '" data-icon="' + p.icon + '"' + (added ? ' disabled' : '') + '>' +
+        '<span class="tool-preset-icon">' + toolIcon(p.icon) + '</span>' + esc(p.nome) + (added ? ' ✓' : '') +
+        '</button>';
+    }).join('');
+  }
+  $('tool-presets').addEventListener('click', function(e){
+    var btn = e.target.closest ? e.target.closest('.tool-preset-chip') : null;
+    if(!btn || btn.disabled) return;
+    state.liveTools.push({ nome: btn.dataset.nome, url: btn.dataset.url, icon: btn.dataset.icon });
+    renderToolPresets(); renderToolsList();
+  });
+  function renderToolsList(){
+    var wrap = $('tools-list');
+    if(!state.liveTools.length){ wrap.innerHTML = '<p class="hint" style="margin-top:10px;">Nenhuma ferramenta adicionada ainda.</p>'; return; }
+    wrap.innerHTML = state.liveTools.map(function(t, i){
+      return '<div class="group-row"><span class="tool-preset-icon" style="flex:0 0 auto;">' + toolIcon(t.icon) + '</span>' +
+        '<span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + esc(t.nome) + '</span>' +
+        '<button class="btn btn-danger btn-sm" data-idx="' + i + '">Remover</button></div>';
+    }).join('');
+  }
+  $('tools-list').addEventListener('click', function(e){
+    if(e.target.dataset.idx !== undefined){
+      state.liveTools.splice(+e.target.dataset.idx, 1); renderToolPresets(); renderToolsList();
+    }
+  });
+  $('tool-custom-btn').addEventListener('click', function(){
+    $('tool-custom-form').hidden = !$('tool-custom-form').hidden;
+    if(!$('tool-custom-form').hidden) $('tool-custom-nome').focus();
+  });
+  $('tool-custom-cancel').addEventListener('click', function(){
+    $('tool-custom-form').hidden = true; $('tool-custom-nome').value = ''; $('tool-custom-url').value = '';
+  });
+  $('tool-custom-save').addEventListener('click', function(){
+    var nome = $('tool-custom-nome').value.trim();
+    var url = $('tool-custom-url').value.trim();
+    if(!nome || !url) return;
+    if(!/^https?:\/\//i.test(url)) url = 'https://' + url;
+    state.liveTools.push({ nome: nome, url: url, icon: 'link' });
+    $('tool-custom-nome').value = ''; $('tool-custom-url').value = ''; $('tool-custom-form').hidden = true;
+    renderToolPresets(); renderToolsList();
+  });
+  function renderLiveTools(){
+    var bar = $('tools-bar');
+    var card = $('live-tools-card');
+    if(!state.liveTools.length){ card.hidden = true; bar.innerHTML = ''; return; }
+    card.hidden = false;
+    bar.innerHTML = state.liveTools.map(function(t){
+      return '<a class="tool-tile" href="' + esc(t.url) + '" target="_blank" rel="noopener">' +
+        '<span class="tool-tile-icon">' + toolIcon(t.icon) + '</span>' +
+        '<span class="tool-tile-label">' + esc(t.nome) + '</span>' +
+        '</a>';
+    }).join('');
+  }
+
+  // Stages / groups delegation
+  $('stages-list').addEventListener('input', function(e){
+    var idx = +e.target.dataset.idx;
+    if(e.target.classList.contains('stage-nome')) state.stages[idx].nome = e.target.value;
+    if(e.target.classList.contains('stage-min')) state.stages[idx].min = Math.max(1, parseInt(e.target.value, 10) || 1);
+  });
+  $('stages-list').addEventListener('click', function(e){
+    if(e.target.dataset.act === 'remove-stage' && state.stages.length > 1){
+      state.stages.splice(+e.target.dataset.idx, 1); renderStages();
+    }
+  });
+  $('stage-add-btn').addEventListener('click', function(){
+    state.stages.push({ nome:'Nova etapa', min:10 }); renderStages();
+  });
+
+  $('groups-list').addEventListener('input', function(e){
+    var idx = +e.target.dataset.idx;
+    if(e.target.classList.contains('group-nome')) state.groups[idx].nome = e.target.value;
+  });
+  $('groups-list').addEventListener('click', function(e){
+    var act = e.target.dataset.act;
+    var idx = +e.target.dataset.idx;
+    if(act === 'remove-group' && state.groups.length > 1){
+      state.groups.splice(idx, 1); renderGroups();
+    } else if(act === 'qtd-minus'){
+      state.groups[idx].qtd = Math.max(0, (state.groups[idx].qtd || 0) - 1); renderGroups();
+    } else if(act === 'qtd-plus'){
+      state.groups[idx].qtd = (state.groups[idx].qtd || 0) + 1; renderGroups();
+    }
+  });
+  $('group-add-btn').addEventListener('click', function(){
+    state.groups.push({ nome:'Grupo ' + (state.groups.length + 1), pontos:0, qtd:0 }); renderGroups();
+  });
+
+  $('bncc-add-btn').addEventListener('click', function(){
+    var v = $('bncc-input').value.trim();
+    if(v){ addBnccItem(v); $('bncc-input').value = ''; hideBnccSuggest(); }
+  });
+  $('bncc-input').addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); $('bncc-add-btn').click(); } });
+  $('bncc-chips').addEventListener('click', function(e){
+    if(e.target.dataset.act === 'remove-bncc'){ state.bncc.splice(+e.target.dataset.idx, 1); renderBnccChips(); }
+  });
+  function addBnccItem(text){
+    var codigo = (text.split('–')[0] || text).trim().toUpperCase();
+    var already = state.bncc.some(function(item){ return item.trim().toUpperCase().indexOf(codigo) === 0; });
+    if(already) return;
+    state.bncc.push(text);
+    renderBnccChips();
+  }
+
+  // ---- Busca ao vivo na API oficial da BNCC (api.bncc.dev — dados abertos, sem chave) ----
+  var BNCC_API = 'https://api.bncc.dev/v1';
+  var bnccSeq = 0;
+  var bnccAbort = null;
+  var bnccDebounce = null;
+
+  function hideBnccSuggest(){ $('bncc-suggest').hidden = true; $('bncc-suggest').innerHTML = ''; }
+  function showBnccSuggest(html){ $('bncc-suggest').innerHTML = html; $('bncc-suggest').hidden = false; }
+  function bnccNote(msg){ showBnccSuggest('<div class="bncc-suggest-note">' + esc(msg) + '</div>'); }
+
+  function bnccMetaLine(item){
+    var parts = [];
+    if(item.etapa) parts.push(item.etapa);
+    if(item.anos && item.anos.length) parts.push(item.anos.join('/') + 'º ano');
+    if(item.componente && item.componente.nome) parts.push(item.componente.nome);
+    return parts.join(' · ');
+  }
+  function renderBnccResults(items){
+    if(!items.length){ bnccNote('Nenhuma habilidade encontrada. Você pode digitar o código e a descrição à mão e tocar em "Adicionar".'); return; }
+    var html = items.map(function(item){
+      var full = item.codigo + ' – ' + item.texto;
+      return '<button type="button" class="bncc-suggest-item" data-full="' + esc(full) + '">' +
+        '<span class="bncc-suggest-code">' + esc(item.codigo) + '</span>' +
+        '<span class="bncc-suggest-meta">' + esc(bnccMetaLine(item)) + '</span>' +
+        '<div class="bncc-suggest-text">' + esc(item.texto) + '</div>' +
+        '</button>';
+    }).join('');
+    showBnccSuggest(html);
+  }
+
+  function fetchBncc(term){
+    var mySeq = ++bnccSeq;
+    if(bnccAbort){ bnccAbort.abort(); }
+    var codigoLike = /^[A-Z]{2}\d{2}[A-Z]{2}\d{2}$/i.test(term.replace(/\s+/g, ''));
+    var url = codigoLike
+      ? BNCC_API + '/aprendizagens/' + encodeURIComponent(term.replace(/\s+/g, '').toUpperCase())
+      : BNCC_API + '/busca?q=' + encodeURIComponent(term) + '&limite=8';
+    if(typeof AbortController !== 'undefined'){ bnccAbort = new AbortController(); }
+    bnccNote('Buscando na BNCC…');
+    fetch(url, bnccAbort ? { signal: bnccAbort.signal } : undefined)
+      .then(function(res){
+        if(mySeq !== bnccSeq) return null;
+        if(res.status === 404){ return { notFound:true }; }
+        if(res.status === 429){ return { rateLimited:true }; }
+        if(!res.ok) throw new Error('http ' + res.status);
+        return res.json();
+      })
+      .then(function(data){
+        if(!data || mySeq !== bnccSeq) return;
+        if(data.notFound){ bnccNote('Código não encontrado. Confira o código ou descreva livremente e toque em "Adicionar".'); return; }
+        if(data.rateLimited){ bnccNote('Muitas buscas em pouco tempo — aguarde alguns segundos e tente de novo.'); return; }
+        var items = codigoLike ? (data.codigo ? [data] : []) : (data.itens || []);
+        renderBnccResults(items);
+      })
+      .catch(function(err){
+        if(err && err.name === 'AbortError') return;
+        if(mySeq !== bnccSeq) return;
+        bnccNote('Busca on-line indisponível agora. Você ainda pode digitar o código e a descrição manualmente e tocar em "Adicionar".');
+      });
+  }
+
+  $('bncc-input').addEventListener('input', function(e){
+    var term = e.target.value.trim();
+    clearTimeout(bnccDebounce);
+    if(term.length < 3){ hideBnccSuggest(); return; }
+    bnccDebounce = setTimeout(function(){ fetchBncc(term); }, 350);
+  });
+  $('bncc-suggest').addEventListener('click', function(e){
+    var btn = e.target.closest ? e.target.closest('.bncc-suggest-item') : null;
+    if(!btn) return;
+    addBnccItem(btn.dataset.full);
+    $('bncc-input').value = '';
+    hideBnccSuggest();
+    $('bncc-input').focus();
+  });
+  document.addEventListener('click', function(e){
+    if(!$('bncc-suggest').hidden && !e.target.closest('.bncc-search-wrap')){ hideBnccSuggest(); }
+  });
+  $('bncc-input').addEventListener('keydown', function(e){ if(e.key === 'Escape') hideBnccSuggest(); });
+
+  // Timer / live view
+  function formatTime(s){ var m = Math.floor(s / 60), sec = s % 60; return String(m).padStart(2,'0') + ':' + String(sec).padStart(2,'0'); }
+  function renderTimer(){
+    var el = $('timer-display');
+    el.textContent = formatTime(state.secondsLeft);
+    var alerta = state.secondsLeft === 0;
+    el.classList.toggle('alert', alerta);
+    $('timer-pal').classList.toggle('alert', alerta);
+  }
+  function renderStageDots(){
+    var wrap = $('stage-dots'); wrap.innerHTML = '';
+    state.stages.forEach(function(s, i){
+      var d = document.createElement('span');
+      d.className = 'dot' + (i === state.currentStage ? ' active' : (i < state.currentStage ? ' done' : ''));
+      wrap.appendChild(d);
+    });
+  }
+  function renderStageName(){
+    var s = state.stages[state.currentStage];
+    $('stage-name').textContent = s.nome + ' · Etapa ' + (state.currentStage + 1) + ' de ' + state.stages.length;
+  }
+  function renderLiveHeader(){
+    $('live-subtitle').textContent = state.disciplina + ' · ' + state.turma + ' — ' + state.atividade;
+  }
+  function beep(){
+    try{
+      var Ctx = window.AudioContext || window.webkitAudioContext;
+      var ctx = new Ctx(); var o = ctx.createOscillator(); var g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination); o.frequency.value = 880; g.gain.value = 0.16; o.start();
+      setTimeout(function(){ o.stop(); ctx.close(); }, 380);
+    }catch(e){}
+  }
+  function updateStartPauseLabel(){ $('btn-start-pause').textContent = state.timerRunning ? 'Pausar' : 'Iniciar'; }
+  function tick(){
+    if(state.secondsLeft > 0){
+      state.secondsLeft--; renderTimer();
+      if(state.secondsLeft === 0){ pauseTimer(); beep(); }
+    }
+  }
+  function startPauseTimer(){
+    if(state.timerRunning){ pauseTimer(); return; }
+    if(state.secondsLeft === 0) return;
+    state.timerRunning = true; state.timerHandle = setInterval(tick, 1000); updateStartPauseLabel();
+  }
+  function pauseTimer(){ state.timerRunning = false; clearInterval(state.timerHandle); updateStartPauseLabel(); }
+  function resetStageTimer(){
+    pauseTimer(); state.secondsLeft = state.stages[state.currentStage].min * 60; renderTimer();
+  }
+  function nextStage(){
+    pauseTimer();
+    if(state.currentStage < state.stages.length - 1) state.currentStage++;
+    state.secondsLeft = state.stages[state.currentStage].min * 60;
+    renderStageDots(); renderStageName(); renderTimer(); renderMethodologyPanel();
+  }
+  function updateNextStageButtonLabel(){
+    $('btn-next-stage').textContent = state.metodologia === 'estacoes' ? 'Rotacionar grupos →' : 'Próxima etapa →';
+  }
+  $('btn-start-pause').addEventListener('click', startPauseTimer);
+  $('btn-reset').addEventListener('click', resetStageTimer);
+  $('btn-next-stage').addEventListener('click', nextStage);
+
+  // Methodology-specific live panel
+  function contextLines(){ return (state.contexto || '').split('\n').map(function(s){ return s.trim(); }).filter(Boolean); }
+  function ensurePollArrays(n){
+    while(state.poll.votes1.length < n) state.poll.votes1.push(0);
+    while(state.poll.votes2.length < n) state.poll.votes2.push(0);
+  }
+  function renderMethodologyPanel(){
+    var wrap = $('methodology-panel');
+    var key = state.metodologia;
+    var cfg = METODOLOGIAS[key];
+    var lines = contextLines();
+    var html = '<h2>' + esc(cfg.panelTitle) + '</h2>';
+
+    if(key === 'invertida'){
+      if(!lines.length){ html += '<p class="hint">Adicione os itens de verificação na etapa de configuração.</p>'; }
+      else {
+        var doneCount = state.checklist.filter(Boolean).length;
+        html += '<p class="hint">' + doneCount + ' de ' + lines.length + ' confirmados</p>';
+        html += '<div class="checklist">' + lines.map(function(l, i){
+          return '<label class="check-row"><input type="checkbox" data-idx="' + i + '"' + (state.checklist[i] ? ' checked' : '') + '><span>' + esc(l) + '</span></label>';
+        }).join('') + '</div>';
+      }
+    } else if(key === 'pbl' || key === 'gamificacao' || key === 'caso'){
+      if(!lines.length){ html += '<p class="hint">Adicione o texto na etapa de configuração.</p>'; }
+      else {
+        html += '<p class="context-lead">' + esc(lines[0]) + '</p>';
+        if(lines.length > 1){ html += '<ul class="context-list">' + lines.slice(1).map(function(l){ return '<li>' + esc(l) + '</li>'; }).join('') + '</ul>'; }
+      }
+    } else if(key === 'pares'){
+      if(lines.length < 2){ html += '<p class="hint">Escreva a pergunta na primeira linha e as alternativas nas linhas seguintes.</p>'; }
+      else {
+        var pergunta = lines[0]; var options = lines.slice(1);
+        ensurePollArrays(options.length);
+        var votes = state.poll.round === 1 ? state.poll.votes1 : state.poll.votes2;
+        var total = votes.reduce(function(a,b){ return a + b; }, 0) || 1;
+        html += '<p class="context-lead">' + esc(pergunta) + '</p>';
+        html += '<p class="hint">Rodada ' + state.poll.round + (state.poll.round === 2 ? ' — depois da discussão em duplas' : ' — votação individual') + '</p>';
+        html += '<div class="poll-list">' + options.map(function(opt, i){
+          var pct = Math.round(((votes[i] || 0) / total) * 100);
+          var color = 'var(--g' + ((i % 6) + 1) + ')';
+          return '<div class="poll-row"><div class="poll-label">' + esc(opt) + '</div>' +
+            '<div class="rank-bar-track"><div class="rank-bar-fill" style="width:' + Math.max(4, pct) + '%;background:' + color + '"></div></div>' +
+            '<div class="poll-pct">' + pct + '%</div>' +
+            '<button class="pt-btn" data-act="vote" data-idx="' + i + '">+1</button></div>';
+        }).join('') + '</div>';
+        html += state.poll.round === 1
+          ? '<div class="btn-row"><button class="btn btn-ghost btn-sm" id="poll-next-round">Iniciar rodada 2 (após discussão) →</button></div>'
+          : '<div class="btn-row"><button class="btn btn-ghost btn-sm" id="poll-reset">Reiniciar votação</button></div>';
+      }
+    } else if(key === 'estacoes'){
+      var stations = lines.length ? lines : state.stages.map(function(s){ return s.nome; });
+      html += state.timerAtivo
+        ? '<p class="hint">A cada etapa, os grupos avançam uma estação — use "Rotacionar grupos" no cronômetro.</p>'
+        : '<p class="hint">Mapa de rotação estático — ligue o cronômetro por etapas na Configuração para rotacionar os grupos automaticamente.</p>';
+      html += '<div class="table-wrap"><table><thead><tr><th>Grupo</th><th>Estação atual</th></tr></thead><tbody>' +
+        state.groups.map(function(g, i){
+          var stIdx = (i + state.currentStage) % stations.length;
+          return '<tr><td>' + esc(g.nome) + '</td><td>' + esc(stations[stIdx]) + '</td></tr>';
+        }).join('') + '</tbody></table></div>';
+    }
+    wrap.innerHTML = html;
+  }
+  $('methodology-panel').addEventListener('change', function(e){
+    if(e.target.matches('input[type="checkbox"][data-idx]')){
+      state.checklist[+e.target.dataset.idx] = e.target.checked;
+      renderMethodologyPanel();
+    }
+  });
+  $('methodology-panel').addEventListener('click', function(e){
+    if(e.target.dataset.act === 'vote'){
+      var idx = +e.target.dataset.idx;
+      var arr = state.poll.round === 1 ? state.poll.votes1 : state.poll.votes2;
+      arr[idx] = (arr[idx] || 0) + 1;
+      renderMethodologyPanel();
+    } else if(e.target.id === 'poll-next-round'){
+      state.poll.round = 2; renderMethodologyPanel();
+    } else if(e.target.id === 'poll-reset'){
+      state.poll.round = 1; state.poll.votes1 = []; state.poll.votes2 = []; renderMethodologyPanel();
+    }
+  });
+
+  function renderRanking(){
+    var list = $('ranking-list'); list.innerHTML = '';
+    var publico = state.rankingPublico;
+    var ordered = publico ? state.groups.slice().sort(function(a,b){ return b.pontos - a.pontos; }) : state.groups.slice();
+    var max = Math.max(1, Math.max.apply(null, state.groups.map(function(g){ return g.pontos; })));
+    var medalColors = ['var(--gold)', '#C7C7CC', '#D2A679'];
+    ordered.forEach(function(g, i){
+      var origIndex = state.groups.indexOf(g);
+      var barColor = 'var(--g' + ((origIndex % 6) + 1) + ')';
+      var badgeHtml = publico ? ((i + 1) + 'º') : '•';
+      var badgeBg = (publico && i < 3) ? medalColors[i] : 'var(--ink-soft)';
+      var widthPct = publico ? Math.max(4, (g.pontos / max) * 100) : 30;
+      var pointsText = publico ? (g.pontos + ' pts') : '••';
+      var row = document.createElement('div'); row.className = 'rank-item';
+      row.innerHTML =
+        '<div class="rank-badge" style="background:' + badgeBg + '">' + badgeHtml + '</div>' +
+        '<div class="rank-name">' + esc(g.nome) + '</div>' +
+        '<div class="rank-bar-track"><div class="rank-bar-fill" style="width:' + widthPct + '%;background:' + barColor + '"></div></div>' +
+        '<div class="rank-points">' + pointsText + '</div>' +
+        '<div class="rank-controls">' +
+          '<button class="pt-btn" data-act="minus" data-idx="' + origIndex + '">−1</button>' +
+          '<button class="pt-btn" data-act="plus1" data-idx="' + origIndex + '">+1</button>' +
+          '<button class="pt-btn" data-act="plus5" data-idx="' + origIndex + '">+5</button>' +
+        '</div>';
+      list.appendChild(row);
+    });
+  }
+  $('ranking-list').addEventListener('click', function(e){
+    var act = e.target.dataset.act; if(!act) return;
+    var idx = +e.target.dataset.idx;
+    var delta = act === 'minus' ? -1 : (act === 'plus1' ? 1 : 5);
+    state.groups[idx].pontos = Math.max(0, state.groups[idx].pontos + delta);
+    renderRanking();
+  });
+  $('ranking-visivel').addEventListener('change', function(e){ state.rankingPublico = e.target.checked; renderRanking(); });
+
+  // ---- Medidor de barulho (bolinhas que saltam com o volume do microfone) ----
+  var NOISE_COLOR_VARS = ['--g1', '--g2', '--g3', '--g4', '--g5', '--g6'];
+  var noiseStream = null, noiseAudioCtx = null, noiseAnalyser = null, noiseData = null, noiseRAF = null;
+  var noiseCanvasCtx = null, noiseCanvasW = 0, noiseCanvasH = 0, noiseGroundColor = '#999';
+  var noiseBalls = [], noiseLevelSmoothed = 0, noiseOverlayOpen = false;
+
+  function cssVar(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+
+  function resizeNoiseCanvas(){
+    var canvas = $('noise-canvas');
+    var dpr = window.devicePixelRatio || 1;
+    var w = Math.max(200, canvas.clientWidth || (canvas.parentElement && canvas.parentElement.clientWidth) || 300);
+    var h = 180;
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    var ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx: ctx, w: w, h: h };
+  }
+  function initNoiseBalls(w){
+    noiseGroundColor = cssVar('--line');
+    var n = 6;
+    noiseBalls = [];
+    for(var i = 0; i < n; i++){
+      noiseBalls.push({
+        x: (w / (n + 1)) * (i + 1),
+        radius: 15 + (i % 3) * 3,
+        color: cssVar(NOISE_COLOR_VARS[i % NOISE_COLOR_VARS.length]),
+        phase: Math.random() * Math.PI * 2,
+        speed: 3.5 + Math.random() * 2.5,
+        wobble: 0.7 + Math.random() * 0.5
+      });
+    }
+  }
+  function drawNoiseFrame(level){
+    if(!noiseCanvasCtx) return;
+    var ctx = noiseCanvasCtx, w = noiseCanvasW, h = noiseCanvasH;
+    ctx.clearRect(0, 0, w, h);
+    var groundY = h - 18;
+    ctx.strokeStyle = noiseGroundColor; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(0, groundY + 0.5); ctx.lineTo(w, groundY + 0.5); ctx.stroke();
+    var t = performance.now() / 1000;
+    noiseBalls.forEach(function(b){
+      var amp = level * (h - 40) * b.wobble;
+      var bounce = Math.abs(Math.sin(t * b.speed + b.phase));
+      var y = groundY - b.radius - bounce * amp;
+      var shadowScale = Math.max(0.28, 1 - (groundY - y) / (h - 20));
+      ctx.beginPath();
+      ctx.fillStyle = 'rgba(0,0,0,' + (0.24 * shadowScale).toFixed(3) + ')';
+      ctx.ellipse(b.x, groundY + 3, b.radius * 0.82 * shadowScale, 4 * shadowScale, 0, 0, Math.PI * 2);
+      ctx.fill();
+      var grad = ctx.createRadialGradient(b.x - b.radius * 0.35, y - b.radius * 0.42, b.radius * 0.12, b.x, y, b.radius);
+      grad.addColorStop(0, 'rgba(255,255,255,.9)');
+      grad.addColorStop(0.2, b.color);
+      grad.addColorStop(1, b.color);
+      ctx.beginPath();
+      ctx.fillStyle = grad;
+      ctx.arc(b.x, y, b.radius, 0, Math.PI * 2);
+      ctx.fill();
+    });
+  }
+  function updateNoiseStatus(level){
+    var el = $('noise-status');
+    var fab = $('fab-noise-btn');
+    var cls, label;
+    if(level < 0.22){ label = 'Silêncio'; cls = 'ok'; }
+    else if(level < 0.5){ label = 'Ficando alto'; cls = 'mid'; }
+    else { label = 'Muito barulho!'; cls = 'high'; }
+    el.textContent = label; el.className = 'noise-status ' + cls;
+    fab.className = 'fab-noise no-print ' + cls;
+  }
+  function showNoiseMessage(msg){ $('noise-message').innerHTML = msg ? '<div class="nudge">' + esc(msg) + '</div>' : ''; }
+
+  function openNoiseOverlay(){
+    noiseOverlayOpen = true;
+    overlayOpen($('noise-backdrop'));
+    if(noiseStream){
+      var d = resizeNoiseCanvas();
+      noiseCanvasCtx = d.ctx; noiseCanvasW = d.w; noiseCanvasH = d.h;
+      initNoiseBalls(noiseCanvasW);
+    }
+  }
+  function closeNoiseOverlay(){
+    noiseOverlayOpen = false;
+    overlayClose($('noise-backdrop'));
+  }
+  $('fab-noise-btn').addEventListener('click', openNoiseOverlay);
+  $('noise-sheet-close').addEventListener('click', closeNoiseOverlay);
+  $('noise-backdrop').addEventListener('click', function(e){ if(e.target === this) closeNoiseOverlay(); });
+
+  function noiseLoop(){
+    noiseRAF = requestAnimationFrame(noiseLoop);
+    noiseAnalyser.getByteTimeDomainData(noiseData);
+    var sum = 0;
+    for(var i = 0; i < noiseData.length; i++){ var v = (noiseData[i] - 128) / 128; sum += v * v; }
+    var rms = Math.sqrt(sum / noiseData.length);
+    var gain = parseFloat($('noise-sensitivity').value) || 1;
+    var level = Math.min(1, rms * 6 * gain);
+    noiseLevelSmoothed = noiseLevelSmoothed * 0.82 + level * 0.18;
+    updateNoiseStatus(noiseLevelSmoothed);
+    if(noiseOverlayOpen) drawNoiseFrame(noiseLevelSmoothed);
+  }
+
+  function startNoiseMeter(){
+    if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+      showNoiseMessage('Seu navegador não permite captura de áudio. Tente uma versão atualizada do Chrome, Edge ou Firefox.');
+      return;
+    }
+    var btn = $('noise-toggle-btn');
+    btn.disabled = true; btn.textContent = 'Pedindo permissão…';
+    navigator.mediaDevices.getUserMedia({ audio: true, video: false }).then(function(stream){
+      noiseStream = stream;
+      var AudioCtxClass = window.AudioContext || window.webkitAudioContext;
+      noiseAudioCtx = new AudioCtxClass();
+      var source = noiseAudioCtx.createMediaStreamSource(stream);
+      noiseAnalyser = noiseAudioCtx.createAnalyser();
+      noiseAnalyser.fftSize = 1024;
+      source.connect(noiseAnalyser);
+      noiseData = new Uint8Array(noiseAnalyser.frequencyBinCount);
+      var dims = resizeNoiseCanvas();
+      noiseCanvasCtx = dims.ctx; noiseCanvasW = dims.w; noiseCanvasH = dims.h;
+      initNoiseBalls(noiseCanvasW);
+      noiseLevelSmoothed = 0;
+      showNoiseMessage('');
+      btn.disabled = false; btn.textContent = 'Desligar microfone';
+      btn.classList.remove('btn-primary'); btn.classList.add('btn-ghost');
+      updateNoiseStatus(0);
+      noiseLoop();
+    }).catch(function(err){
+      btn.disabled = false; btn.textContent = 'Ativar microfone';
+      if(err && err.name === 'NotAllowedError'){
+        showNoiseMessage('Permissão de microfone negada. Ative o acesso ao microfone nas configurações do navegador para usar este recurso.');
+      } else {
+        showNoiseMessage('Não foi possível acessar o microfone agora.');
+      }
+    });
+  }
+  function stopNoiseMeter(){
+    if(noiseRAF){ cancelAnimationFrame(noiseRAF); noiseRAF = null; }
+    if(noiseStream){ noiseStream.getTracks().forEach(function(t){ t.stop(); }); noiseStream = null; }
+    if(noiseAudioCtx){ noiseAudioCtx.close(); noiseAudioCtx = null; }
+    noiseAnalyser = null;
+    var btn = $('noise-toggle-btn');
+    btn.disabled = false; btn.textContent = 'Ativar microfone';
+    btn.classList.add('btn-primary'); btn.classList.remove('btn-ghost');
+    $('noise-status').textContent = 'Desligado'; $('noise-status').className = 'noise-status off';
+    $('fab-noise-btn').className = 'fab-noise no-print';
+    if(noiseCanvasCtx){ noiseCanvasCtx.clearRect(0, 0, noiseCanvasW, noiseCanvasH); }
+  }
+  $('noise-toggle-btn').addEventListener('click', function(){
+    if(noiseStream){ stopNoiseMeter(); } else { startNoiseMeter(); }
+  });
+  window.addEventListener('resize', function(){
+    if(noiseStream){
+      var d = resizeNoiseCanvas();
+      noiseCanvasCtx = d.ctx; noiseCanvasW = d.w; noiseCanvasH = d.h;
+      initNoiseBalls(noiseCanvasW);
+    }
+  });
+
+  // ---- Bloco de anotações (rabisco livre pra exibir na tela "Ao vivo") ----
+  var scribbleCtx = null, scribbleW = 0, scribbleH = 0, scribbleDrawing = false, scribbleLastPt = null;
+  var scribbleColor = '#2b2118', scribbleTool = 'pen', scribblePaperColor = '#f4f0e2';
+  var SCRIBBLE_PEN_WIDTH = 3, SCRIBBLE_ERASER_WIDTH = 22;
+
+  function scribbleFillPaper(ctx, w, h){
+    ctx.fillStyle = scribblePaperColor;
+    ctx.fillRect(0, 0, w, h);
+  }
+  function resizeScribbleCanvas(preserve){
+    var canvas = $('scribble-canvas');
+    var dpr = window.devicePixelRatio || 1;
+    var w = Math.max(200, canvas.clientWidth || (canvas.parentElement && canvas.parentElement.clientWidth) || 300);
+    var h = 320;
+    var prevImg = null;
+    if(preserve && canvas.width > 0 && canvas.height > 0){
+      try{ prevImg = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height); }catch(e){}
+    }
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    var ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    scribbleCtx = ctx; scribbleW = w; scribbleH = h;
+    scribbleFillPaper(ctx, w, h);
+    if(prevImg){ try{ ctx.putImageData(prevImg, 0, 0); }catch(e){} }
+  }
+  function scribblePointFromEvent(e){
+    var canvas = $('scribble-canvas');
+    var rect = canvas.getBoundingClientRect();
+    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+  }
+  function scribbleStrokeStyle(){
+    if(scribbleTool === 'eraser'){ scribbleCtx.strokeStyle = scribblePaperColor; scribbleCtx.lineWidth = SCRIBBLE_ERASER_WIDTH; }
+    else { scribbleCtx.strokeStyle = scribbleColor; scribbleCtx.lineWidth = SCRIBBLE_PEN_WIDTH; }
+    scribbleCtx.lineCap = 'round'; scribbleCtx.lineJoin = 'round';
+  }
+  function scribbleDrawTo(pt){
+    if(!scribbleCtx || !scribbleLastPt) return;
+    scribbleStrokeStyle();
+    scribbleCtx.beginPath();
+    scribbleCtx.moveTo(scribbleLastPt.x, scribbleLastPt.y);
+    scribbleCtx.lineTo(pt.x, pt.y);
+    scribbleCtx.stroke();
+    scribbleLastPt = pt;
+  }
+  var scribbleCanvasEl = $('scribble-canvas');
+  scribbleCanvasEl.addEventListener('pointerdown', function(e){
+    scribbleDrawing = true; scribbleLastPt = scribblePointFromEvent(e);
+    scribbleStrokeStyle();
+    scribbleCtx.beginPath();
+    scribbleCtx.arc(scribbleLastPt.x, scribbleLastPt.y, scribbleCtx.lineWidth / 2, 0, Math.PI * 2);
+    scribbleCtx.fillStyle = scribbleCtx.strokeStyle; scribbleCtx.fill();
+    try{ scribbleCanvasEl.setPointerCapture(e.pointerId); }catch(err){}
+  });
+  scribbleCanvasEl.addEventListener('pointermove', function(e){
+    if(!scribbleDrawing) return;
+    scribbleDrawTo(scribblePointFromEvent(e));
+  });
+  function scribbleEndStroke(){ scribbleDrawing = false; scribbleLastPt = null; }
+  scribbleCanvasEl.addEventListener('pointerup', scribbleEndStroke);
+  scribbleCanvasEl.addEventListener('pointerleave', scribbleEndStroke);
+  scribbleCanvasEl.addEventListener('pointercancel', scribbleEndStroke);
+
+  $('scribble-colors').addEventListener('click', function(e){
+    var btn = e.target.closest ? e.target.closest('.scribble-color') : null;
+    if(!btn) return;
+    scribbleColor = btn.dataset.color;
+    scribbleTool = 'pen';
+    document.querySelectorAll('.scribble-color').forEach(function(b){ b.classList.toggle('active', b === btn); });
+    $('scribble-pen-btn').classList.add('active');
+    $('scribble-eraser-btn').classList.remove('active');
+  });
+  $('scribble-pen-btn').addEventListener('click', function(){
+    scribbleTool = 'pen';
+    $('scribble-pen-btn').classList.add('active'); $('scribble-eraser-btn').classList.remove('active');
+  });
+  $('scribble-eraser-btn').addEventListener('click', function(){
+    scribbleTool = 'eraser';
+    $('scribble-eraser-btn').classList.add('active'); $('scribble-pen-btn').classList.remove('active');
+  });
+  $('scribble-clear-btn').addEventListener('click', function(){
+    var wrap = $('scribble-canvas-wrap');
+    if(wrap.classList.contains('crumpling')) return;
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(reduced){
+      scribbleFillPaper(scribbleCtx, scribbleW, scribbleH);
+      return;
+    }
+    wrap.classList.add('crumpling');
+    setTimeout(function(){
+      scribbleFillPaper(scribbleCtx, scribbleW, scribbleH);
+      wrap.classList.remove('crumpling');
+      wrap.classList.add('popping');
+      setTimeout(function(){ wrap.classList.remove('popping'); }, 380);
+    }, 500);
+  });
+
+  var scribbleInited = false;
+  function openScribbleOverlay(){
+    overlayOpen($('scribble-backdrop'));
+    if(!scribbleInited){ resizeScribbleCanvas(false); scribbleInited = true; }
+  }
+  function closeScribbleOverlay(){ overlayClose($('scribble-backdrop')); }
+  $('fab-scribble-btn').addEventListener('click', openScribbleOverlay);
+  $('scribble-sheet-close').addEventListener('click', closeScribbleOverlay);
+  $('scribble-backdrop').addEventListener('click', function(e){ if(e.target === this) closeScribbleOverlay(); });
+  window.addEventListener('resize', function(){ if(scribbleInited && !$('scribble-backdrop').hidden) resizeScribbleCanvas(true); });
+
+  // ---- Documentos: pastas com lista limpa ----
+  var DOC_CATS = {
+    planejamento: { nome: 'Planejamentos', color: '--accent' },
+    relatorio: { nome: 'Relatórios', color: '--green' },
+    outro: { nome: 'Outros', color: '--g4' }
+  };
+  var folderOpenCat = null, docEditorMode = null;
+
+  function newId(){ return 'd' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+  function saveDocs(){ try{ localStorage.setItem('aulaviva_docs', JSON.stringify(state.docs)); }catch(e){} }
+  function loadDocs(){ try{ var raw = localStorage.getItem('aulaviva_docs'); if(raw){ state.docs = JSON.parse(raw) || []; } }catch(e){} }
+  function folderSvg(color){
+    return '<svg viewBox="0 0 64 48">' +
+      '<path d="M4 8a4 4 0 0 1 4-4h14l6 6h28a4 4 0 0 1 4 4v26a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4Z" fill="' + color + '"></path>' +
+      '<path d="M4 20h56v18a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4Z" fill="' + color + '" opacity=".55"></path></svg>';
+  }
+  function docSnippet(doc){
+    var text = (doc.conteudo || '').trim();
+    if(!text) return 'Sem conteúdo';
+    return text.length > 72 ? text.slice(0, 72) + '…' : text;
+  }
+  var CHEVRON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>';
+  function renderDocsGrid(){
+    var wrap = $('docs-grid');
+    wrap.innerHTML = Object.keys(DOC_CATS).map(function(cat){
+      var docsInCat = state.docs.filter(function(d){ return d.categoria === cat; });
+      var count = docsInCat.length;
+      var meta = DOC_CATS[cat];
+      return '<button type="button" class="folder-card" data-cat="' + cat + '">' +
+        '<div class="folder-icon">' + folderSvg(cssVar(meta.color)) + '</div>' +
+        '<div class="folder-text">' +
+          '<div class="folder-label">' + esc(meta.nome) + '</div>' +
+          '<div class="folder-sub">' + count + (count === 1 ? ' documento' : ' documentos') + '</div>' +
+        '</div>' +
+        '<div class="folder-chevron">' + CHEVRON_SVG + '</div>' +
+        '</button>';
+    }).join('');
+  }
+  $('docs-grid').addEventListener('click', function(e){
+    var btn = e.target.closest ? e.target.closest('.folder-card') : null;
+    if(btn) openFolder(btn.dataset.cat);
+  });
+
+  function renderFolderDocList(cat){
+    var stage = $('folder-stage');
+    var docs = state.docs.filter(function(d){ return d.categoria === cat; })
+      .sort(function(a, b){ return (b.atualizadoEm || 0) - (a.atualizadoEm || 0); });
+    if(!docs.length){
+      stage.innerHTML = '<div class="doc-empty">Nenhum documento ainda. Toque em "+ Novo documento" pra começar.</div>';
+      return;
+    }
+    stage.innerHTML = docs.map(function(doc){
+      return '<button type="button" class="doc-row" data-id="' + doc.id + '">' +
+        '<div class="doc-row-main">' +
+          '<div class="doc-row-title">' + esc(doc.titulo || 'Sem título') + '</div>' +
+          '<div class="doc-row-snippet">' + esc(docSnippet(doc)) + '</div>' +
+        '</div>' +
+        '<div class="doc-row-chevron">' + CHEVRON_SVG + '</div>' +
+        '</button>';
+    }).join('');
+  }
+  $('folder-stage').addEventListener('click', function(e){
+    var btn = e.target.closest ? e.target.closest('.doc-row') : null;
+    if(btn && folderOpenCat) openDocEditor(btn.dataset.id, folderOpenCat);
+  });
+
+  function openFolder(cat){
+    folderOpenCat = cat;
+    $('docs-grid').hidden = true;
+    $('docs-hint').hidden = true;
+    $('folder-open').hidden = false;
+    $('folder-open-title').textContent = DOC_CATS[cat].nome;
+    renderFolderDocList(cat);
+  }
+  function closeFolder(){
+    folderOpenCat = null;
+    $('folder-open').hidden = true;
+    $('docs-grid').hidden = false;
+    $('docs-hint').hidden = false;
+    renderDocsGrid();
+  }
+  $('folder-back-btn').addEventListener('click', closeFolder);
+  $('folder-add-btn').addEventListener('click', function(){ if(folderOpenCat) openDocEditor(null, folderOpenCat); });
+
+  function openDocEditor(id, categoria){
+    var doc = id ? state.docs.filter(function(d){ return d.id === id; })[0] : null;
+    docEditorMode = { id: id, categoria: categoria };
+    $('doc-editor-title').textContent = doc ? 'Editar documento' : 'Novo documento (' + DOC_CATS[categoria].nome + ')';
+    $('doc-editor-titulo').value = doc ? doc.titulo : '';
+    $('doc-editor-conteudo').value = doc ? doc.conteudo : '';
+    $('doc-editor-delete').hidden = !doc;
+    overlayOpen($('doc-editor-backdrop'));
+  }
+  function closeDocEditor(){ overlayClose($('doc-editor-backdrop')); docEditorMode = null; }
+  function refreshAfterDocChange(){
+    saveDocs();
+    renderDocsGrid();
+    if(folderOpenCat) renderFolderDocList(folderOpenCat);
+  }
+  $('doc-editor-close').addEventListener('click', closeDocEditor);
+  $('doc-editor-backdrop').addEventListener('click', function(e){ if(e.target === this) closeDocEditor(); });
+  $('doc-editor-save').addEventListener('click', function(){
+    if(!docEditorMode) return;
+    var titulo = $('doc-editor-titulo').value.trim() || 'Sem título';
+    var conteudo = $('doc-editor-conteudo').value;
+    if(docEditorMode.id){
+      var doc = state.docs.filter(function(d){ return d.id === docEditorMode.id; })[0];
+      if(doc){ doc.titulo = titulo; doc.conteudo = conteudo; doc.atualizadoEm = Date.now(); }
+    } else {
+      state.docs.push({ id: newId(), categoria: docEditorMode.categoria, titulo: titulo, conteudo: conteudo, criadoEm: Date.now(), atualizadoEm: Date.now() });
+    }
+    closeDocEditor();
+    refreshAfterDocChange();
+  });
+  $('doc-editor-delete').addEventListener('click', function(){
+    if(docEditorMode && docEditorMode.id){
+      state.docs = state.docs.filter(function(d){ return d.id !== docEditorMode.id; });
+    }
+    closeDocEditor();
+    refreshAfterDocChange();
+  });
+
+  function autoSaveReportDoc(){
+    var sorted = state.groups.slice().sort(function(a, b){ return b.pontos - a.pontos; });
+    var linhas = [];
+    linhas.push('Turma: ' + state.turma);
+    linhas.push('Disciplina: ' + state.disciplina);
+    linhas.push('Atividade: ' + state.atividade);
+    linhas.push('Metodologia: ' + (METODOLOGIAS[state.metodologia] ? METODOLOGIAS[state.metodologia].nome : '—'));
+    linhas.push('Data: ' + new Date().toLocaleDateString('pt-BR'));
+    if(state.bncc.length) linhas.push('BNCC: ' + state.bncc.join(' | '));
+    if(state.rankingAtivo) linhas.push('Ranking final: ' + sorted.map(function(g, i){ return (i + 1) + 'º ' + g.nome + ' (' + g.pontos + ' pts)'; }).join(', '));
+    if(state.evidenciaFormativa) linhas.push('Evidência de aprendizagem: ' + state.evidenciaFormativa);
+    if(state.adaptacao) linhas.push('Adaptação feita: ' + state.adaptacao);
+    if(state.proximoPasso) linhas.push('Próximo passo: ' + state.proximoPasso);
+    state.docs.push({
+      id: newId(), categoria: 'relatorio',
+      titulo: 'Relatório — ' + state.turma + ' — ' + new Date().toLocaleDateString('pt-BR'),
+      conteudo: linhas.join('\n'), criadoEm: Date.now(), atualizadoEm: Date.now()
+    });
+    saveDocs();
+  }
+  function maybeAutoSaveReportDoc(){
+    if(!state.reportSavedThisClass){ autoSaveReportDoc(); state.reportSavedThisClass = true; }
+  }
+
+  function getUsageWeeks(){
+    try{
+      var first = localStorage.getItem('aulaviva_first_use');
+      var now = Date.now();
+      if(!first){ localStorage.setItem('aulaviva_first_use', String(now)); return 0; }
+      return Math.floor((now - parseInt(first, 10)) / (7 * 24 * 60 * 60 * 1000));
+    }catch(e){ return 0; }
+  }
+  function renderNudge(){
+    var weeks = getUsageWeeks();
+    $('ranking-nudge').innerHTML = weeks >= 4
+      ? '<div class="nudge">Já se passaram ' + weeks + ' semanas usando o ranking. O efeito de novidade da gamificação costuma cair por volta da 4ª semana — considere migrar parte dos pontos para critérios de colaboração e autonomia, não só participação.</div>'
+      : '';
+  }
+
+  function prepareLive(resetPoints){
+    if(resetPoints){
+      state.groups.forEach(function(g){ g.pontos = 0; }); state.currentStage = 0;
+      state.checklist = contextLines().map(function(){ return false; });
+      state.poll = { round:1, votes1:[], votes2:[] };
+      state.reportSavedThisClass = false;
+    }
+    state.secondsLeft = state.stages[state.currentStage].min * 60;
+    state.timerRunning = false;
+    $('ranking-visivel').checked = state.rankingPublico;
+    $('timer-section').hidden = !state.timerAtivo;
+    $('stage-info-wrap').hidden = !state.timerAtivo;
+    $('ranking-card').hidden = !state.rankingAtivo;
+    $('timer-pal').hidden = !state.timerPalAtivo;
+    $('timer-pal').className = 'timer-pal pal-' + state.faixaEtaria;
+    renderLiveHeader(); renderStageDots(); renderStageName(); renderTimer(); renderRanking(); renderNudge();
+    updateStartPauseLabel(); updateNextStageButtonLabel(); renderMethodologyPanel(); renderLiveTools();
+  }
+
+  $('start-btn').addEventListener('click', function(){
+    collectSetupIntoState(); saveLocal(); prepareLive(true); switchView('live');
+  });
+
+  // Report
+  function renderReport(){
+    var totalMin = state.stages.reduce(function(sum, s){ return sum + s.min; }, 0);
+    $('report-grid').innerHTML =
+      stat('Turma', state.turma) + stat('Disciplina', state.disciplina) + stat('Atividade', state.atividade) +
+      stat('Metodologia', METODOLOGIAS[state.metodologia] ? METODOLOGIAS[state.metodologia].nome : '—') +
+      stat('Data', new Date().toLocaleDateString('pt-BR')) + stat('Duração planejada', totalMin + ' min') +
+      stat('Tempo de preparo', state.custoPreparoMin == null ? '—' : state.custoPreparoMin + ' min');
+
+    $('report-producao').textContent = 'Produto esperado: ' + (state.producao || '—');
+
+    $('f-evidencia').value = state.evidenciaFormativa;
+    $('f-adaptacao').value = state.adaptacao;
+    $('f-proximo-passo').value = state.proximoPasso;
+
+    $('report-bncc').innerHTML = state.bncc.map(function(item){ return '<span class="chip">' + esc(item) + '</span>'; }).join('');
+
+    $('report-stages-section').hidden = !state.timerAtivo;
+    if(state.timerAtivo){
+      $('report-stages').innerHTML = state.stages.map(function(s, i){
+        var status = i < state.currentStage ? 'Concluída' : (i === state.currentStage ? 'Em andamento' : 'Não iniciada');
+        return '<tr><td>' + esc(s.nome) + '</td><td>' + s.min + ' min</td><td>' + status + '</td></tr>';
+      }).join('');
+    }
+
+    $('report-ranking-section').hidden = !state.rankingAtivo;
+    if(state.rankingAtivo){
+      var sorted = state.groups.slice().sort(function(a,b){ return b.pontos - a.pontos; });
+      $('report-ranking').innerHTML = sorted.map(function(g, i){
+        return '<tr><td>' + (i + 1) + 'º</td><td>' + esc(g.nome) + '</td><td>' + g.pontos + ' pts</td></tr>';
+      }).join('');
+    }
+  }
+  function stat(lbl, num){ return '<div class="report-stat"><div class="num">' + esc(String(num)) + '</div><div class="lbl">' + esc(lbl) + '</div></div>'; }
+
+  $('f-evidencia').addEventListener('input', function(e){ state.evidenciaFormativa = e.target.value; });
+  $('f-adaptacao').addEventListener('input', function(e){ state.adaptacao = e.target.value; });
+  $('f-proximo-passo').addEventListener('input', function(e){ state.proximoPasso = e.target.value; });
+
+  $('finish-btn').addEventListener('click', function(){ if(noiseStream) stopNoiseMeter(); renderReport(); switchView('report'); });
+  $('print-btn').addEventListener('click', function(){ window.print(); });
+  $('newclass-btn').addEventListener('click', function(){
+    if(noiseStream) stopNoiseMeter();
+    maybeAutoSaveReportDoc();
+    state.groups.forEach(function(g){ g.pontos = 0; }); state.currentStage = 0; switchView('setup');
+  });
+
+  document.querySelectorAll('.tab').forEach(function(t){
+    t.addEventListener('click', function(){
+      var leavingReport = t.dataset.tab !== 'report' && !document.querySelector('.view[data-view="report"]').hidden;
+      if(leavingReport) maybeAutoSaveReportDoc();
+      if(t.dataset.tab === 'report') renderReport();
+      if(t.dataset.tab !== 'live' && noiseStream) stopNoiseMeter();
+      switchView(t.dataset.tab);
+    });
+  });
+
+  // ---- Camada de acessibilidade: texto ajustável, glossário e tutorial ----
+  var HELP_TEXTS = {
+    metodologia: { title:'O que é uma "metodologia ativa"?',
+      body:'É um jeito de dar aula em que o aluno participa mais — resolvendo problemas, discutindo em grupo ou ensinando os colegas — em vez de só ouvir a explicação. Escolha uma opção na lista; o app já adapta a tela ao vivo para ela.' },
+    bncc: { title:'O que é a BNCC?',
+      body:'É a Base Nacional Comum Curricular, o documento oficial que lista as habilidades que os alunos precisam desenvolver. Aqui você só marca quais habilidades a aula de hoje trabalha — isso ajuda no planejamento e fica pronto no relatório para a coordenação.' },
+    etapas: { title:'O que são as "etapas" da aula?',
+      body:'São os blocos de tempo da sua aula — por exemplo: explicação, atividade em grupo, fechamento. Cada etapa vira um cronômetro na tela de projeção, para ajudar você a manter o ritmo sem precisar olhar o relógio.' },
+    ranking: { title:'Como funciona o placar dos grupos?',
+      body:'Cada grupo ganha pontos durante a aula, e você decide o ritmo tocando em −1 / +1 / +5. Se preferir evitar comparação entre os alunos, desmarque "Mostrar pontuação para a turma" — o placar continua funcionando, só fica oculto na tela projetada.' },
+    ruido: { title:'Como funciona o medidor de barulho?',
+      body:'Ele usa o microfone do computador para medir o volume da sala em tempo real e mostra isso com bolinhas que saltam mais alto quanto mais alto estiver o som — parecido com o "bouncy balls" que muitos professores já usam com turmas do Fundamental 1. É uma pista visual pra ajudar a turma a se autorregular. O áudio não é gravado nem sai do seu navegador; ele só serve pra calcular o volume daquele instante, e para de ser usado assim que você desliga o microfone ou sai da tela "Ao vivo".' },
+    documentos: { title:'Como funcionam os documentos?',
+      body:'Cada pasta guarda um tipo de documento — planejamentos, relatórios e outros. Toque numa pasta pra ver a lista de documentos; toque num documento pra abrir e editar, ou toque em "+ Novo documento" pra criar um. Ao finalizar uma aula, um resumo dela é salvo automaticamente na pasta Relatórios. Tudo fica guardado só no seu navegador, como o resto do app.' },
+    scribble: { title:'Como funciona o bloco de anotações?',
+      body:'É um quadro em branco pra você escrever ou desenhar à mão livre durante a aula — pra explicar algo rápido sem precisar de outro app. Escolha a cor da caneta, use a borracha se errar, e toque em "Amassar e limpar" quando quiser recomeçar do zero (a folha se amassa e some, como papel de verdade). Nada é salvo — some ao amassar ou ao fechar a aula.' }
+  };
+  var FS_LEVELS = [1, 1.15, 1.3];
+  var fsIndex = 0;
+  function applyFontScale(){
+    document.documentElement.style.setProperty('--fs-scale', FS_LEVELS[fsIndex]);
+    try{ localStorage.setItem('aulaviva_fontscale', String(fsIndex)); }catch(e){}
+    $('fs-down').disabled = fsIndex === 0;
+    $('fs-up').disabled = fsIndex === FS_LEVELS.length - 1;
+  }
+  $('fs-up').addEventListener('click', function(){ if(fsIndex < FS_LEVELS.length - 1){ fsIndex++; applyFontScale(); } });
+  $('fs-down').addEventListener('click', function(){ if(fsIndex > 0){ fsIndex--; applyFontScale(); } });
+
+  function openHelp(key){
+    if(key === 'index'){
+      $('help-sheet-title').textContent = 'Central de ajuda';
+      var rows = Object.keys(HELP_TEXTS).map(function(k){
+        return '<button type="button" class="link-btn" data-help-goto="' + k + '" style="display:block;width:100%;text-align:left;padding:10px 4px;border-bottom:1px solid var(--line);">' + esc(HELP_TEXTS[k].title) + '</button>';
+      }).join('');
+      $('help-sheet-body').innerHTML = '<p>Toque num tópico para entender rapidinho, ou reveja o tutorial completo.</p>' + rows +
+        '<div class="btn-row" style="margin-top:14px;"><button type="button" class="btn btn-primary btn-sm" id="help-replay-tour">Rever o tutorial inicial</button></div>';
+    } else if(HELP_TEXTS[key]){
+      $('help-sheet-title').textContent = HELP_TEXTS[key].title;
+      $('help-sheet-body').innerHTML = '<p>' + esc(HELP_TEXTS[key].body) + '</p>';
+    }
+    overlayOpen($('help-backdrop'));
+  }
+  function closeHelp(){ overlayClose($('help-backdrop')); }
+  document.querySelectorAll('.help-btn').forEach(function(b){
+    b.addEventListener('click', function(){ openHelp(b.dataset.help); });
+  });
+  $('fab-help-btn').addEventListener('click', function(){ openHelp('index'); });
+  $('help-sheet-close').addEventListener('click', closeHelp);
+  $('help-backdrop').addEventListener('click', function(e){ if(e.target === this) closeHelp(); });
+  $('help-sheet-body').addEventListener('click', function(e){
+    if(e.target.id === 'help-replay-tour'){ closeHelp(); openOnboard(); }
+    else if(e.target.dataset.helpGoto){ openHelp(e.target.dataset.helpGoto); }
+  });
+
+  var ICON_WAVE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 1 0 8"></path><path d="M14.5 5.5a10 10 0 0 1 0 13"></path><path d="M8 8a6 6 0 0 0 0 8"></path><circle cx="4" cy="12" r="1.5"></circle></svg>';
+  var ICON_GEAR = document.querySelector('.tab[data-tab="setup"] svg').outerHTML;
+  var ICON_PLAY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg>';
+  var ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>';
+  var ONBOARD_STEPS = [
+    { icon:ICON_WAVE, title:'Bem-vindo(a) ao Aula Viva',
+      body:'Este app ajuda você a organizar, projetar e fechar suas aulas em três telas simples. Vamos mostrar rapidinho como funciona — leva menos de um minuto.' },
+    { icon:ICON_GEAR, title:'1. Configurar',
+      body:'Aqui você prepara a aula: turma, metodologia, habilidades da BNCC e os grupos. Cada bloco tem um número — é só ir preenchendo em ordem. Fica salvo sozinho no seu navegador.' },
+    { icon:ICON_PLAY, title:'2. Ao vivo',
+      body:'Na hora da aula, projete esta tela. Ela mostra o cronômetro, o passo a passo da metodologia escolhida e o placar dos grupos — tudo se ajusta automaticamente conforme a etapa avança.' },
+    { icon:ICON_CHECK, title:'3. Relatório',
+      body:'No final, você recebe um resumo pronto para imprimir ou guardar — ótimo para compartilhar com a coordenação o que funcionou na aula. Toque no botão "?" a qualquer momento para rever esta explicação ou tirar dúvidas.' }
+  ];
+  var onboardIndex = 0;
+  function renderOnboard(){
+    var s = ONBOARD_STEPS[onboardIndex];
+    $('onboard-icon').innerHTML = s.icon;
+    $('onboard-title').textContent = s.title;
+    $('onboard-body').innerHTML = '<p>' + esc(s.body) + '</p>';
+    $('onboard-dots').innerHTML = ONBOARD_STEPS.map(function(_, i){ return '<span class="dot' + (i === onboardIndex ? ' active' : '') + '"></span>'; }).join('');
+    $('onboard-back').disabled = onboardIndex === 0;
+    $('onboard-next').textContent = onboardIndex === ONBOARD_STEPS.length - 1 ? 'Começar' : 'Avançar →';
+  }
+  function openOnboard(){ onboardIndex = 0; renderOnboard(); overlayOpen($('onboard-backdrop')); }
+  function closeOnboard(markSeen){
+    overlayClose($('onboard-backdrop'));
+    if(markSeen){ try{ localStorage.setItem('aulaviva_onboarded', '1'); }catch(e){} }
+  }
+  $('onboard-next').addEventListener('click', function(){
+    if(onboardIndex < ONBOARD_STEPS.length - 1){ onboardIndex++; renderOnboard(); } else { closeOnboard(true); }
+  });
+  $('onboard-back').addEventListener('click', function(){ if(onboardIndex > 0){ onboardIndex--; renderOnboard(); } });
+  $('onboard-skip').addEventListener('click', function(){ closeOnboard(true); });
+  $('help-open-btn').addEventListener('click', openOnboard);
+  $('onboard-backdrop').addEventListener('click', function(e){ if(e.target === this) closeOnboard(true); });
+  document.addEventListener('keydown', function(e){
+    if(e.key !== 'Escape') return;
+    if(!$('help-backdrop').hidden) closeHelp();
+    if(!$('onboard-backdrop').hidden) closeOnboard(true);
+    if(!$('noise-backdrop').hidden) closeNoiseOverlay();
+    if(!$('scribble-backdrop').hidden) closeScribbleOverlay();
+    if(!$('doc-editor-backdrop').hidden) closeDocEditor();
+    if($('sidebar').classList.contains('open')) closeSidebar();
+  });
+
+  // Init
+  loadLocal();
+  loadDocs();
+  populateFormFromState();
+  prepareLive(false);
+  renderReport();
+  renderDocsGrid();
+  switchView('setup');
+
+  try{ fsIndex = parseInt(localStorage.getItem('aulaviva_fontscale'), 10); }catch(e){ fsIndex = 0; }
+  if(!(fsIndex >= 0 && fsIndex < FS_LEVELS.length)) fsIndex = 0;
+  applyFontScale();
+  var jaViuTutorial = false;
+  try{ jaViuTutorial = localStorage.getItem('aulaviva_onboarded') === '1'; }catch(e){}
+  if(!jaViuTutorial) openOnboard();
+})();
+</script>
+
+</body>
+</html>
