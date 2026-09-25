@@ -1058,8 +1058,15 @@
         <textarea id="ai-slides-topic" placeholder="Ex.: Introdução à robótica educacional para o 6º ano, com exemplos de sensores e atuadores"></textarea>
       </div>
       <div class="field">
-        <span>Estilo visual (opcional)</span>
-        <input type="text" id="ai-slides-theme" placeholder="ex.: moderno, colorido, infantil">
+        <span>Estilo visual</span>
+        <select id="ai-slides-theme">
+          <option value="modern">Moderno</option>
+          <option value="business">Profissional / corporativo</option>
+          <option value="education">Educação / escolar</option>
+          <option value="colorful">Colorido e divertido</option>
+          <option value="creative">Criativo</option>
+          <option value="minimal">Minimalista</option>
+        </select>
       </div>
       <div class="hint" id="ai-slides-status" style="margin:4px 0 0;"></div>
       <div id="ai-slides-result" hidden></div>
@@ -3083,7 +3090,7 @@
   // nunca aqui no front-end. O site chama /api/generate-slides, que é quem fala com a 2slides. ---
   function openAiSlides(){
     $('ai-slides-topic').value = '';
-    $('ai-slides-theme').value = '';
+    $('ai-slides-theme').value = 'modern';
     $('ai-slides-status').textContent = '';
     $('ai-slides-result').hidden = true;
     $('ai-slides-result').innerHTML = '';
@@ -3097,7 +3104,7 @@
   $('ai-slides-generate-btn').addEventListener('click', function(){
     var topic = $('ai-slides-topic').value.trim();
     if(!topic){ $('ai-slides-status').textContent = 'Escreva o tema da apresentação primeiro.'; return; }
-    var themeQuery = $('ai-slides-theme').value.trim() || 'moderno';
+    var themeQuery = $('ai-slides-theme').value || 'modern';
     $('ai-slides-generate-btn').disabled = true;
     $('ai-slides-status').textContent = 'Gerando apresentação... isso pode levar até um minuto.';
     $('ai-slides-result').hidden = true;

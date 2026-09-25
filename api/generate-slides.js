@@ -7,6 +7,41 @@
 //   3. Faça um novo deploy (ou "Redeploy") para a variável entrar em vigor.
 // Sem essa variável configurada, este endpoint responde com erro 500 e o site
 // mostra um aviso amigável — ele nunca expõe a chave de volta pro navegador.
+//
+// A busca de temas da 2slides.com funciona por palavra-chave em inglês, então o
+// site manda uma dessas chaves prontas (escolhida num menu, não digitada pela
+// professora) e, se não encontrar nada, tentamos mais algumas alternativas
+// conhecidas antes de desistir — assim a professora nunca precisa "adivinhar"
+// um termo que funcione.
+var THEME_FALLBACK_CHAIN = ['modern', 'business', 'professional', 'clean', 'minimal', 'simple', 'creative', 'education'];
+
+async function findThemeId(apiKey, preferredQuery) {
+  var tried = {};
+  var candidates = [preferredQuery].concat(THEME_FALLBACK_CHAIN).filter(function (q) {
+    if (!q) return false;
+    var key = q.toLowerCase();
+    if (tried[key]) return false;
+    tried[key] = true;
+    return true;
+  });
+
+  for (var i = 0; i < candidates.length; i++) {
+    var q = candidates[i];
+    try {
+      var resp = await fetch(
+        'https://2slides.com/api/v1/themes/search?query=' + encodeURIComponent(q) + '&limit=1',
+        { headers: { 'Authorization': 'Bearer ' + apiKey } }
+      );
+      var data = await resp.json().catch(function () { return null; });
+      if (resp.ok && data && data.success && data.data && data.data.themes && data.data.themes.length) {
+        return data.data.themes[0].id;
+      }
+    } catch (e) {
+      // tenta o próximo candidato
+    }
+  }
+  return null;
+}
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -22,7 +57,7 @@ export default async function handler(req, res) {
 
   var body = req.body || {};
   var topic = (body.topic || '').toString().trim();
-  var themeQuery = (body.themeQuery || 'moderno').toString().trim() || 'moderno';
+  var themeQuery = (body.themeQuery || 'modern').toString().trim() || 'modern';
   var language = (body.language || 'pt-BR').toString().trim() || 'pt-BR';
 
   if (!topic) {
@@ -31,18 +66,13 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 1) Busca um tema visual disponível na 2slides.com (endpoint gratuito).
-    var themeResp = await fetch(
-      'https://2slides.com/api/v1/themes/search?query=' + encodeURIComponent(themeQuery) + '&limit=1',
-      { headers: { 'Authorization': 'Bearer ' + apiKey } }
-    );
-    var themeData = await themeResp.json().catch(function () { return null; });
-
-    if (!themeResp.ok || !themeData || !themeData.success || !themeData.data || !themeData.data.themes || !themeData.data.themes.length) {
-      res.status(502).json({ error: 'Não foi possível encontrar um tema de slides na 2slides.com para "' + themeQuery + '".' });
+    // 1) Busca um tema visual disponível na 2slides.com (endpoint gratuito),
+    // tentando alternativas conhecidas se a preferida não existir.
+    var themeId = await findThemeId(apiKey, themeQuery);
+    if (!themeId) {
+      res.status(502).json({ error: 'Não foi possível encontrar nenhum tema visual disponível na 2slides.com no momento. Tente novamente em instantes.' });
       return;
     }
-    var themeId = themeData.data.themes[0].id;
 
     // 2) Gera a apresentação (modo síncrono — resposta já vem com o link pronto).
     var genResp = await fetch('https://2slides.com/api/v1/slides/generate', {
