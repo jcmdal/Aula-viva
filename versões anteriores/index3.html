@@ -1,3 +1,8 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Aula Viva</title>
 <style>
   :root{
@@ -135,18 +140,18 @@
   .setup-grid > .field{ border-bottom:.5px solid var(--line); }
   .card > .field:last-child, .setup-grid > .field:last-child{ border-bottom:none; padding-bottom:0; }
   .field > span{ font-size:.92rem; font-weight:400; color:var(--ink); flex:0 0 auto; }
-  input[type="text"], input[type="number"], input[type="datetime-local"], select, textarea{
+  input[type="text"], input[type="number"], select, textarea{
     font:inherit; font-size:.95rem; color:var(--ink); background:var(--surface-2); border:none;
     border-radius:var(--radius-sm); padding:9px 11px; width:100%;
     transition:box-shadow .12s var(--ease-out); }
-  input[type="text"]:focus, input[type="number"]:focus, input[type="datetime-local"]:focus, select:focus, textarea:focus{
+  input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:focus{
     outline:none; box-shadow:0 0 0 3px var(--accent-soft); }
   textarea{ min-height:68px; resize:vertical; }
-  .field input[type="text"], .field input[type="number"], .field input[type="datetime-local"], .field select{
+  .field input[type="text"], .field input[type="number"], .field select{
     flex:1 1 auto; min-width:0; text-align:right; background:transparent; border:none; border-radius:0;
     padding:0; color:var(--ink-soft); font-size:.92rem; }
   .field input[type="text"]::placeholder, .field input[type="number"]::placeholder{ color:var(--ink-tertiary); text-align:right; }
-  .field input[type="text"]:focus, .field input[type="number"]:focus, .field input[type="datetime-local"]:focus, .field select:focus{ box-shadow:none; color:var(--accent); }
+  .field input[type="text"]:focus, .field input[type="number"]:focus, .field select:focus{ box-shadow:none; color:var(--accent); }
   .field select{ appearance:none; -webkit-appearance:none; cursor:pointer; }
   .field:has(textarea){ flex-direction:column; align-items:stretch; gap:6px; }
   .field:has(textarea) > span{ font-size:.76rem; font-weight:600; color:var(--ink-soft); }
@@ -206,36 +211,16 @@
   .tool-preset-icon svg{ width:100%; height:100%; }
   #tool-custom-form{ margin-top:10px; padding-top:4px; }
   #tools-list .group-row{ gap:10px; }
-  /* Botão de ferramentas (Ao vivo): FAB + menu radial, no lugar do antigo card de atalhos */
-  .fab-tools{ right:16px; bottom:calc(190px + env(safe-area-inset-bottom,0px)); }
-  .fab-tools[hidden]{ display:none; }
-  .overlay-backdrop.tools-radial-backdrop{ background:rgba(20,20,22,.72); }
-  .tools-radial-circle{ position:relative; width:300px; height:300px; max-width:88vw; max-height:88vw; border-radius:50%;
-    background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.14);
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.04); }
-  @keyframes radialPopIn{ from{ opacity:0; transform:scale(.55); } to{ opacity:1; transform:scale(1); } }
-  @keyframes radialPopOut{ from{ opacity:1; transform:scale(1); } to{ opacity:0; transform:scale(.7); } }
-  .tools-radial-backdrop.entering .tools-radial-circle{ animation:radialPopIn var(--dur-modal-in) var(--ease-out); }
-  .tools-radial-backdrop.leaving .tools-radial-circle{ animation:radialPopOut var(--dur-modal-out) var(--ease-out) forwards; }
-  @media (prefers-reduced-motion: reduce){
-    .tools-radial-backdrop.entering .tools-radial-circle, .tools-radial-backdrop.leaving .tools-radial-circle{ animation:none; }
-  }
-  .tools-radial-close{ position:absolute; top:50%; left:50%; margin:-26px 0 0 -26px; width:52px; height:52px; border-radius:50%;
-    background:#fff; color:#141414; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center;
-    transition:transform .1s var(--ease-out); }
-  .tools-radial-close svg{ width:22px; height:22px; }
-  .tools-radial-close:active{ transform:scale(.9); }
-  .tools-radial-item{ position:absolute; top:50%; left:50%; margin:-37px 0 0 -37px; }
-  .tools-radial-link{ width:74px; height:74px; border-radius:50%; display:flex; flex-direction:column; align-items:center;
-    justify-content:center; gap:4px; text-decoration:none; color:#fff;
-    transition:background-color .15s var(--ease-out), color .15s var(--ease-out), transform .1s var(--ease-out); }
-  @media (hover:hover) and (pointer:fine){ .tools-radial-link:hover{ background:#fff; color:#141414; } }
-  .tools-radial-link:focus-visible{ background:#fff; color:#141414; outline:none; }
-  .tools-radial-link:active{ transform:scale(.92); }
-  .tools-radial-icon{ width:22px; height:22px; display:flex; }
-  .tools-radial-icon svg{ width:22px; height:22px; }
-  .tools-radial-label{ font-size:.66rem; font-weight:600; text-align:center; max-width:68px; overflow:hidden;
-    text-overflow:ellipsis; white-space:nowrap; }
+  .tools-card{ padding:12px 16px; }
+  .tools-bar{ display:flex; gap:10px; overflow-x:auto; padding-bottom:2px; -webkit-overflow-scrolling:touch; }
+  .tool-tile{ flex:0 0 auto; display:flex; flex-direction:column; align-items:center; gap:5px; width:66px;
+    text-decoration:none; color:var(--ink); transition:transform .1s var(--ease-out), opacity .1s var(--ease-out); }
+  .tool-tile:active{ transform:scale(.93); opacity:.75; }
+  .tool-tile-icon{ width:42px; height:42px; border-radius:13px; background:var(--accent-soft); color:var(--accent);
+    display:flex; align-items:center; justify-content:center; }
+  .tool-tile-icon svg{ width:22px; height:22px; }
+  .tool-tile-label{ font-size:.66rem; text-align:center; line-height:1.15; overflow:hidden; text-overflow:ellipsis;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
   .btn{ border:none; border-radius:var(--radius-sm); padding:10px 16px; font:600 .87rem inherit; cursor:pointer;
     transition:transform .1s var(--ease-out), opacity .1s var(--ease-out), filter .1s var(--ease-out); }
   .btn-primary{ background:var(--accent); color:#fff; }
@@ -439,7 +424,7 @@
   .doc-empty{ padding:32px 16px; text-align:center; color:var(--ink-soft); font-size:.88rem; line-height:1.5; }
 
   /* Camada de acessibilidade: ajuda flutuante, glossário, onboarding */
-  .fab-help, .fab-noise, .fab-scribble, .fab-tools, .fab-lesson{ position:fixed; z-index:30; width:48px; height:48px;
+  .fab-help, .fab-noise, .fab-scribble{ position:fixed; z-index:30; width:48px; height:48px;
     border-radius:50%; background:var(--accent); color:#fff; border:none; cursor:pointer;
     display:flex; align-items:center; justify-content:center;
     box-shadow:0 3px 10px rgba(0,0,0,.22);
@@ -447,11 +432,9 @@
   .fab-help{ right:16px; bottom:calc(16px + env(safe-area-inset-bottom,0px)); font:700 1.05rem inherit; }
   .fab-noise{ right:16px; bottom:calc(74px + env(safe-area-inset-bottom,0px)); }
   .fab-scribble{ right:16px; bottom:calc(132px + env(safe-area-inset-bottom,0px)); }
-  .fab-lesson{ right:16px; bottom:calc(248px + env(safe-area-inset-bottom,0px)); }
-  .fab-lesson[hidden]{ display:none; }
-  .fab-help:active, .fab-noise:active, .fab-scribble:active, .fab-tools:active, .fab-lesson:active{ transform:scale(.93); opacity:.85; }
+  .fab-help:active, .fab-noise:active, .fab-scribble:active{ transform:scale(.93); opacity:.85; }
   .fab-noise[hidden], .fab-scribble[hidden]{ display:none; }
-  .fab-help svg, .fab-noise svg, .fab-scribble svg, .fab-tools svg, .fab-lesson svg{ width:22px; height:22px; }
+  .fab-help svg, .fab-noise svg, .fab-scribble svg{ width:22px; height:22px; }
   .fab-noise.ok{ background:var(--green); }
   .fab-noise.mid{ background:var(--gold); color:#3a2e00; }
   .fab-noise.high{ background:var(--red); animation:pulse 1s ease-in-out infinite; }
@@ -531,162 +514,6 @@
   .onboard-nav{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:18px; }
   .link-btn{ border:none; background:transparent; color:var(--accent); font:600 .85rem inherit; cursor:pointer; padding:8px; }
   @media (hover:hover) and (pointer:fine){ .link-btn:hover{ opacity:.7; } }
-
-  /* ---- Calendário (aulas e reuniões) ---- */
-  .cal-toolbar-card{ padding:14px 16px; display:flex; flex-direction:column; gap:12px; }
-  .cal-toolbar{ display:flex; align-items:center; gap:10px 14px; flex-wrap:wrap; }
-  .cal-nav{ display:flex; align-items:center; gap:6px; }
-  .cal-title{ font-weight:650; font-size:1rem; color:var(--ink); margin-left:4px; white-space:nowrap; }
-  .cal-seg{ display:flex; gap:2px; background:var(--surface-2); border-radius:10px; padding:2px; }
-  .cal-seg-btn{ border:none; background:transparent; color:var(--ink-soft); font:600 .78rem inherit; padding:7px 11px;
-    border-radius:8px; cursor:pointer; transition:background-color .12s var(--ease-out), color .12s var(--ease-out); }
-  .cal-seg-btn.active{ background:var(--surface); color:var(--accent); box-shadow:var(--shadow); }
-  .cal-filter-row{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
-  .cal-color-dot{ width:22px; height:22px; border-radius:50%; border:2px solid transparent; cursor:pointer; padding:0;
-    transition:transform .1s var(--ease-out); }
-  .cal-color-dot.active{ box-shadow:0 0 0 2px var(--surface), 0 0 0 4px var(--ink-tertiary); }
-  .cal-color-dot:active{ transform:scale(.9); }
-  .cal-cat-chip{ border:none; background:var(--surface-2); color:var(--ink-soft); font-size:.76rem; font-weight:600;
-    padding:6px 12px; border-radius:999px; cursor:pointer; transition:background-color .12s var(--ease-out), color .12s var(--ease-out); }
-  .cal-cat-chip.active{ background:var(--accent-soft); color:var(--accent-deep); }
-  .cal-view-card{ padding:0; overflow:hidden; }
-  .cal-color-row{ display:flex; flex-wrap:wrap; gap:8px; }
-  .cal-color-row .cal-color-dot{ width:26px; height:26px; }
-
-  /* Mês */
-  .cal-month-head{ display:grid; grid-template-columns:repeat(7,1fr); border-bottom:.5px solid var(--line); }
-  .cal-month-head span{ padding:8px 4px; text-align:center; font-size:.66rem; font-weight:700; text-transform:uppercase;
-    letter-spacing:.04em; color:var(--ink-tertiary); }
-  .cal-month-grid{ display:grid; grid-template-columns:repeat(7,1fr); }
-  .cal-day-cell{ min-height:64px; border-bottom:.5px solid var(--line); border-right:.5px solid var(--line); padding:4px;
-    position:relative; cursor:pointer; transition:background-color .12s var(--ease-out); }
-  .cal-month-grid .cal-day-cell:nth-child(7n){ border-right:none; }
-  @media (hover:hover) and (pointer:fine){ .cal-day-cell:hover{ background:var(--surface-2); } }
-  .cal-day-cell.other-month{ opacity:.4; }
-  .cal-day-num{ display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:50%;
-    font-size:.78rem; color:var(--ink); }
-  .cal-day-cell.today .cal-day-num{ background:var(--accent); color:#fff; font-weight:700; }
-  .cal-day-events{ display:flex; flex-direction:column; gap:2px; margin-top:3px; }
-  .cal-pill{ display:block; font-size:.64rem; font-weight:600; color:#fff; padding:2px 5px; border-radius:5px;
-    overflow:hidden; text-overflow:ellipsis; white-space:nowrap; cursor:grab; }
-  .cal-pill-more{ font-size:.62rem; color:var(--ink-soft); padding:1px 5px; }
-
-  /* Semana / dia */
-  .cal-week-grid{ display:grid; grid-template-columns:52px repeat(7,1fr); }
-  .cal-day-grid{ display:grid; grid-template-columns:52px 1fr; }
-  .cal-time-head{ border-bottom:.5px solid var(--line); }
-  .cal-week-head{ display:grid; grid-template-columns:52px repeat(7,1fr); border-bottom:.5px solid var(--line); position:sticky; top:0; background:var(--surface); z-index:2; }
-  .cal-week-head-cell{ padding:8px 4px; text-align:center; }
-  .cal-week-head-cell .wd{ font-size:.64rem; font-weight:700; text-transform:uppercase; color:var(--ink-tertiary); }
-  .cal-week-head-cell .dn{ font-size:.82rem; font-weight:650; color:var(--ink); margin-top:1px; }
-  .cal-week-head-cell.today .dn{ color:var(--accent); }
-  .cal-hour-label{ font-size:.64rem; color:var(--ink-tertiary); padding:3px 6px 0 0; text-align:right;
-    border-right:.5px solid var(--line); border-bottom:.5px solid var(--line); }
-  .cal-slot{ min-height:46px; border-bottom:.5px solid var(--line); border-right:.5px solid var(--line); padding:2px;
-    position:relative; transition:background-color .12s var(--ease-out); }
-  .cal-week-grid .cal-slot:nth-child(8n){ border-right:none; }
-  @media (hover:hover) and (pointer:fine){ .cal-slot:hover{ background:var(--surface-2); } }
-  .cal-event-block{ display:block; border-radius:6px; padding:3px 7px; font-size:.7rem; font-weight:600; color:#fff;
-    cursor:grab; margin-bottom:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .cal-scroll{ max-height:60vh; overflow-y:auto; }
-
-  /* Lista */
-  .cal-list{ padding:12px 16px; }
-  .cal-list-group{ margin-bottom:16px; }
-  .cal-list-date{ font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-tertiary);
-    margin-bottom:6px; }
-  .cal-list-item{ display:flex; align-items:flex-start; gap:10px; padding:9px 0; border-bottom:.5px solid var(--line); cursor:pointer; }
-  .cal-list-item:last-child{ border-bottom:none; }
-  .cal-list-dot{ width:9px; height:9px; border-radius:50%; margin-top:4px; flex:0 0 auto; }
-  .cal-list-title{ font-weight:600; font-size:.9rem; color:var(--ink); }
-  .cal-list-meta{ font-size:.76rem; color:var(--ink-soft); margin-top:1px; }
-  .cal-empty{ padding:32px 16px; text-align:center; color:var(--ink-soft); font-size:.88rem; }
-
-  /* ---- Lições interativas ---- */
-  .sheet-wide{ max-width:640px; }
-  .lessons-grid{ display:flex; flex-direction:column; gap:2px; margin-top:12px; }
-  .lesson-card{ display:flex; align-items:flex-start; gap:12px; padding:12px 2px; border-bottom:.5px solid var(--line); }
-  .lessons-grid .lesson-card:last-child{ border-bottom:none; }
-  .lesson-card-icon{ flex:0 0 auto; width:36px; height:36px; border-radius:10px; background:var(--accent-soft); color:var(--accent);
-    display:flex; align-items:center; justify-content:center; }
-  .lesson-card-icon svg{ width:18px; height:18px; }
-  .lesson-card-main{ flex:1; min-width:0; }
-  .lesson-card-title{ font-weight:650; font-size:.94rem; color:var(--ink); }
-  .lesson-card-obj{ font-size:.8rem; color:var(--ink-soft); margin-top:2px; overflow:hidden; text-overflow:ellipsis;
-    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
-  .lesson-card-meta{ display:flex; gap:10px; flex-wrap:wrap; margin-top:6px; }
-  .lesson-card-tag{ font-size:.68rem; font-weight:600; color:var(--ink-tertiary); background:var(--surface-2); padding:3px 8px; border-radius:999px; }
-  .lesson-card-actions{ display:flex; flex-direction:column; gap:6px; flex:0 0 auto; align-items:stretch; }
-  .lessons-empty{ padding:24px 4px; text-align:center; color:var(--ink-soft); font-size:.87rem; }
-
-  /* ---- Apresentação com IA (2slides.com, via proxy no servidor) ---- */
-  .ai-slides-result-box{ background:var(--surface-2); border-radius:var(--radius-sm); padding:12px 14px;
-    display:flex; flex-direction:column; gap:8px; margin-top:10px; font-size:.87rem; color:var(--ink); }
-  .ai-slides-result-box a{ color:var(--accent); font-weight:600; text-decoration:none; }
-  @media (hover:hover) and (pointer:fine){ .ai-slides-result-box a:hover{ text-decoration:underline; } }
-  .ai-slides-result-box a:active{ opacity:.7; }
-
-  .lesson-editor-section{ margin-top:16px; padding-top:14px; border-top:.5px solid var(--line); }
-  .lesson-editor-section-head{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:2px; }
-  .lesson-fonte-row{ display:flex; gap:8px; align-items:center; padding:7px 0; border-bottom:.5px solid var(--line); }
-  #lesson-fontes-list .lesson-fonte-row:last-child{ border-bottom:none; }
-  .lesson-fonte-row input[type="text"]{ background:var(--surface-2); border-radius:8px; padding:8px 10px; }
-  .lesson-fonte-row .lesson-fonte-titulo{ flex:1 1 40%; }
-  .lesson-fonte-row .lesson-fonte-url{ flex:1 1 50%; }
-  .lesson-block{ background:var(--surface-2); border-radius:var(--radius-sm); padding:11px 12px; margin-top:10px; }
-  .lesson-block-head{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px; }
-  .lesson-block-num{ font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-tertiary); }
-  .lesson-block input[type="text"], .lesson-block textarea{ background:var(--surface); }
-  .lesson-block textarea{ min-height:64px; }
-  .lesson-quiz-opts{ display:flex; flex-direction:column; gap:6px; margin-top:8px; }
-  .lesson-opt-row{ display:flex; align-items:center; gap:8px; }
-  .lesson-opt-row input[type="radio"]{ flex:0 0 auto; width:17px; height:17px; accent-color:var(--green); cursor:pointer; }
-  .lesson-opt-row input[type="text"]{ flex:1; background:var(--surface); border-radius:8px; padding:7px 9px; font-size:.87rem; }
-
-  .learning-records-list{ display:flex; flex-direction:column; gap:2px; margin-top:8px; }
-  .record-row{ display:flex; align-items:flex-start; gap:10px; padding:9px 0; border-bottom:.5px solid var(--line); }
-  .learning-records-list .record-row:last-child{ border-bottom:none; }
-  .record-score{ flex:0 0 auto; min-width:46px; text-align:center; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-weight:700;
-    font-size:.8rem; color:#fff; background:var(--green); border-radius:8px; padding:5px 6px; }
-  .record-score.no-score{ background:var(--ink-tertiary); }
-  .record-main{ flex:1; min-width:0; }
-  .record-title{ font-weight:600; font-size:.87rem; color:var(--ink); }
-  .record-meta{ font-size:.74rem; color:var(--ink-soft); margin-top:1px; }
-  .record-note{ font-size:.83rem; color:var(--ink); margin-top:3px; }
-  .record-remove{ flex:0 0 auto; border:none; background:none; color:var(--ink-tertiary); font-size:1rem; cursor:pointer; padding:2px 4px; }
-  .record-note-form{ margin-top:12px; padding-top:12px; border-top:.5px solid var(--line); display:flex; flex-direction:column; gap:8px; }
-  .record-note-form select, .record-note-form textarea{ background:var(--surface-2); }
-  .record-note-form textarea{ min-height:56px; }
-  .records-empty{ padding:16px 4px; color:var(--ink-soft); font-size:.85rem; }
-
-  /* Modo apresentação da lição */
-  .lesson-player .sheet-head{ margin-bottom:6px; }
-  .lesson-player-dots{ display:flex; gap:5px; justify-content:center; margin-bottom:14px; flex-wrap:wrap; }
-  .lesson-player-dots .dot{ width:7px; height:7px; }
-  .lesson-player-dots .dot.quiz{ border-radius:2px; }
-  .lesson-player-body{ min-height:180px; }
-  .player-section-title{ font-weight:650; font-size:1.05rem; margin:0 0 10px; color:var(--ink); }
-  .player-section-content{ font-size:.96rem; line-height:1.6; color:var(--ink); white-space:pre-wrap; }
-  .player-quiz-question{ font-weight:650; font-size:1.02rem; margin:0 0 14px; color:var(--ink); }
-  .player-quiz-opts{ display:flex; flex-direction:column; gap:9px; }
-  .player-quiz-opt{ text-align:left; border:1.5px solid var(--line); background:var(--surface); color:var(--ink); border-radius:var(--radius-sm);
-    padding:11px 14px; font-size:.92rem; cursor:pointer; transition:border-color .12s var(--ease-out), background-color .12s var(--ease-out); }
-  @media (hover:hover) and (pointer:fine){ .player-quiz-opt:not([disabled]):hover{ border-color:var(--accent); } }
-  .player-quiz-opt:active{ transform:scale(.99); }
-  .player-quiz-opt.correct{ border-color:var(--green); background:var(--green-soft); color:var(--green); font-weight:600; }
-  .player-quiz-opt.wrong{ border-color:var(--red); background:var(--red-soft); color:var(--red); }
-  .player-quiz-feedback{ margin-top:12px; font-size:.87rem; font-weight:600; }
-  .player-quiz-feedback.ok{ color:var(--green); }
-  .player-quiz-feedback.no{ color:var(--red); }
-  .player-summary{ text-align:center; padding:12px 0; }
-  .player-summary-score{ font-family:ui-monospace,'SF Mono',Menlo,monospace; font-weight:700; font-size:2.2rem; color:var(--accent); }
-  .player-summary-label{ font-size:.82rem; color:var(--ink-soft); margin-top:2px; }
-  .player-sources{ margin-top:18px; text-align:left; background:var(--surface-2); border-radius:var(--radius-sm); padding:12px 14px; }
-  .player-sources-title{ font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-tertiary); margin-bottom:6px; }
-  .player-source-link{ display:block; font-size:.85rem; color:var(--accent); text-decoration:none; padding:2px 0; }
-  .lesson-player-nav{ display:flex; justify-content:space-between; gap:10px; margin-top:16px; }
-  .lesson-player-nav[hidden]{ display:none; }
-
   @media print{
     .no-print{ display:none !important; }
     .sidebar, .sidebar-scrim{ display:none !important; }
@@ -698,7 +525,8 @@
     .brand-name{ color:#000; }
   }
 </style>
-
+</head>
+<body>
 <div class="app">
   <aside class="sidebar no-print" id="sidebar">
     <div class="sidebar-brand">
@@ -726,19 +554,11 @@
         <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></span>
         <span class="tab-label">Documentos</span>
       </button>
-      <button class="tab" data-tab="calendar">
-        <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></span>
-        <span class="tab-label">Calendário</span>
-      </button>
-      <button class="tab" data-tab="lessons">
-        <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg></span>
-        <span class="tab-label">Lições</span>
-      </button>
     </nav>
     <div class="sidebar-foot">
       <div class="sidebar-tip">
         <strong>Dica rápida</strong>
-        <p>Toque no botão de ferramentas (⊞) no "Ao vivo" pra abrir seus links da aula sem sair da tela.</p>
+        <p>Abra "Ao vivo" pra ter suas ferramentas de apoio prontas na tela, sem sair da aula.</p>
       </div>
     </div>
   </aside>
@@ -849,6 +669,10 @@
 
     <!-- LIVE -->
     <section class="view" data-view="live" hidden>
+      <div class="card tools-card no-print" id="live-tools-card" hidden>
+        <div class="tools-bar" id="tools-bar"></div>
+      </div>
+
       <div class="card live-head">
         <div class="live-subtitle" id="live-subtitle"></div>
         <div id="stage-info-wrap">
@@ -952,67 +776,6 @@
           <div class="doc-list" id="folder-stage"></div>
         </div>
       </div>
-
-      <div class="card" id="ai-slides-card">
-        <h2>Apresentação com IA<button type="button" class="help-btn" data-help="ai-slides" aria-label="Como funciona a apresentação com IA?">?</button></h2>
-        <p class="hint">Gere um arquivo de slides automaticamente a partir de um tema, usando a 2slides.com. Disponível só na versão publicada no Vercel.</p>
-        <div class="btn-row" style="margin-top:0;"><button type="button" class="btn btn-primary btn-sm" id="ai-slides-open-btn">+ Gerar apresentação</button></div>
-      </div>
-    </section>
-
-    <!-- CALENDÁRIO -->
-    <section class="view" data-view="calendar" hidden>
-      <div class="card cal-toolbar-card">
-        <div class="cal-toolbar">
-          <div class="cal-nav">
-            <button type="button" class="icon-btn" id="cal-prev" aria-label="Período anterior">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-            </button>
-            <button type="button" class="btn btn-ghost btn-sm" id="cal-today-btn">Hoje</button>
-            <button type="button" class="icon-btn" id="cal-next" aria-label="Próximo período">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-            </button>
-            <span class="cal-title" id="cal-title"></span>
-          </div>
-          <div class="cal-seg" id="cal-seg">
-            <button type="button" class="cal-seg-btn active" data-calview="month">Mês</button>
-            <button type="button" class="cal-seg-btn" data-calview="week">Semana</button>
-            <button type="button" class="cal-seg-btn" data-calview="day">Dia</button>
-            <button type="button" class="cal-seg-btn" data-calview="list">Lista</button>
-          </div>
-          <button type="button" class="btn btn-primary btn-sm" id="cal-new-btn">+ Novo evento</button>
-        </div>
-        <div class="cal-filter-row" id="cal-filter-colors"></div>
-        <div class="cal-filter-row" id="cal-filter-cats"></div>
-      </div>
-
-      <div class="card cal-view-card">
-        <div id="cal-month-view"></div>
-        <div id="cal-week-view" hidden></div>
-        <div id="cal-day-view" hidden></div>
-        <div id="cal-list-view" hidden></div>
-      </div>
-    </section>
-
-    <!-- LIÇÕES INTERATIVAS -->
-    <section class="view" data-view="lessons" hidden>
-      <div class="card">
-        <h2>Lições interativas<button type="button" class="help-btn" data-help="licoes" aria-label="Como funcionam as lições interativas?">?</button></h2>
-        <p class="hint">Monte uma lição curta com conteúdo, fontes e um quiz de verificação — depois conduza com a turma no modo apresentação, com o quiz funcionando como checagem de verdade, não só decoração.</p>
-        <div class="btn-row" style="margin-top:0;"><button type="button" class="btn btn-primary btn-sm" id="lesson-new-btn">+ Nova lição</button></div>
-        <div class="lessons-grid" id="lessons-grid"></div>
-      </div>
-
-      <div class="card">
-        <h2>Registro de aprendizagem<button type="button" class="help-btn" data-help="registro-aprendizagem" aria-label="O que é o registro de aprendizagem?">?</button></h2>
-        <p class="hint">O que a turma já demonstrou saber, pra te ajudar a decidir o que ensinar na próxima aula — evita repetir o que já foi dominado.</p>
-        <div class="learning-records-list" id="learning-records-list"></div>
-        <div class="record-note-form">
-          <select id="record-note-lesson"></select>
-          <textarea id="record-note-text" placeholder="Anote uma observação sobre o que a turma já domina ou ainda precisa reforçar…"></textarea>
-          <div class="btn-row" style="margin-top:8px;"><button type="button" class="btn btn-ghost btn-sm" id="record-note-add">+ Registrar observação</button></div>
-        </div>
-      </div>
     </section>
   </main>
   </div>
@@ -1028,54 +791,6 @@
   <button type="button" class="fab-scribble no-print" id="fab-scribble-btn" hidden title="Bloco de anotações" aria-label="Abrir bloco de anotações">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path></svg>
   </button>
-
-  <button type="button" class="fab-tools no-print" id="fab-tools-btn" hidden title="Ferramentas e sites da aula" aria-label="Abrir ferramentas e sites da aula">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg>
-  </button>
-
-  <button type="button" class="fab-lesson no-print" id="fab-lesson-btn" hidden title="Iniciar lição interativa" aria-label="Iniciar lição interativa com a turma">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-  </button>
-
-  <div class="overlay-backdrop no-print" id="lesson-picker-backdrop" hidden aria-modal="true">
-    <div class="sheet" role="dialog" aria-labelledby="lesson-picker-title">
-      <div class="sheet-head">
-        <h3 class="sheet-title" id="lesson-picker-title">Iniciar lição com a turma</h3>
-        <button type="button" class="sheet-close" id="lesson-picker-close" aria-label="Fechar">×</button>
-      </div>
-      <div class="doc-list" id="lesson-picker-list"></div>
-    </div>
-  </div>
-
-  <div class="overlay-backdrop center no-print" id="ai-slides-backdrop" hidden aria-modal="true">
-    <div class="sheet" role="dialog" aria-labelledby="ai-slides-title">
-      <div class="sheet-head">
-        <h3 class="sheet-title" id="ai-slides-title">Gerar apresentação com IA<button type="button" class="help-btn" data-help="ai-slides" aria-label="Como funciona a apresentação com IA?">?</button></h3>
-        <button type="button" class="sheet-close" id="ai-slides-close" aria-label="Fechar">×</button>
-      </div>
-      <div class="field" style="flex-direction:column;align-items:stretch;gap:6px;">
-        <span>Tema / conteúdo da apresentação</span>
-        <textarea id="ai-slides-topic" placeholder="Ex.: Introdução à robótica educacional para o 6º ano, com exemplos de sensores e atuadores"></textarea>
-      </div>
-      <div class="field">
-        <span>Estilo visual (opcional)</span>
-        <input type="text" id="ai-slides-theme" placeholder="ex.: moderno, colorido, infantil">
-      </div>
-      <div class="hint" id="ai-slides-status" style="margin:4px 0 0;"></div>
-      <div id="ai-slides-result" hidden></div>
-      <div class="btn-row">
-        <button type="button" class="btn btn-primary" id="ai-slides-generate-btn">Gerar</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="overlay-backdrop center tools-radial-backdrop no-print" id="tools-radial-backdrop" hidden aria-modal="true">
-    <div class="tools-radial-circle" id="tools-radial-circle">
-      <button type="button" class="tools-radial-close" id="tools-radial-close" aria-label="Fechar">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-      </button>
-    </div>
-  </div>
 
   <div class="overlay-backdrop center no-print" id="noise-backdrop" hidden aria-modal="true">
     <div class="sheet" role="dialog" aria-labelledby="noise-sheet-title">
@@ -1170,93 +885,6 @@
       </div>
     </div>
   </div>
-
-  <div class="overlay-backdrop center no-print" id="event-editor-backdrop" hidden aria-modal="true">
-    <div class="sheet" role="dialog" aria-labelledby="event-editor-title">
-      <div class="sheet-head">
-        <h3 class="sheet-title" id="event-editor-title">Novo evento</h3>
-        <button type="button" class="sheet-close" id="event-editor-close" aria-label="Fechar">×</button>
-      </div>
-      <label class="field"><span>Título</span><input type="text" id="event-titulo" placeholder="Ex.: Reunião de pais — 7º A"></label>
-      <div class="setup-grid">
-        <label class="field"><span>Início</span><input type="datetime-local" id="event-inicio"></label>
-        <label class="field"><span>Fim</span><input type="datetime-local" id="event-fim"></label>
-        <label class="field"><span>Categoria</span>
-          <select id="event-categoria"></select>
-        </label>
-      </div>
-      <div class="field" style="flex-direction:column; align-items:stretch; gap:8px; margin-top:6px;">
-        <span>Cor</span>
-        <div class="cal-color-row" id="event-color-row"></div>
-      </div>
-      <label class="field" style="margin-top:12px;"><span>Descrição</span>
-        <textarea id="event-descricao" placeholder="Detalhes opcionais…"></textarea>
-      </label>
-      <div class="btn-row">
-        <button type="button" class="btn btn-primary" id="event-save">Salvar</button>
-        <button type="button" class="btn btn-danger" id="event-delete">Excluir</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="overlay-backdrop center no-print" id="lesson-editor-backdrop" hidden aria-modal="true">
-    <div class="sheet sheet-wide" role="dialog" aria-labelledby="lesson-editor-title">
-      <div class="sheet-head">
-        <h3 class="sheet-title" id="lesson-editor-title">Nova lição</h3>
-        <button type="button" class="sheet-close" id="lesson-editor-close" aria-label="Fechar">×</button>
-      </div>
-      <label class="field"><span>Título</span><input type="text" id="lesson-titulo" placeholder="Ex.: Cadeia alimentar da mata atlântica"></label>
-      <label class="field" style="flex-direction:column; align-items:stretch; gap:6px; margin-top:6px;"><span>Objetivo da lição</span>
-        <textarea id="lesson-objetivo" placeholder="Por que a turma precisa saber isso — o que ela vai conseguir fazer depois?"></textarea>
-      </label>
-
-      <div class="lesson-editor-section">
-        <div class="lesson-editor-section-head">
-          <span class="section-title" style="margin:0;">Fontes</span>
-          <button type="button" class="btn btn-ghost btn-sm" id="lesson-fonte-add-btn">+ Adicionar fonte</button>
-        </div>
-        <p class="hint" style="margin:0 0 8px;">De onde vem o conteúdo — aparece pra turma no fim da lição.</p>
-        <div id="lesson-fontes-list"></div>
-      </div>
-
-      <div class="lesson-editor-section">
-        <div class="lesson-editor-section-head">
-          <span class="section-title" style="margin:0;">Seções de conteúdo</span>
-          <button type="button" class="btn btn-ghost btn-sm" id="lesson-section-add-btn">+ Adicionar seção</button>
-        </div>
-        <div id="lesson-sections-list"></div>
-      </div>
-
-      <div class="lesson-editor-section">
-        <div class="lesson-editor-section-head">
-          <span class="section-title" style="margin:0;">Quiz de verificação</span>
-          <button type="button" class="btn btn-ghost btn-sm" id="lesson-quiz-add-btn">+ Adicionar pergunta</button>
-        </div>
-        <p class="hint" style="margin:0 0 8px;">A turma só avança se acertar — marque a opção correta.</p>
-        <div id="lesson-quiz-list"></div>
-      </div>
-
-      <div class="btn-row">
-        <button type="button" class="btn btn-primary" id="lesson-save">Salvar lição</button>
-        <button type="button" class="btn btn-danger" id="lesson-delete">Excluir</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="overlay-backdrop center no-print" id="lesson-player-backdrop" hidden aria-modal="true">
-    <div class="sheet sheet-wide lesson-player" role="dialog" aria-labelledby="lesson-player-title">
-      <div class="sheet-head">
-        <h3 class="sheet-title" id="lesson-player-title"></h3>
-        <button type="button" class="sheet-close" id="lesson-player-close" aria-label="Fechar">×</button>
-      </div>
-      <div class="lesson-player-dots" id="lesson-player-dots"></div>
-      <div class="lesson-player-body" id="lesson-player-body"></div>
-      <div class="lesson-player-nav no-print">
-        <button type="button" class="btn btn-ghost btn-sm" id="lesson-player-back">← Voltar</button>
-        <button type="button" class="btn btn-primary" id="lesson-player-next">Avançar →</button>
-      </div>
-    </div>
-  </div>
 </div>
 
 <script>
@@ -1315,8 +943,7 @@
     producao:'Cartaz com a cadeia alimentar da região', custoPreparoMin:null,
     evidenciaFormativa:'', adaptacao:'', proximoPasso:'', rankingPublico:true,
     checklist:[], poll:{ round:1, votes1:[], votes2:[] }, docs:[], reportSavedThisClass:false,
-    currentStage:0, secondsLeft:0, timerRunning:false, timerHandle:null,
-    calendarEvents:[], lessons:[], learningRecords:[]
+    currentStage:0, secondsLeft:0, timerRunning:false, timerHandle:null
   };
 
   function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
@@ -1364,9 +991,7 @@
     setup: { title:'Configurar', sub:'Prepare a aula antes de começar' },
     live: { title:'Ao vivo', sub:'Conduza a aula em tempo real' },
     report: { title:'Relatório', sub:'Revise e feche o registro da aula' },
-    docs: { title:'Documentos', sub:'Planejamentos, relatórios e anotações' },
-    calendar: { title:'Calendário', sub:'Agende aulas, provas e reuniões' },
-    lessons: { title:'Lições', sub:'Crie e conduza lições interativas com a turma' }
+    docs: { title:'Documentos', sub:'Planejamentos, relatórios e anotações' }
   };
   function switchView(name){
     document.querySelectorAll('.view').forEach(function(v){ v.hidden = v.dataset.view !== name; });
@@ -1375,17 +1000,10 @@
     if(meta){ $('view-title').textContent = meta.title; $('view-subtitle').textContent = meta.sub; }
     $('fab-noise-btn').hidden = name !== 'live';
     $('fab-scribble-btn').hidden = name !== 'live';
-    $('fab-tools-btn').hidden = name !== 'live' || !state.liveTools.length;
-    $('fab-lesson-btn').hidden = name !== 'live' || !state.lessons.length;
     if(name !== 'live') closeNoiseOverlay();
     if(name !== 'live') closeScribbleOverlay();
-    if(name !== 'live') closeToolsRadial();
-    if(name !== 'live') closeLessonPicker();
     if(name !== 'docs' && folderOpenCat) closeFolder();
-    if(name !== 'docs') closeAiSlides();
     if(name === 'docs') renderDocsGrid();
-    if(name === 'calendar') renderCalendar();
-    if(name === 'lessons') renderLessonsView();
     closeSidebar();
   }
   function openSidebar(){ $('sidebar').classList.add('open'); $('sidebar-scrim').hidden = false; $('sidebar-toggle').setAttribute('aria-expanded', 'true'); }
@@ -1618,33 +1236,17 @@
     renderToolPresets(); renderToolsList();
   });
   function renderLiveTools(){
-    if(!state.liveTools.length) $('fab-tools-btn').hidden = true;
+    var bar = $('tools-bar');
+    var card = $('live-tools-card');
+    if(!state.liveTools.length){ card.hidden = true; bar.innerHTML = ''; return; }
+    card.hidden = false;
+    bar.innerHTML = state.liveTools.map(function(t){
+      return '<a class="tool-tile" href="' + esc(t.url) + '" target="_blank" rel="noopener">' +
+        '<span class="tool-tile-icon">' + toolIcon(t.icon) + '</span>' +
+        '<span class="tool-tile-label">' + esc(t.nome) + '</span>' +
+        '</a>';
+    }).join('');
   }
-  function renderToolsRadialItems(){
-    var circle = $('tools-radial-circle');
-    circle.querySelectorAll('.tools-radial-item').forEach(function(n){ n.remove(); });
-    var n = state.liveTools.length;
-    var radius = n > 6 ? 130 : 112;
-    state.liveTools.forEach(function(t, i){
-      var angle = (360 / n) * i;
-      var item = document.createElement('div');
-      item.className = 'tools-radial-item';
-      item.style.transform = 'rotate(' + angle + 'deg) translate(' + radius + 'px) rotate(-' + angle + 'deg)';
-      item.innerHTML = '<a class="tools-radial-link" href="' + esc(t.url) + '" target="_blank" rel="noopener">' +
-        '<span class="tools-radial-icon">' + toolIcon(t.icon) + '</span>' +
-        '<span class="tools-radial-label">' + esc(t.nome) + '</span></a>';
-      circle.appendChild(item);
-    });
-  }
-  function openToolsRadial(){
-    if(!state.liveTools.length) return;
-    renderToolsRadialItems();
-    overlayOpen($('tools-radial-backdrop'));
-  }
-  function closeToolsRadial(){ overlayClose($('tools-radial-backdrop')); }
-  $('fab-tools-btn').addEventListener('click', openToolsRadial);
-  $('tools-radial-close').addEventListener('click', closeToolsRadial);
-  $('tools-radial-backdrop').addEventListener('click', function(e){ if(e.target === this) closeToolsRadial(); });
 
   // Stages / groups delegation
   $('stages-list').addEventListener('input', function(e){
@@ -2233,12 +1835,6 @@
   function newId(){ return 'd' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
   function saveDocs(){ try{ localStorage.setItem('aulaviva_docs', JSON.stringify(state.docs)); }catch(e){} }
   function loadDocs(){ try{ var raw = localStorage.getItem('aulaviva_docs'); if(raw){ state.docs = JSON.parse(raw) || []; } }catch(e){} }
-  function saveCalendarEvents(){ try{ localStorage.setItem('aulaviva_calendar', JSON.stringify(state.calendarEvents)); }catch(e){} }
-  function loadCalendarEvents(){ try{ var raw = localStorage.getItem('aulaviva_calendar'); if(raw){ state.calendarEvents = JSON.parse(raw) || []; } }catch(e){} }
-  function saveLessons(){ try{ localStorage.setItem('aulaviva_lessons', JSON.stringify(state.lessons)); }catch(e){} }
-  function loadLessons(){ try{ var raw = localStorage.getItem('aulaviva_lessons'); if(raw){ state.lessons = JSON.parse(raw) || []; } }catch(e){} }
-  function saveLearningRecords(){ try{ localStorage.setItem('aulaviva_learning_records', JSON.stringify(state.learningRecords)); }catch(e){} }
-  function loadLearningRecords(){ try{ var raw = localStorage.getItem('aulaviva_learning_records'); if(raw){ state.learningRecords = JSON.parse(raw) || []; } }catch(e){} }
   function folderSvg(color){
     return '<svg viewBox="0 0 64 48">' +
       '<path d="M4 8a4 4 0 0 1 4-4h14l6 6h28a4 4 0 0 1 4 4v26a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4Z" fill="' + color + '"></path>' +
@@ -2483,10 +2079,6 @@
       body:'Ele usa o microfone do computador para medir o volume da sala em tempo real e mostra isso com bolinhas que saltam mais alto quanto mais alto estiver o som — parecido com o "bouncy balls" que muitos professores já usam com turmas do Fundamental 1. É uma pista visual pra ajudar a turma a se autorregular. O áudio não é gravado nem sai do seu navegador; ele só serve pra calcular o volume daquele instante, e para de ser usado assim que você desliga o microfone ou sai da tela "Ao vivo".' },
     documentos: { title:'Como funcionam os documentos?',
       body:'Cada pasta guarda um tipo de documento — planejamentos, relatórios e outros. Toque numa pasta pra ver a lista de documentos; toque num documento pra abrir e editar, ou toque em "+ Novo documento" pra criar um. Ao finalizar uma aula, um resumo dela é salvo automaticamente na pasta Relatórios. Tudo fica guardado só no seu navegador, como o resto do app.' },
-    licoes: { title:'Como funcionam as lições interativas?',
-      body:'Monte uma lição com objetivo, fontes e seções de conteúdo, mais um quiz de verificação. No modo apresentação, o quiz funciona como uma checagem de verdade: a turma só avança pra próxima etapa depois de acertar a pergunta (pode errar e tentar de novo). Na tela "Ao vivo", o botão de lição (ícone de livro) abre direto a última lição — ou a lista, se você tiver mais de uma — sem precisar trocar de aba.' },
-    'ai-slides': { title:'Como funciona a apresentação com IA?',
-      body:'Gera um arquivo de slides (.pptx) automaticamente a partir de um tema, usando o serviço 2slides.com. Essa função só funciona na versão do Aula Viva publicada no Vercel, porque depende de uma chave de API que precisa ficar guardada com segurança em um servidor — nunca dentro do site em si. No preview aqui do Claude (sem servidor), o botão avisa que não é possível gerar.' },
     scribble: { title:'Como funciona o bloco de anotações?',
       body:'É um quadro em branco pra você escrever ou desenhar à mão livre durante a aula — pra explicar algo rápido sem precisar de outro app. Escolha a cor da caneta, use a borracha se errar, e toque em "Amassar e limpar" quando quiser recomeçar do zero (a folha se amassa e some, como papel de verdade). Nada é salvo — some ao amassar ou ao fechar a aula.' }
   };
@@ -2563,701 +2155,6 @@
   $('onboard-skip').addEventListener('click', function(){ closeOnboard(true); });
   $('help-open-btn').addEventListener('click', openOnboard);
   $('onboard-backdrop').addEventListener('click', function(e){ if(e.target === this) closeOnboard(true); });
-
-  // ---- Calendário (aulas, provas e reuniões, com classificação por cor) ----
-  var CAL_COLORS = [
-    { key:'azul', nome:'Azul', varName:'--accent' },
-    { key:'laranja', nome:'Laranja', varName:'--g1' },
-    { key:'verde', nome:'Verde', varName:'--g2' },
-    { key:'vermelho', nome:'Vermelho', varName:'--g3' },
-    { key:'roxo', nome:'Roxo', varName:'--g4' },
-    { key:'celeste', nome:'Celeste', varName:'--g5' },
-    { key:'rosa', nome:'Rosa', varName:'--g6' }
-  ];
-  var CAL_CATEGORIES = ['Aula', 'Reunião', 'Avaliação', 'Planejamento', 'Outro'];
-  var CAL_HOURS = []; (function(){ for(var h = 6; h <= 21; h++) CAL_HOURS.push(h); })();
-  var calState = { date:new Date(), view:'month', filterColors:[], filterCats:[], dragId:null };
-  var eventEditorMode = null, eventEditorColor = CAL_COLORS[0].key;
-
-  function pad2(n){ return String(n).padStart(2, '0'); }
-  function calCapitalize(s){ return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
-  function calSameDay(a, b){ return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate(); }
-  function calStartOfWeek(d){ var s = new Date(d); s.setHours(0,0,0,0); s.setDate(s.getDate() - s.getDay()); return s; }
-  function calColorVar(key){ var c = CAL_COLORS.filter(function(x){ return x.key === key; })[0]; return 'var(' + (c ? c.varName : '--accent') + ')'; }
-  function toLocalInputValue(d){ return d.getFullYear() + '-' + pad2(d.getMonth()+1) + '-' + pad2(d.getDate()) + 'T' + pad2(d.getHours()) + ':' + pad2(d.getMinutes()); }
-  function fromLocalInputValue(s){ return new Date(s); }
-  function fmtHM(d){ return pad2(d.getHours()) + ':' + pad2(d.getMinutes()); }
-
-  function calFilteredEvents(){
-    return state.calendarEvents.filter(function(ev){
-      if(calState.filterColors.length && calState.filterColors.indexOf(ev.cor) === -1) return false;
-      if(calState.filterCats.length && calState.filterCats.indexOf(ev.categoria) === -1) return false;
-      return true;
-    });
-  }
-
-  function renderCalFilters(){
-    $('cal-filter-colors').innerHTML = CAL_COLORS.map(function(c){
-      var active = calState.filterColors.indexOf(c.key) !== -1;
-      return '<button type="button" class="cal-color-dot' + (active ? ' active' : '') + '" data-color="' + c.key + '" style="background:' + calColorVar(c.key) + '" title="' + esc(c.nome) + '" aria-label="Filtrar por ' + esc(c.nome) + '"></button>';
-    }).join('');
-    $('cal-filter-cats').innerHTML = CAL_CATEGORIES.map(function(cat){
-      var active = calState.filterCats.indexOf(cat) !== -1;
-      return '<button type="button" class="cal-cat-chip' + (active ? ' active' : '') + '" data-cat="' + esc(cat) + '">' + esc(cat) + '</button>';
-    }).join('');
-  }
-  $('cal-filter-colors').addEventListener('click', function(e){
-    var btn = e.target.closest ? e.target.closest('.cal-color-dot') : null; if(!btn) return;
-    var idx = calState.filterColors.indexOf(btn.dataset.color);
-    if(idx === -1) calState.filterColors.push(btn.dataset.color); else calState.filterColors.splice(idx, 1);
-    renderCalFilters(); renderCalendarBody();
-  });
-  $('cal-filter-cats').addEventListener('click', function(e){
-    var btn = e.target.closest ? e.target.closest('.cal-cat-chip') : null; if(!btn) return;
-    var idx = calState.filterCats.indexOf(btn.dataset.cat);
-    if(idx === -1) calState.filterCats.push(btn.dataset.cat); else calState.filterCats.splice(idx, 1);
-    renderCalFilters(); renderCalendarBody();
-  });
-
-  $('cal-seg').addEventListener('click', function(e){
-    var btn = e.target.closest ? e.target.closest('.cal-seg-btn') : null; if(!btn) return;
-    calState.view = btn.dataset.calview; renderCalendar();
-  });
-  $('cal-prev').addEventListener('click', function(){ calNavigate(-1); });
-  $('cal-next').addEventListener('click', function(){ calNavigate(1); });
-  $('cal-today-btn').addEventListener('click', function(){ calState.date = new Date(); renderCalendar(); });
-  $('cal-new-btn').addEventListener('click', function(){ openEventEditor(null, new Date()); });
-
-  function calNavigate(dir){
-    var d = new Date(calState.date);
-    if(calState.view === 'week') d.setDate(d.getDate() + dir * 7);
-    else if(calState.view === 'day') d.setDate(d.getDate() + dir);
-    else d.setMonth(d.getMonth() + dir);
-    calState.date = d; renderCalendar();
-  }
-
-  function calTitleText(){
-    var d = calState.date;
-    if(calState.view === 'week'){
-      var start = calStartOfWeek(d), end = new Date(start); end.setDate(start.getDate() + 6);
-      return start.toLocaleDateString('pt-BR', { day:'2-digit', month:'short' }) + ' – ' + end.toLocaleDateString('pt-BR', { day:'2-digit', month:'short' });
-    }
-    if(calState.view === 'day') return calCapitalize(d.toLocaleDateString('pt-BR', { weekday:'long', day:'2-digit', month:'long' }));
-    return calCapitalize(d.toLocaleDateString('pt-BR', { month:'long', year:'numeric' }));
-  }
-
-  function renderCalendar(){
-    renderCalFilters();
-    $('cal-month-view').hidden = calState.view !== 'month';
-    $('cal-week-view').hidden = calState.view !== 'week';
-    $('cal-day-view').hidden = calState.view !== 'day';
-    $('cal-list-view').hidden = calState.view !== 'list';
-    document.querySelectorAll('.cal-seg-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.calview === calState.view); });
-    $('cal-title').textContent = calTitleText();
-    renderCalendarBody();
-  }
-  function renderCalendarBody(){
-    if(calState.view === 'month') renderCalMonth();
-    else if(calState.view === 'week') renderCalWeek();
-    else if(calState.view === 'day') renderCalDay();
-    else renderCalList();
-  }
-
-  function renderCalMonth(){
-    var d = calState.date;
-    var first = new Date(d.getFullYear(), d.getMonth(), 1);
-    var start = new Date(first); start.setDate(start.getDate() - start.getDay());
-    var days = []; var cur = new Date(start);
-    for(var i = 0; i < 42; i++){ days.push(new Date(cur)); cur.setDate(cur.getDate() + 1); }
-    var events = calFilteredEvents();
-    var today = new Date();
-    var head = '<div class="cal-month-head">' + ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'].map(function(w){ return '<span>' + w + '</span>'; }).join('') + '</div>';
-    var grid = '<div class="cal-month-grid">' + days.map(function(day){
-      var dayEvents = events.filter(function(ev){ return calSameDay(new Date(ev.inicio), day); })
-        .sort(function(a, b){ return new Date(a.inicio) - new Date(b.inicio); });
-      var isOther = day.getMonth() !== d.getMonth();
-      var isToday = calSameDay(day, today);
-      var pills = dayEvents.slice(0, 3).map(function(ev){
-        return '<span class="cal-pill" draggable="true" data-id="' + ev.id + '" style="background:' + calColorVar(ev.cor) + '">' + esc(ev.titulo) + '</span>';
-      }).join('');
-      var more = dayEvents.length > 3 ? '<span class="cal-pill-more">+' + (dayEvents.length - 3) + ' mais</span>' : '';
-      return '<div class="cal-day-cell' + (isOther ? ' other-month' : '') + (isToday ? ' today' : '') + '" data-date="' + day.toISOString() + '">' +
-        '<span class="cal-day-num">' + day.getDate() + '</span>' +
-        '<div class="cal-day-events">' + pills + more + '</div></div>';
-    }).join('') + '</div>';
-    $('cal-month-view').innerHTML = head + grid;
-  }
-  $('cal-month-view').addEventListener('click', function(e){
-    var pill = e.target.closest ? e.target.closest('.cal-pill') : null;
-    if(pill){ openEventEditor(pill.dataset.id); return; }
-    var cell = e.target.closest ? e.target.closest('.cal-day-cell') : null;
-    if(cell) openEventEditor(null, new Date(cell.dataset.date));
-  });
-  $('cal-month-view').addEventListener('dragstart', function(e){
-    var pill = e.target.closest ? e.target.closest('.cal-pill') : null;
-    if(pill) calState.dragId = pill.dataset.id;
-  });
-  $('cal-month-view').addEventListener('dragover', function(e){
-    if(e.target.closest && e.target.closest('.cal-day-cell')) e.preventDefault();
-  });
-  $('cal-month-view').addEventListener('drop', function(e){
-    var cell = e.target.closest ? e.target.closest('.cal-day-cell') : null;
-    if(!cell || !calState.dragId) return;
-    e.preventDefault();
-    calRescheduleToDate(calState.dragId, new Date(cell.dataset.date));
-    calState.dragId = null;
-  });
-
-  function calRescheduleToDate(id, newDate){
-    var ev = state.calendarEvents.filter(function(e){ return e.id === id; })[0]; if(!ev) return;
-    var oldStart = new Date(ev.inicio), duration = new Date(ev.fim) - oldStart;
-    var ns = new Date(newDate); ns.setHours(oldStart.getHours(), oldStart.getMinutes(), 0, 0);
-    ev.inicio = ns.toISOString(); ev.fim = new Date(ns.getTime() + duration).toISOString();
-    saveCalendarEvents(); renderCalendarBody();
-  }
-  function calRescheduleToHour(id, newDate, hour){
-    var ev = state.calendarEvents.filter(function(e){ return e.id === id; })[0]; if(!ev) return;
-    var oldStart = new Date(ev.inicio), duration = new Date(ev.fim) - oldStart;
-    var ns = new Date(newDate); ns.setHours(hour, oldStart.getMinutes(), 0, 0);
-    ev.inicio = ns.toISOString(); ev.fim = new Date(ns.getTime() + duration).toISOString();
-    saveCalendarEvents(); renderCalendarBody();
-  }
-
-  function renderCalWeek(){
-    var start = calStartOfWeek(calState.date);
-    var days = []; for(var i = 0; i < 7; i++){ var dd = new Date(start); dd.setDate(start.getDate() + i); days.push(dd); }
-    var events = calFilteredEvents(); var today = new Date();
-    var head = '<div class="cal-week-head"><div></div>' + days.map(function(day){
-      return '<div class="cal-week-head-cell' + (calSameDay(day, today) ? ' today' : '') + '"><div class="wd">' +
-        day.toLocaleDateString('pt-BR', { weekday:'short' }) + '</div><div class="dn">' + day.getDate() + '</div></div>';
-    }).join('') + '</div>';
-    var rows = CAL_HOURS.map(function(hour){
-      var cells = days.map(function(day){
-        var hourEvents = events.filter(function(ev){ var s = new Date(ev.inicio); return calSameDay(s, day) && s.getHours() === hour; });
-        var blocks = hourEvents.map(function(ev){
-          return '<span class="cal-event-block" draggable="true" data-id="' + ev.id + '" style="background:' + calColorVar(ev.cor) + '">' + esc(ev.titulo) + '</span>';
-        }).join('');
-        return '<div class="cal-slot" data-date="' + day.toISOString() + '" data-hour="' + hour + '">' + blocks + '</div>';
-      }).join('');
-      return '<div class="cal-hour-label">' + pad2(hour) + ':00</div>' + cells;
-    }).join('');
-    $('cal-week-view').innerHTML = head + '<div class="cal-scroll"><div class="cal-week-grid">' + rows + '</div></div>';
-  }
-
-  function renderCalDay(){
-    var day = calState.date;
-    var events = calFilteredEvents().filter(function(ev){ return calSameDay(new Date(ev.inicio), day); });
-    var rows = CAL_HOURS.map(function(hour){
-      var hourEvents = events.filter(function(ev){ return new Date(ev.inicio).getHours() === hour; });
-      var blocks = hourEvents.map(function(ev){
-        return '<span class="cal-event-block" draggable="true" data-id="' + ev.id + '" style="background:' + calColorVar(ev.cor) + '">' +
-          esc(ev.titulo) + ' · ' + fmtHM(new Date(ev.inicio)) + '</span>';
-      }).join('');
-      return '<div class="cal-hour-label">' + pad2(hour) + ':00</div>' +
-        '<div class="cal-slot" data-date="' + day.toISOString() + '" data-hour="' + hour + '">' + blocks + '</div>';
-    }).join('');
-    $('cal-day-view').innerHTML = '<div class="cal-scroll"><div class="cal-day-grid">' + rows + '</div></div>';
-  }
-
-  ['cal-week-view', 'cal-day-view'].forEach(function(id){
-    var el = $(id);
-    el.addEventListener('click', function(e){
-      var block = e.target.closest ? e.target.closest('.cal-event-block') : null;
-      if(block){ openEventEditor(block.dataset.id); return; }
-      var slot = e.target.closest ? e.target.closest('.cal-slot') : null;
-      if(slot){ var d = new Date(slot.dataset.date); d.setHours(+slot.dataset.hour, 0, 0, 0); openEventEditor(null, d); }
-    });
-    el.addEventListener('dragstart', function(e){
-      var block = e.target.closest ? e.target.closest('.cal-event-block') : null;
-      if(block) calState.dragId = block.dataset.id;
-    });
-    el.addEventListener('dragover', function(e){ if(e.target.closest && e.target.closest('.cal-slot')) e.preventDefault(); });
-    el.addEventListener('drop', function(e){
-      var slot = e.target.closest ? e.target.closest('.cal-slot') : null;
-      if(!slot || !calState.dragId) return;
-      e.preventDefault();
-      calRescheduleToHour(calState.dragId, new Date(slot.dataset.date), +slot.dataset.hour);
-      calState.dragId = null;
-    });
-  });
-
-  function renderCalList(){
-    var events = calFilteredEvents().slice().sort(function(a, b){ return new Date(a.inicio) - new Date(b.inicio); });
-    if(!events.length){ $('cal-list-view').innerHTML = '<div class="cal-empty">Nenhum evento ainda. Toque em "+ Novo evento" pra agendar.</div>'; return; }
-    var groups = {}, order = [];
-    events.forEach(function(ev){
-      var key = new Date(ev.inicio).toDateString();
-      if(!groups[key]){ groups[key] = []; order.push(key); }
-      groups[key].push(ev);
-    });
-    var html = '<div class="cal-list">' + order.map(function(key){
-      var d = new Date(groups[key][0].inicio);
-      var label = calCapitalize(d.toLocaleDateString('pt-BR', { weekday:'long', day:'2-digit', month:'long' }));
-      var items = groups[key].map(function(ev){
-        return '<div class="cal-list-item" data-id="' + ev.id + '">' +
-          '<span class="cal-list-dot" style="background:' + calColorVar(ev.cor) + '"></span>' +
-          '<div><div class="cal-list-title">' + esc(ev.titulo) + '</div>' +
-          '<div class="cal-list-meta">' + fmtHM(new Date(ev.inicio)) + '–' + fmtHM(new Date(ev.fim)) + ' · ' + esc(ev.categoria) + '</div></div></div>';
-      }).join('');
-      return '<div class="cal-list-group"><div class="cal-list-date">' + label + '</div>' + items + '</div>';
-    }).join('') + '</div>';
-    $('cal-list-view').innerHTML = html;
-  }
-  $('cal-list-view').addEventListener('click', function(e){
-    var item = e.target.closest ? e.target.closest('.cal-list-item') : null;
-    if(item) openEventEditor(item.dataset.id);
-  });
-
-  function populateEventCategorySelect(){
-    $('event-categoria').innerHTML = CAL_CATEGORIES.map(function(c){ return '<option value="' + esc(c) + '">' + esc(c) + '</option>'; }).join('');
-  }
-  function renderEventColorPicker(selectedKey){
-    $('event-color-row').innerHTML = CAL_COLORS.map(function(c){
-      return '<button type="button" class="cal-color-dot' + (c.key === selectedKey ? ' active' : '') + '" data-color="' + c.key + '" style="background:' + calColorVar(c.key) + '" title="' + esc(c.nome) + '" aria-label="' + esc(c.nome) + '"></button>';
-    }).join('');
-  }
-  $('event-color-row').addEventListener('click', function(e){
-    var btn = e.target.closest ? e.target.closest('.cal-color-dot') : null; if(!btn) return;
-    eventEditorColor = btn.dataset.color; renderEventColorPicker(eventEditorColor);
-  });
-
-  function openEventEditor(id, presetStart){
-    var ev = id ? state.calendarEvents.filter(function(e){ return e.id === id; })[0] : null;
-    eventEditorMode = { id: id };
-    $('event-editor-title').textContent = ev ? 'Editar evento' : 'Novo evento';
-    $('event-titulo').value = ev ? ev.titulo : '';
-    $('event-descricao').value = ev ? (ev.descricao || '') : '';
-    var start = ev ? new Date(ev.inicio) : new Date(presetStart || new Date());
-    if(!ev && presetStart && presetStart.getHours() === 0 && presetStart.getMinutes() === 0) start.setHours(8, 0, 0, 0);
-    var end = ev ? new Date(ev.fim) : new Date(start.getTime() + 60 * 60 * 1000);
-    $('event-inicio').value = toLocalInputValue(start);
-    $('event-fim').value = toLocalInputValue(end);
-    $('event-categoria').value = ev ? ev.categoria : CAL_CATEGORIES[0];
-    eventEditorColor = ev ? ev.cor : CAL_COLORS[0].key;
-    renderEventColorPicker(eventEditorColor);
-    $('event-delete').hidden = !ev;
-    overlayOpen($('event-editor-backdrop'));
-  }
-  function closeEventEditor(){ overlayClose($('event-editor-backdrop')); eventEditorMode = null; }
-  $('event-editor-close').addEventListener('click', closeEventEditor);
-  $('event-editor-backdrop').addEventListener('click', function(e){ if(e.target === this) closeEventEditor(); });
-  $('event-save').addEventListener('click', function(){
-    if(!eventEditorMode) return;
-    var inicioVal = $('event-inicio').value; if(!inicioVal) return;
-    var titulo = $('event-titulo').value.trim() || 'Sem título';
-    var inicio = fromLocalInputValue(inicioVal);
-    var fimVal = $('event-fim').value;
-    var fim = fimVal ? fromLocalInputValue(fimVal) : new Date(inicio.getTime() + 60 * 60 * 1000);
-    if(fim <= inicio) fim = new Date(inicio.getTime() + 30 * 60 * 1000);
-    var categoria = $('event-categoria').value;
-    var descricao = $('event-descricao').value;
-    if(eventEditorMode.id){
-      var ev = state.calendarEvents.filter(function(e){ return e.id === eventEditorMode.id; })[0];
-      if(ev){ ev.titulo = titulo; ev.inicio = inicio.toISOString(); ev.fim = fim.toISOString(); ev.categoria = categoria; ev.cor = eventEditorColor; ev.descricao = descricao; }
-    } else {
-      state.calendarEvents.push({ id:newId(), titulo:titulo, inicio:inicio.toISOString(), fim:fim.toISOString(), categoria:categoria, cor:eventEditorColor, descricao:descricao });
-    }
-    saveCalendarEvents(); closeEventEditor(); renderCalendarBody();
-  });
-  $('event-delete').addEventListener('click', function(){
-    if(eventEditorMode && eventEditorMode.id){
-      state.calendarEvents = state.calendarEvents.filter(function(e){ return e.id !== eventEditorMode.id; });
-      saveCalendarEvents();
-    }
-    closeEventEditor(); renderCalendarBody();
-  });
-  populateEventCategorySelect();
-
-  // ---- Lições interativas (conteúdo + fontes citadas + quiz como checagem de verdade) ----
-  var lessonEditorMode = null, lessonDraft = null, lessonPlayerState = null;
-  var LESSON_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>';
-
-  function lessonSnippet(lesson){
-    var text = (lesson.objetivo || '').trim();
-    if(!text) return 'Sem objetivo definido';
-    return text.length > 96 ? text.slice(0, 96) + '…' : text;
-  }
-
-  function renderLessonsView(){
-    renderLessonsGrid();
-    renderLearningRecordsList();
-    renderRecordNoteLessonSelect();
-  }
-
-  function renderLessonsGrid(){
-    var wrap = $('lessons-grid');
-    if(!state.lessons.length){
-      wrap.innerHTML = '<div class="lessons-empty">Nenhuma lição ainda. Toque em "+ Nova lição" pra montar a primeira.</div>';
-      return;
-    }
-    wrap.innerHTML = state.lessons.map(function(l){
-      return '<div class="lesson-card" data-id="' + l.id + '">' +
-        '<div class="lesson-card-icon">' + LESSON_ICON + '</div>' +
-        '<div class="lesson-card-main">' +
-          '<div class="lesson-card-title">' + esc(l.titulo || 'Sem título') + '</div>' +
-          '<div class="lesson-card-obj">' + esc(lessonSnippet(l)) + '</div>' +
-          '<div class="lesson-card-meta">' +
-            '<span class="lesson-card-tag">' + l.secoes.length + (l.secoes.length === 1 ? ' seção' : ' seções') + '</span>' +
-            '<span class="lesson-card-tag">' + l.quiz.length + (l.quiz.length === 1 ? ' pergunta' : ' perguntas') + '</span>' +
-            '<span class="lesson-card-tag">' + l.fontes.length + (l.fontes.length === 1 ? ' fonte' : ' fontes') + '</span>' +
-          '</div>' +
-        '</div>' +
-        '<div class="lesson-card-actions">' +
-          '<button type="button" class="btn btn-primary btn-sm" data-act="start-lesson" data-id="' + l.id + '"' + (!l.secoes.length && !l.quiz.length ? ' disabled' : '') + '>Iniciar com a turma</button>' +
-          '<button type="button" class="btn btn-ghost btn-sm" data-act="edit-lesson" data-id="' + l.id + '">Editar</button>' +
-        '</div>' +
-      '</div>';
-    }).join('');
-  }
-  $('lessons-grid').addEventListener('click', function(e){
-    var btn = e.target.closest ? e.target.closest('[data-act]') : null; if(!btn) return;
-    var lesson = state.lessons.filter(function(l){ return l.id === btn.dataset.id; })[0];
-    if(!lesson) return;
-    if(btn.dataset.act === 'start-lesson') startLessonPlayer(lesson);
-    else if(btn.dataset.act === 'edit-lesson') openLessonEditor(lesson.id);
-  });
-
-  // --- Editor da lição ---
-  $('lesson-new-btn').addEventListener('click', function(){ openLessonEditor(null); });
-  function openLessonEditor(id){
-    var lesson = id ? state.lessons.filter(function(l){ return l.id === id; })[0] : null;
-    lessonEditorMode = { id: id };
-    lessonDraft = lesson ? JSON.parse(JSON.stringify(lesson)) : { titulo:'', objetivo:'', fontes:[], secoes:[{titulo:'', conteudo:''}], quiz:[] };
-    $('lesson-editor-title').textContent = lesson ? 'Editar lição' : 'Nova lição';
-    $('lesson-titulo').value = lessonDraft.titulo;
-    $('lesson-objetivo').value = lessonDraft.objetivo;
-    $('lesson-delete').hidden = !lesson;
-    renderLessonFontes();
-    renderLessonSections();
-    renderLessonQuiz();
-    overlayOpen($('lesson-editor-backdrop'));
-  }
-  function closeLessonEditor(){ overlayClose($('lesson-editor-backdrop')); lessonEditorMode = null; lessonDraft = null; }
-  $('lesson-editor-close').addEventListener('click', closeLessonEditor);
-  $('lesson-editor-backdrop').addEventListener('click', function(e){ if(e.target === this) closeLessonEditor(); });
-  $('lesson-titulo').addEventListener('input', function(){ if(lessonDraft) lessonDraft.titulo = this.value; });
-  $('lesson-objetivo').addEventListener('input', function(){ if(lessonDraft) lessonDraft.objetivo = this.value; });
-
-  function renderLessonFontes(){
-    var wrap = $('lesson-fontes-list');
-    wrap.innerHTML = lessonDraft.fontes.map(function(f, i){
-      return '<div class="lesson-fonte-row" data-idx="' + i + '">' +
-        '<input type="text" class="lesson-fonte-titulo" data-idx="' + i + '" placeholder="Nome da fonte" value="' + esc(f.titulo) + '">' +
-        '<input type="text" class="lesson-fonte-url" data-idx="' + i + '" placeholder="https://…" value="' + esc(f.url) + '">' +
-        '<button type="button" class="btn btn-danger btn-sm" data-act="remove-fonte" data-idx="' + i + '">×</button>' +
-      '</div>';
-    }).join('');
-  }
-  $('lesson-fonte-add-btn').addEventListener('click', function(){ lessonDraft.fontes.push({titulo:'', url:''}); renderLessonFontes(); });
-  $('lesson-fontes-list').addEventListener('input', function(e){
-    var idx = +e.target.dataset.idx;
-    if(e.target.classList.contains('lesson-fonte-titulo')) lessonDraft.fontes[idx].titulo = e.target.value;
-    if(e.target.classList.contains('lesson-fonte-url')) lessonDraft.fontes[idx].url = e.target.value;
-  });
-  $('lesson-fontes-list').addEventListener('click', function(e){
-    if(e.target.dataset.act === 'remove-fonte'){ lessonDraft.fontes.splice(+e.target.dataset.idx, 1); renderLessonFontes(); }
-  });
-
-  function renderLessonSections(){
-    var wrap = $('lesson-sections-list');
-    wrap.innerHTML = lessonDraft.secoes.map(function(s, i){
-      return '<div class="lesson-block" data-idx="' + i + '">' +
-        '<div class="lesson-block-head"><span class="lesson-block-num">Seção ' + (i + 1) + '</span>' +
-          '<button type="button" class="btn btn-danger btn-sm" data-act="remove-section" data-idx="' + i + '"' + (lessonDraft.secoes.length === 1 ? ' disabled' : '') + '>Remover</button></div>' +
-        '<input type="text" class="lesson-section-titulo" data-idx="' + i + '" placeholder="Título da seção" value="' + esc(s.titulo) + '" style="margin-bottom:8px;">' +
-        '<textarea class="lesson-section-conteudo" data-idx="' + i + '" placeholder="Conteúdo da seção…">' + esc(s.conteudo) + '</textarea>' +
-      '</div>';
-    }).join('');
-  }
-  $('lesson-section-add-btn').addEventListener('click', function(){ lessonDraft.secoes.push({titulo:'', conteudo:''}); renderLessonSections(); });
-  $('lesson-sections-list').addEventListener('input', function(e){
-    var idx = +e.target.dataset.idx;
-    if(e.target.classList.contains('lesson-section-titulo')) lessonDraft.secoes[idx].titulo = e.target.value;
-    if(e.target.classList.contains('lesson-section-conteudo')) lessonDraft.secoes[idx].conteudo = e.target.value;
-  });
-  $('lesson-sections-list').addEventListener('click', function(e){
-    if(e.target.dataset.act === 'remove-section' && lessonDraft.secoes.length > 1){
-      lessonDraft.secoes.splice(+e.target.dataset.idx, 1); renderLessonSections();
-    }
-  });
-
-  function renderLessonQuiz(){
-    var wrap = $('lesson-quiz-list');
-    wrap.innerHTML = lessonDraft.quiz.map(function(q, i){
-      var opts = q.opcoes.map(function(opt, oi){
-        return '<div class="lesson-opt-row">' +
-          '<input type="radio" name="lesson-quiz-correct-' + i + '" data-idx="' + i + '" data-opt="' + oi + '" data-act="set-correct"' + (q.correta === oi ? ' checked' : '') + '>' +
-          '<input type="text" class="lesson-quiz-opt" data-idx="' + i + '" data-opt="' + oi + '" placeholder="Opção ' + String.fromCharCode(65 + oi) + '" value="' + esc(opt) + '">' +
-        '</div>';
-      }).join('');
-      return '<div class="lesson-block" data-idx="' + i + '">' +
-        '<div class="lesson-block-head"><span class="lesson-block-num">Pergunta ' + (i + 1) + '</span>' +
-          '<button type="button" class="btn btn-danger btn-sm" data-act="remove-quiz" data-idx="' + i + '">Remover</button></div>' +
-        '<input type="text" class="lesson-quiz-pergunta" data-idx="' + i + '" placeholder="Pergunta" value="' + esc(q.pergunta) + '" style="margin-bottom:8px;">' +
-        '<div class="lesson-quiz-opts">' + opts + '</div>' +
-      '</div>';
-    }).join('');
-  }
-  $('lesson-quiz-add-btn').addEventListener('click', function(){
-    lessonDraft.quiz.push({ pergunta:'', opcoes:['', '', '', ''], correta:0 }); renderLessonQuiz();
-  });
-  $('lesson-quiz-list').addEventListener('input', function(e){
-    var idx = +e.target.dataset.idx;
-    if(e.target.classList.contains('lesson-quiz-pergunta')) lessonDraft.quiz[idx].pergunta = e.target.value;
-    if(e.target.classList.contains('lesson-quiz-opt')) lessonDraft.quiz[idx].opcoes[+e.target.dataset.opt] = e.target.value;
-  });
-  $('lesson-quiz-list').addEventListener('change', function(e){
-    if(e.target.dataset.act === 'set-correct') lessonDraft.quiz[+e.target.dataset.idx].correta = +e.target.dataset.opt;
-  });
-  $('lesson-quiz-list').addEventListener('click', function(e){
-    if(e.target.dataset.act === 'remove-quiz'){ lessonDraft.quiz.splice(+e.target.dataset.idx, 1); renderLessonQuiz(); }
-  });
-
-  $('lesson-save').addEventListener('click', function(){
-    if(!lessonEditorMode || !lessonDraft) return;
-    lessonDraft.titulo = $('lesson-titulo').value.trim() || 'Sem título';
-    if(lessonEditorMode.id){
-      var idx2 = -1;
-      state.lessons.forEach(function(l, i){ if(l.id === lessonEditorMode.id) idx2 = i; });
-      if(idx2 !== -1) state.lessons[idx2] = lessonDraft;
-    } else {
-      lessonDraft.id = newId();
-      lessonDraft.criadoEm = Date.now();
-      state.lessons.push(lessonDraft);
-    }
-    saveLessons();
-    closeLessonEditor();
-    renderLessonsView();
-  });
-  $('lesson-delete').addEventListener('click', function(){
-    if(lessonEditorMode && lessonEditorMode.id){
-      state.lessons = state.lessons.filter(function(l){ return l.id !== lessonEditorMode.id; });
-      saveLessons();
-    }
-    closeLessonEditor();
-    renderLessonsView();
-  });
-
-  // --- Modo apresentação (o quiz funciona como portão, não decoração) ---
-  function startLessonPlayer(lesson){
-    var steps = [];
-    lesson.secoes.forEach(function(s){ steps.push({ type:'section', data:s }); });
-    lesson.quiz.forEach(function(q, i){ steps.push({ type:'quiz', data:q, qIdx:i }); });
-    steps.push({ type:'summary' });
-    lessonPlayerState = { lesson:lesson, steps:steps, index:0, quizResults:{} };
-    $('lesson-player-title').textContent = lesson.titulo || 'Lição';
-    renderLessonPlayerStep();
-    overlayOpen($('lesson-player-backdrop'));
-  }
-  function closeLessonPlayer(){ overlayClose($('lesson-player-backdrop')); lessonPlayerState = null; }
-  $('lesson-player-close').addEventListener('click', closeLessonPlayer);
-  $('lesson-player-backdrop').addEventListener('click', function(e){ if(e.target === this) closeLessonPlayer(); });
-
-  // --- Atalho no Ao vivo: iniciar lição sem precisar trocar de tela ---
-  function openLessonPicker(){
-    if(!state.lessons.length) return;
-    if(state.lessons.length === 1){ startLessonPlayer(state.lessons[0]); return; }
-    $('lesson-picker-list').innerHTML = state.lessons.map(function(l){
-      return '<button type="button" class="doc-row" data-id="' + l.id + '">' +
-        '<div class="doc-row-main">' +
-          '<div class="doc-row-title">' + esc(l.titulo || 'Sem título') + '</div>' +
-          '<div class="doc-row-snippet">' + l.secoes.length + (l.secoes.length === 1 ? ' seção' : ' seções') + ' · ' + l.quiz.length + (l.quiz.length === 1 ? ' pergunta' : ' perguntas') + '</div>' +
-        '</div>' +
-        '<div class="doc-row-chevron">' + CHEVRON_SVG + '</div>' +
-      '</button>';
-    }).join('');
-    overlayOpen($('lesson-picker-backdrop'));
-  }
-  function closeLessonPicker(){ overlayClose($('lesson-picker-backdrop')); }
-  $('fab-lesson-btn').addEventListener('click', openLessonPicker);
-  $('lesson-picker-close').addEventListener('click', closeLessonPicker);
-  $('lesson-picker-backdrop').addEventListener('click', function(e){ if(e.target === this) closeLessonPicker(); });
-  $('lesson-picker-list').addEventListener('click', function(e){
-    var btn = e.target.closest ? e.target.closest('.doc-row') : null; if(!btn) return;
-    var lesson = state.lessons.filter(function(l){ return l.id === btn.dataset.id; })[0];
-    closeLessonPicker();
-    if(lesson) startLessonPlayer(lesson);
-  });
-
-  // --- Apresentação com IA (2slides.com): a chave de API fica só no servidor (Vercel),
-  // nunca aqui no front-end. O site chama /api/generate-slides, que é quem fala com a 2slides. ---
-  function openAiSlides(){
-    $('ai-slides-topic').value = '';
-    $('ai-slides-theme').value = '';
-    $('ai-slides-status').textContent = '';
-    $('ai-slides-result').hidden = true;
-    $('ai-slides-result').innerHTML = '';
-    $('ai-slides-generate-btn').disabled = false;
-    overlayOpen($('ai-slides-backdrop'));
-  }
-  function closeAiSlides(){ overlayClose($('ai-slides-backdrop')); }
-  $('ai-slides-open-btn').addEventListener('click', openAiSlides);
-  $('ai-slides-close').addEventListener('click', closeAiSlides);
-  $('ai-slides-backdrop').addEventListener('click', function(e){ if(e.target === this) closeAiSlides(); });
-  $('ai-slides-generate-btn').addEventListener('click', function(){
-    var topic = $('ai-slides-topic').value.trim();
-    if(!topic){ $('ai-slides-status').textContent = 'Escreva o tema da apresentação primeiro.'; return; }
-    var themeQuery = $('ai-slides-theme').value.trim() || 'moderno';
-    $('ai-slides-generate-btn').disabled = true;
-    $('ai-slides-status').textContent = 'Gerando apresentação... isso pode levar até um minuto.';
-    $('ai-slides-result').hidden = true;
-    $('ai-slides-result').innerHTML = '';
-    fetch('/api/generate-slides', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ topic: topic, themeQuery: themeQuery, language: 'pt-BR' })
-    }).then(function(r){
-      return r.json().catch(function(){ return null; }).then(function(data){ return { ok: r.ok, data: data }; });
-    }).then(function(res){
-      $('ai-slides-generate-btn').disabled = false;
-      if(!res.ok || !res.data){
-        $('ai-slides-status').textContent = (res.data && res.data.error) || 'Não foi possível gerar a apresentação agora.';
-        return;
-      }
-      var d = res.data;
-      $('ai-slides-status').textContent = '';
-      $('ai-slides-result').hidden = false;
-      $('ai-slides-result').innerHTML = '<div class="ai-slides-result-box">' +
-        '<div>Apresentação gerada' + (d.slidePageCount ? (' — ' + d.slidePageCount + ' slides') : '') + '.</div>' +
-        (d.downloadUrl ? '<a href="' + esc(d.downloadUrl) + '" target="_blank" rel="noopener">Baixar apresentação (.pptx) — link válido por 1 hora</a>' : '') +
-        (d.jobUrl ? '<a href="' + esc(d.jobUrl) + '" target="_blank" rel="noopener">Abrir e editar no 2slides.com</a>' : '') +
-      '</div>';
-    }).catch(function(){
-      $('ai-slides-generate-btn').disabled = false;
-      $('ai-slides-status').textContent = 'Essa função só funciona na versão do Aula Viva publicada no Vercel, com a chave da 2slides configurada no servidor. Aqui no preview do Claude não há servidor, então não é possível gerar.';
-    });
-  });
-
-  function renderLessonPlayerDots(){
-    var st = lessonPlayerState;
-    $('lesson-player-dots').innerHTML = st.steps.map(function(step, i){
-      var cls = 'dot' + (step.type === 'quiz' ? ' quiz' : '') + (i === st.index ? ' active' : (i < st.index ? ' done' : ''));
-      return '<span class="' + cls + '"></span>';
-    }).join('');
-  }
-  function renderLessonPlayerStep(){
-    var st = lessonPlayerState;
-    var step = st.steps[st.index];
-    renderLessonPlayerDots();
-    var body = $('lesson-player-body');
-    if(step.type === 'section'){
-      body.innerHTML = '<div class="player-section-title">' + esc(step.data.titulo || 'Seção') + '</div>' +
-        '<div class="player-section-content">' + esc(step.data.conteudo || '') + '</div>';
-    } else if(step.type === 'quiz'){
-      var q = step.data;
-      var result = st.quizResults[step.qIdx];
-      body.innerHTML = '<div class="player-quiz-question">' + esc(q.pergunta || 'Pergunta') + '</div>' +
-        '<div class="player-quiz-opts">' + q.opcoes.map(function(opt, oi){
-          var cls = 'player-quiz-opt', disabled = '';
-          if(result && result.correct){
-            if(oi === q.correta) cls += ' correct';
-            disabled = ' disabled';
-          } else if(result && result.answered && oi === result.chosen){
-            cls += ' wrong';
-          }
-          return '<button type="button" class="' + cls + '" data-opt="' + oi + '"' + disabled + '>' + esc(opt || ('Opção ' + String.fromCharCode(65 + oi))) + '</button>';
-        }).join('') + '</div>' +
-        '<div class="player-quiz-feedback' + (result && result.answered ? (result.correct ? ' ok' : ' no') : '') + '">' +
-          (result && result.answered ? (result.correct ? 'Isso mesmo! Pode avançar.' : 'Não é essa — tente de novo.') : '') +
-        '</div>';
-    } else if(step.type === 'summary'){
-      var total = st.steps.filter(function(s){ return s.type === 'quiz'; }).length;
-      var acertos = 0;
-      Object.keys(st.quizResults).forEach(function(k){ if(st.quizResults[k].firstTryCorrect) acertos++; });
-      var fontesValidas = st.lesson.fontes.filter(function(f){ return f.titulo || f.url; });
-      var sourcesHtml = fontesValidas.length ? ('<div class="player-sources"><div class="player-sources-title">Fontes</div>' +
-        fontesValidas.map(function(f){
-          return f.url ? ('<a class="player-source-link" href="' + esc(f.url) + '" target="_blank" rel="noopener">' + esc(f.titulo || f.url) + '</a>')
-            : ('<span class="player-source-link">' + esc(f.titulo) + '</span>');
-        }).join('') + '</div>') : '';
-      var scoreHtml = total > 0
-        ? ('<div class="player-summary-score">' + acertos + '/' + total + '</div><div class="player-summary-label">acertos de primeira no quiz</div>')
-        : ('<div class="player-summary-label">Lição concluída — sem perguntas de verificação nesta lição.</div>');
-      body.innerHTML = '<div class="player-summary">' + scoreHtml + sourcesHtml + '</div>';
-    }
-    updateLessonPlayerNav();
-  }
-  $('lesson-player-body').addEventListener('click', function(e){
-    var btn = e.target.closest ? e.target.closest('.player-quiz-opt') : null; if(!btn) return;
-    var st = lessonPlayerState; var step = st.steps[st.index]; if(step.type !== 'quiz') return;
-    var oi = +btn.dataset.opt;
-    var correct = oi === step.data.correta;
-    var prev = st.quizResults[step.qIdx];
-    if(!prev) st.quizResults[step.qIdx] = { answered:true, chosen:oi, correct:correct, firstTryCorrect:correct, attempts:1 };
-    else if(!prev.correct){ prev.answered = true; prev.chosen = oi; prev.correct = correct; prev.attempts++; }
-    renderLessonPlayerStep();
-  });
-  function updateLessonPlayerNav(){
-    var st = lessonPlayerState;
-    var step = st.steps[st.index];
-    $('lesson-player-back').hidden = st.index === 0;
-    var nextBtn = $('lesson-player-next');
-    if(step.type === 'summary'){ nextBtn.textContent = 'Salvar registro e concluir'; nextBtn.disabled = false; }
-    else if(step.type === 'quiz'){ var result = st.quizResults[step.qIdx]; nextBtn.textContent = 'Avançar →'; nextBtn.disabled = !(result && result.correct); }
-    else { nextBtn.textContent = 'Avançar →'; nextBtn.disabled = false; }
-  }
-  $('lesson-player-back').addEventListener('click', function(){
-    if(lessonPlayerState && lessonPlayerState.index > 0){ lessonPlayerState.index--; renderLessonPlayerStep(); }
-  });
-  $('lesson-player-next').addEventListener('click', function(){
-    var st = lessonPlayerState; if(!st) return;
-    var step = st.steps[st.index];
-    if(step.type === 'summary'){ finishLessonPlayer(); return; }
-    if(st.index < st.steps.length - 1){ st.index++; renderLessonPlayerStep(); }
-  });
-  function finishLessonPlayer(){
-    var st = lessonPlayerState;
-    var total = st.steps.filter(function(s){ return s.type === 'quiz'; }).length;
-    var acertos = 0;
-    Object.keys(st.quizResults).forEach(function(k){ if(st.quizResults[k].firstTryCorrect) acertos++; });
-    state.learningRecords.push({ id:newId(), lessonId:st.lesson.id, lessonTitulo:st.lesson.titulo, data:Date.now(), acertos:acertos, total:total, nota:'' });
-    saveLearningRecords();
-    closeLessonPlayer();
-    renderLessonsView();
-  }
-
-  // --- Registro de aprendizagem ---
-  function renderLearningRecordsList(){
-    var wrap = $('learning-records-list');
-    if(!state.learningRecords.length){
-      wrap.innerHTML = '<div class="records-empty">Nenhum registro ainda. Conclua uma lição com a turma ou registre uma observação manual abaixo.</div>';
-      return;
-    }
-    var sorted = state.learningRecords.slice().sort(function(a, b){ return b.data - a.data; });
-    wrap.innerHTML = sorted.map(function(r){
-      var dataStr = new Date(r.data).toLocaleDateString('pt-BR');
-      var scoreHtml = r.total > 0 ? ('<div class="record-score">' + r.acertos + '/' + r.total + '</div>') : '<div class="record-score no-score">—</div>';
-      return '<div class="record-row" data-id="' + r.id + '">' + scoreHtml +
-        '<div class="record-main">' +
-          '<div class="record-title">' + esc(r.lessonTitulo || 'Observação geral') + '</div>' +
-          '<div class="record-meta">' + dataStr + '</div>' +
-          (r.nota ? ('<div class="record-note">' + esc(r.nota) + '</div>') : '') +
-        '</div>' +
-        '<button type="button" class="record-remove" data-act="remove-record" data-id="' + r.id + '" aria-label="Remover registro">×</button>' +
-      '</div>';
-    }).join('');
-  }
-  $('learning-records-list').addEventListener('click', function(e){
-    var btn = e.target.closest ? e.target.closest('[data-act="remove-record"]') : null; if(!btn) return;
-    state.learningRecords = state.learningRecords.filter(function(r){ return r.id !== btn.dataset.id; });
-    saveLearningRecords(); renderLearningRecordsList();
-  });
-  function renderRecordNoteLessonSelect(){
-    var sel = $('record-note-lesson');
-    sel.innerHTML = '<option value="">Observação geral (sem lição)</option>' +
-      state.lessons.map(function(l){ return '<option value="' + l.id + '">' + esc(l.titulo || 'Sem título') + '</option>'; }).join('');
-  }
-  $('record-note-add').addEventListener('click', function(){
-    var nota = $('record-note-text').value.trim();
-    if(!nota) return;
-    var lessonId = $('record-note-lesson').value;
-    var lesson = lessonId ? state.lessons.filter(function(l){ return l.id === lessonId; })[0] : null;
-    state.learningRecords.push({ id:newId(), lessonId: lessonId || null, lessonTitulo: lesson ? lesson.titulo : 'Observação geral', data:Date.now(), acertos:0, total:0, nota:nota });
-    saveLearningRecords();
-    $('record-note-text').value = '';
-    renderLearningRecordsList();
-  });
-
   document.addEventListener('keydown', function(e){
     if(e.key !== 'Escape') return;
     if(!$('help-backdrop').hidden) closeHelp();
@@ -3265,21 +2162,12 @@
     if(!$('noise-backdrop').hidden) closeNoiseOverlay();
     if(!$('scribble-backdrop').hidden) closeScribbleOverlay();
     if(!$('doc-editor-backdrop').hidden) closeDocEditor();
-    if(!$('tools-radial-backdrop').hidden) closeToolsRadial();
-    if(!$('event-editor-backdrop').hidden) closeEventEditor();
-    if(!$('lesson-editor-backdrop').hidden) closeLessonEditor();
-    if(!$('lesson-player-backdrop').hidden) closeLessonPlayer();
-    if(!$('lesson-picker-backdrop').hidden) closeLessonPicker();
-    if(!$('ai-slides-backdrop').hidden) closeAiSlides();
     if($('sidebar').classList.contains('open')) closeSidebar();
   });
 
   // Init
   loadLocal();
   loadDocs();
-  loadCalendarEvents();
-  loadLessons();
-  loadLearningRecords();
   populateFormFromState();
   prepareLive(false);
   renderReport();
@@ -3294,3 +2182,6 @@
   if(!jaViuTutorial) openOnboard();
 })();
 </script>
+
+</body>
+</html>
