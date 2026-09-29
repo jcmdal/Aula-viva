@@ -221,6 +221,20 @@
   @media (hover:hover) and (pointer:fine){ .age-chip:hover{ background:var(--accent-soft); } }
   .age-chip.active{ background:var(--accent); color:#fff; }
   .age-chip:active{ transform:scale(.97); }
+  .autodiv-box{ background:var(--surface-2); border-radius:12px; padding:12px; margin:4px 0 14px; display:flex; flex-direction:column; gap:10px; }
+  .autodiv-row{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .autodiv-label{ font-size:.82rem; font-weight:650; color:var(--ink); flex:1 1 auto; }
+  .group-papeis-hint{ font-size:.72rem; color:var(--ink-soft); padding:0 0 8px; margin-top:-6px; }
+  .plano-relampago-cta{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; background:linear-gradient(135deg, var(--accent-soft), var(--surface-2));
+    border-radius:14px; padding:14px 16px; margin-bottom:16px; }
+  .plano-relampago-cta-text{ display:flex; flex-direction:column; gap:2px; flex:1 1 220px; }
+  .plano-relampago-cta-text strong{ font-size:.88rem; color:var(--ink); }
+  .plano-relampago-cta-text span{ font-size:.78rem; color:var(--ink-soft); line-height:1.4; }
+  .plano-relampago-cta .btn{ flex:0 0 auto; white-space:nowrap; }
+  .desafio-box{ background:var(--surface-2); border-radius:12px; padding:14px; margin:10px 0; }
+  .desafio-texto{ margin:0; font-size:.9rem; color:var(--ink); line-height:1.5; }
+  .desafio-select{ font-family:inherit; }
+  .engajamento-nudge-msg{ background:var(--accent-soft); color:var(--accent-deep); border-radius:10px; padding:10px 12px; font-size:.8rem; margin-bottom:10px; line-height:1.4; }
   .tool-presets{ display:flex; flex-wrap:wrap; gap:8px; margin-top:4px; }
   .tool-preset-chip{ display:inline-flex; align-items:center; gap:6px; border:none; background:var(--surface-2); color:var(--ink);
     border-radius:999px; padding:7px 12px 7px 8px; font-size:.82rem; font-weight:500; cursor:pointer;
@@ -354,6 +368,7 @@
     font:700 .7rem inherit; color:#fff; background:var(--ink-soft); }
   .rank-badge::after{ content:none; }
   .rank-name{ font-weight:600; font-size:.87rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .rank-papeis{ font-weight:400; font-size:.68rem; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .rank-bar-track{ background:var(--surface-2); border-radius:6px; height:18px; overflow:hidden; min-width:0; }
   .rank-bar-fill{ height:100%; border-radius:6px; position:relative; overflow:hidden;
     transform-origin:left center; transition:transform .28s var(--ease-out); }
@@ -464,19 +479,21 @@
   .doc-empty{ padding:32px 16px; text-align:center; color:var(--ink-soft); font-size:.88rem; line-height:1.5; }
 
   /* Camada de acessibilidade: ajuda flutuante, glossário, onboarding */
-  .fab-help, .fab-noise, .fab-scribble, .fab-tools, .fab-lesson{ position:fixed; z-index:30; width:48px; height:48px;
-    border-radius:50%; background:var(--accent); color:#fff; border:none; cursor:pointer;
+  .fab-help, .fab-noise, .fab-scribble, .fab-tools, .fab-lesson{ position:fixed; z-index:30; height:48px;
+    border-radius:999px; background:var(--accent); color:#fff; border:none; cursor:pointer;
     display:flex; align-items:center; justify-content:center;
     box-shadow:0 3px 10px rgba(0,0,0,.22);
     transition:transform .1s var(--ease-out), opacity .1s var(--ease-out); }
-  .fab-help{ right:16px; bottom:calc(16px + env(safe-area-inset-bottom,0px)); font:700 1.05rem inherit; }
+  .fab-help{ right:16px; bottom:calc(16px + env(safe-area-inset-bottom,0px)); font:700 1.05rem inherit; width:48px; padding:0; }
+  .fab-noise, .fab-scribble, .fab-tools, .fab-lesson{ padding:0 18px 0 15px; gap:8px; font:650 .8rem inherit; white-space:nowrap; }
   .fab-noise{ right:16px; bottom:calc(74px + env(safe-area-inset-bottom,0px)); }
   .fab-scribble{ right:16px; bottom:calc(132px + env(safe-area-inset-bottom,0px)); }
   .fab-lesson{ right:16px; bottom:calc(248px + env(safe-area-inset-bottom,0px)); }
   .fab-lesson[hidden]{ display:none; }
   .fab-help:active, .fab-noise:active, .fab-scribble:active, .fab-tools:active, .fab-lesson:active{ transform:scale(.93); opacity:.85; }
   .fab-noise[hidden], .fab-scribble[hidden]{ display:none; }
-  .fab-help svg, .fab-noise svg, .fab-scribble svg, .fab-tools svg, .fab-lesson svg{ width:22px; height:22px; }
+  .fab-help svg, .fab-noise svg, .fab-scribble svg, .fab-tools svg, .fab-lesson svg{ width:20px; height:20px; flex:0 0 auto; }
+  .fab-label{ line-height:1; }
   .fab-noise.ok{ background:var(--green); }
   .fab-noise.mid{ background:var(--gold); color:#3a2e00; }
   .fab-noise.high{ background:var(--red); animation:pulse 1s ease-in-out infinite; }
@@ -1003,6 +1020,13 @@
       <div class="card">
         <h2><span class="step-num">1</span>Turma e atividade</h2>
         <p class="hint">Funciona para qualquer disciplina — preencha com a sua próxima aula.</p>
+        <div class="plano-relampago-cta no-print">
+          <div class="plano-relampago-cta-text">
+            <strong>Sem tempo pra planejar?</strong>
+            <span>Digite só o tema — a gente sugere metodologia, etapas cronometradas, BNCC e grupos pra você.</span>
+          </div>
+          <button type="button" class="btn btn-primary btn-sm" id="plano-relampago-btn">⚡ Gerar plano relâmpago</button>
+        </div>
         <div class="setup-grid">
           <label class="field turma-select-field" id="turma-select-wrap" hidden><span>Selecionar turma cadastrada</span>
             <select id="turma-select"></select>
@@ -1059,6 +1083,21 @@
         <h2><span class="step-num">5</span>Grupos e pontuação</h2>
         <p class="hint">Defina os grupos e quantos integrantes cada um tem — sem precisar digitar nomes de alunos.</p>
         <label class="ranking-toggle no-print"><input type="checkbox" id="ranking-ativo-toggle" checked><span>Usar ranking/pontuação ao vivo</span></label>
+
+        <div class="autodiv-box no-print">
+          <div class="autodiv-row">
+            <span class="autodiv-label">Turma cheia? Divida automaticamente</span>
+            <div class="qtd-stepper">
+              <button type="button" class="qtd-btn" id="autodiv-qtd-minus" aria-label="Diminuir alunos">−</button>
+              <span class="qtd-value" id="autodiv-qtd-value">30</span>
+              <button type="button" class="qtd-btn" id="autodiv-qtd-plus" aria-label="Aumentar alunos">+</button>
+            </div>
+            <span class="unit">aluno(s)</span>
+          </div>
+          <div class="age-chip-row" id="autodiv-size-row"></div>
+          <div class="btn-row" style="margin-top:2px;"><button type="button" class="btn btn-primary btn-sm" id="autodiv-btn">⚡ Dividir automaticamente</button></div>
+        </div>
+
         <div id="groups-list"></div>
         <div class="btn-row"><button class="btn btn-ghost btn-sm" id="group-add-btn">+ Adicionar grupo</button></div>
       </div>
@@ -1121,6 +1160,21 @@
         <label class="ranking-toggle no-print"><input type="checkbox" id="ranking-visivel" checked><span>Mostrar pontuação para a turma (desmarque para evitar comparação e constrangimento)</span></label>
         <div id="ranking-nudge"></div>
         <div id="ranking-list"></div>
+      </div>
+
+      <div class="card" id="engajamento-card">
+        <h2>Reengajar agora<button type="button" class="help-btn" data-help="engajamento" aria-label="Como funciona o reengajamento?">?</button></h2>
+        <p class="hint">Sorteie um desafio relâmpago de 1 a 2 minutos pra recuperar a atenção da turma, sem precisar improvisar.</p>
+        <div id="engajamento-nudge"></div>
+        <div class="desafio-box">
+          <p class="desafio-texto" id="desafio-texto">Toque em "Sortear desafio" pra reengajar a turma na hora.</p>
+          <div class="btn-row" id="desafio-aplicar-row" hidden>
+            <select id="desafio-grupo-select" class="desafio-select"></select>
+            <button type="button" class="btn btn-primary btn-sm" id="desafio-aplicar-btn">Aplicar (+2 pts)</button>
+            <button type="button" class="btn btn-ghost btn-sm" id="desafio-descartar-btn">Descartar</button>
+          </div>
+        </div>
+        <div class="btn-row no-print"><button type="button" class="btn btn-ghost btn-sm" id="desafio-sortear-btn">🎲 Sortear desafio relâmpago</button></div>
       </div>
 
       <div class="btn-row">
@@ -1257,18 +1311,22 @@
 
   <button type="button" class="fab-noise no-print" id="fab-noise-btn" hidden title="Medidor de barulho" aria-label="Abrir medidor de barulho">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+    <span class="fab-label">Barulho</span>
   </button>
 
   <button type="button" class="fab-scribble no-print" id="fab-scribble-btn" hidden title="Bloco de anotações" aria-label="Abrir bloco de anotações">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path></svg>
+    <span class="fab-label">Notas</span>
   </button>
 
   <button type="button" class="fab-tools no-print" id="fab-tools-btn" hidden title="Ferramentas e sites da aula" aria-label="Abrir ferramentas e sites da aula">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg>
+    <span class="fab-label">Links</span>
   </button>
 
   <button type="button" class="fab-lesson no-print" id="fab-lesson-btn" hidden title="Iniciar lição interativa" aria-label="Iniciar lição interativa com a turma">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+    <span class="fab-label">Lição</span>
   </button>
 
   <div class="overlay-backdrop no-print" id="lesson-picker-backdrop" hidden aria-modal="true">
@@ -1430,6 +1488,29 @@
       <div class="btn-row">
         <button type="button" class="btn btn-primary" id="event-save">Salvar</button>
         <button type="button" class="btn btn-danger" id="event-delete">Excluir</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay-backdrop center no-print" id="plano-relampago-backdrop" hidden aria-modal="true">
+    <div class="sheet" role="dialog" aria-labelledby="plano-relampago-title">
+      <div class="sheet-head">
+        <h3 class="sheet-title" id="plano-relampago-title">⚡ Plano de aula relâmpago</h3>
+        <button type="button" class="sheet-close" id="plano-relampago-close" aria-label="Fechar">×</button>
+      </div>
+      <p class="hint">Preenche metodologia, etapas cronometradas, BNCC e grupos pra você — revise e ajuste o que quiser depois.</p>
+      <label class="field"><span>Tema da aula</span><input type="text" id="plano-tema" placeholder="Ex.: Cadeia alimentar"></label>
+      <div class="field" style="flex-direction:column; align-items:stretch; gap:8px; margin-top:6px;">
+        <span>Duração total</span>
+        <div class="age-chip-row" id="plano-duracao-row"></div>
+      </div>
+      <div class="field" style="flex-direction:column; align-items:stretch; gap:8px; margin-top:6px;">
+        <span>Foco da aula</span>
+        <div class="age-chip-row" id="plano-foco-row"></div>
+      </div>
+      <p class="auth-error" id="plano-error" hidden></p>
+      <div class="btn-row">
+        <button type="button" class="btn btn-primary" id="plano-gerar-btn">Gerar plano ⚡</button>
       </div>
     </div>
   </div>
@@ -1753,7 +1834,7 @@
       turma:state.turma, disciplina:state.disciplina, atividade:state.atividade, metodologia:state.metodologia,
       faixaEtaria:state.faixaEtaria, timerAtivo:state.timerAtivo, timerPalAtivo:state.timerPalAtivo,
       rankingAtivo:state.rankingAtivo, liveTools:state.liveTools,
-      bncc:state.bncc, stages:state.stages, groups:state.groups.map(function(g){ return {nome:g.nome, pontos:0, qtd:g.qtd}; }),
+      bncc:state.bncc, stages:state.stages, groups:state.groups.map(function(g){ return {nome:g.nome, pontos:0, qtd:g.qtd, papeis:g.papeis || null}; }),
       contexto:state.contexto, producao:state.producao
     };
   }
@@ -1901,6 +1982,11 @@
         '<span class="unit">integrante(s)</span>' +
         '<button class="btn btn-danger btn-sm" data-act="remove-group" data-idx="' + i + '"' + (state.groups.length === 1 ? ' disabled' : '') + '>Remover</button>';
       wrap.appendChild(row);
+      if(g.papeis && g.papeis.length){
+        var hint = document.createElement('div'); hint.className = 'group-papeis-hint';
+        hint.textContent = 'Papéis sugeridos: ' + g.papeis.join(', ');
+        wrap.appendChild(hint);
+      }
     });
   }
 
@@ -1920,6 +2006,7 @@
     renderStages();
     updateTimerConfigVisibility();
     renderGroups();
+    renderAutodivControls();
     renderToolPresets();
     renderToolsList();
   }
@@ -1956,6 +2043,140 @@
     if(!btn) return;
     state.faixaEtaria = btn.dataset.key;
     renderAgeChips();
+  });
+
+  // ---- Dividir turma automaticamente: menos digitação, grupos e papéis prontos ----
+  var GRUPO_NOMES_POOL = ['Nebulosa', 'Cometa', 'Estrela', 'Meteoro', 'Galáxia', 'Constelação', 'Supernova', 'Asteroide', 'Órbita', 'Eclipse', 'Aurora', 'Nébula'];
+  var PAPEIS_POOL = ['Líder', 'Relator', 'Cronometrista', 'Apoio técnico', 'Revisor'];
+  var TAMANHOS_GRUPO = [
+    { key:'pequeno', nome:'Grupos pequenos', sub:'~3 por grupo', alvo:3 },
+    { key:'medio', nome:'Grupos médios', sub:'~4-5 por grupo', alvo:4 },
+    { key:'grande', nome:'Grupos grandes', sub:'~6+ por grupo', alvo:6 }
+  ];
+  var autodivState = { qtd:30, tamanho:'medio' };
+
+  function renderAutodivControls(){
+    $('autodiv-qtd-value').textContent = autodivState.qtd;
+    $('autodiv-size-row').innerHTML = TAMANHOS_GRUPO.map(function(t){
+      return '<button type="button" class="age-chip' + (autodivState.tamanho === t.key ? ' active' : '') + '" data-key="' + t.key + '">' +
+        '<span class="age-chip-nome">' + esc(t.nome) + '</span><span class="age-chip-sub">' + esc(t.sub) + '</span></button>';
+    }).join('');
+  }
+  $('autodiv-qtd-minus').addEventListener('click', function(){ autodivState.qtd = Math.max(1, autodivState.qtd - 1); renderAutodivControls(); });
+  $('autodiv-qtd-plus').addEventListener('click', function(){ autodivState.qtd = Math.min(80, autodivState.qtd + 1); renderAutodivControls(); });
+  $('autodiv-size-row').addEventListener('click', function(e){
+    var btn = e.target.closest ? e.target.closest('.age-chip') : null; if(!btn) return;
+    autodivState.tamanho = btn.dataset.key;
+    renderAutodivControls();
+  });
+  function gerarGruposAutomaticos(totalAlunos, tamanhoKey){
+    var total = Math.max(1, totalAlunos || 1);
+    var cfg = TAMANHOS_GRUPO.filter(function(t){ return t.key === tamanhoKey; })[0] || TAMANHOS_GRUPO[1];
+    var numGrupos = Math.max(1, Math.round(total / cfg.alvo));
+    var base = Math.floor(total / numGrupos), resto = total % numGrupos;
+    var grupos = [];
+    for(var i = 0; i < numGrupos; i++){
+      var qtd = base + (i < resto ? 1 : 0);
+      var papeis = PAPEIS_POOL.slice(0, Math.max(2, Math.min(PAPEIS_POOL.length, qtd >= 5 ? 5 : qtd)));
+      grupos.push({ nome:GRUPO_NOMES_POOL[i % GRUPO_NOMES_POOL.length], pontos:0, qtd:qtd, papeis:papeis });
+    }
+    return grupos;
+  }
+  $('autodiv-btn').addEventListener('click', function(){
+    state.groups = gerarGruposAutomaticos(autodivState.qtd, autodivState.tamanho);
+    renderGroups();
+    saveLocal();
+  });
+
+  // ---- Plano de aula relâmpago: tema + 2 toques -> metodologia, etapas, BNCC e grupos prontos ----
+  var PLANO_DURACOES = [30, 45, 50, 60, 90];
+  var PLANO_FOCOS = [
+    { key:'introduzir', nome:'Introduzir conceito novo', metodologia:'pares', nucleoNome:'Votação e discussão em duplas' },
+    { key:'praticar', nome:'Praticar em grupo', metodologia:'estacoes', nucleoNome:'Rotação pelas estações' },
+    { key:'revisar', nome:'Revisar pra avaliação', metodologia:'gamificacao', nucleoNome:'Desafios e pontuação' },
+    { key:'projeto', nome:'Projeto / mão na massa', metodologia:'pbl', nucleoNome:'Investigação em grupo' }
+  ];
+  var planoState = { duracao:50, foco:'praticar' };
+
+  function renderPlanoControls(){
+    $('plano-duracao-row').innerHTML = PLANO_DURACOES.map(function(d){
+      return '<button type="button" class="age-chip' + (planoState.duracao === d ? ' active' : '') + '" data-dur="' + d + '"><span class="age-chip-nome">' + d + ' min</span></button>';
+    }).join('');
+    $('plano-foco-row').innerHTML = PLANO_FOCOS.map(function(f){
+      return '<button type="button" class="age-chip' + (planoState.foco === f.key ? ' active' : '') + '" data-foco="' + f.key + '"><span class="age-chip-nome">' + esc(f.nome) + '</span></button>';
+    }).join('');
+  }
+  $('plano-duracao-row').addEventListener('click', function(e){
+    var btn = e.target.closest ? e.target.closest('.age-chip') : null; if(!btn) return;
+    planoState.duracao = +btn.dataset.dur; renderPlanoControls();
+  });
+  $('plano-foco-row').addEventListener('click', function(e){
+    var btn = e.target.closest ? e.target.closest('.age-chip') : null; if(!btn) return;
+    planoState.foco = btn.dataset.foco; renderPlanoControls();
+  });
+
+  function openPlanoRelampago(){
+    $('plano-tema').value = $('f-atividade').value || '';
+    setFieldMsg('plano-error', null);
+    renderPlanoControls();
+    overlayOpen($('plano-relampago-backdrop'));
+  }
+  function closePlanoRelampago(){ overlayClose($('plano-relampago-backdrop')); }
+  $('plano-relampago-btn').addEventListener('click', openPlanoRelampago);
+  $('plano-relampago-close').addEventListener('click', closePlanoRelampago);
+  $('plano-relampago-backdrop').addEventListener('click', function(e){ if(e.target === this) closePlanoRelampago(); });
+
+  function fetchBnccAuto(term){
+    var codigoLike = /^[A-Z]{2}\d{2}[A-Z]{2}\d{2}$/i.test(term.replace(/\s+/g, ''));
+    var url = codigoLike
+      ? BNCC_API + '/aprendizagens/' + encodeURIComponent(term.replace(/\s+/g, '').toUpperCase())
+      : BNCC_API + '/busca?q=' + encodeURIComponent(term) + '&limite=3';
+    return fetch(url).then(function(res){
+      if(!res.ok) return [];
+      return res.json();
+    }).then(function(data){
+      if(!data) return [];
+      return codigoLike ? (data.codigo ? [data] : []) : (data.itens || []);
+    }).catch(function(){ return []; });
+  }
+
+  $('plano-gerar-btn').addEventListener('click', function(){
+    var tema = $('plano-tema').value.trim();
+    if(!tema){ setFieldMsg('plano-error', 'Digite o tema da aula pra gerar o plano.'); return; }
+    setFieldMsg('plano-error', null);
+    var btn = $('plano-gerar-btn'); btn.disabled = true; btn.textContent = 'Gerando…';
+
+    var focoCfg = PLANO_FOCOS.filter(function(f){ return f.key === planoState.foco; })[0] || PLANO_FOCOS[1];
+    var total = planoState.duracao;
+    var abertura = Math.max(3, Math.round(total * 0.2));
+    var fechamento = Math.max(3, Math.round(total * 0.15));
+    var nucleo = Math.max(5, total - abertura - fechamento);
+
+    $('f-atividade').value = tema;
+    state.atividade = tema;
+    state.metodologia = focoCfg.metodologia;
+    renderMetodologiaDesc();
+    state.stages = [
+      { nome:'Abertura e contextualização', min:abertura },
+      { nome:focoCfg.nucleoNome, min:nucleo },
+      { nome:'Fechamento e síntese', min:fechamento }
+    ];
+    renderStages();
+    state.timerAtivo = true; $('timer-ativo-toggle').checked = true; updateTimerConfigVisibility();
+
+    if(!$('f-producao').value.trim()){ $('f-producao').value = 'Produção do grupo sobre: ' + tema; state.producao = $('f-producao').value; }
+
+    if(autodivState.qtd){
+      state.groups = gerarGruposAutomaticos(autodivState.qtd, autodivState.tamanho);
+      renderGroups();
+    }
+
+    fetchBnccAuto(tema).then(function(items){
+      items.slice(0, 2).forEach(function(item){ addBnccItem(item.codigo + ' – ' + item.texto); });
+      btn.disabled = false; btn.textContent = 'Gerar plano ⚡';
+      saveLocal();
+      closePlanoRelampago();
+    });
   });
 
   // ---- Cronômetro/etapas e ranking: opcionais ----
@@ -2361,7 +2582,7 @@
       var row = document.createElement('div'); row.className = 'rank-item';
       row.innerHTML =
         '<div class="rank-badge" style="background:' + badgeBg + '">' + badgeHtml + '</div>' +
-        '<div class="rank-name">' + esc(g.nome) + '</div>' +
+        '<div class="rank-name">' + esc(g.nome) + (g.papeis && g.papeis.length ? '<div class="rank-papeis">' + esc(g.papeis.join(', ')) + '</div>' : '') + '</div>' +
         '<div class="rank-bar-track"><div class="rank-bar-fill" style="width:' + widthPct + '%;background:' + barColor + '"></div></div>' +
         '<div class="rank-points">' + pointsText + '</div>' +
         '<div class="rank-controls">' +
@@ -2371,6 +2592,7 @@
         '</div>';
       list.appendChild(row);
     });
+    checkEngajamentoNudge();
   }
   $('ranking-list').addEventListener('click', function(e){
     var act = e.target.dataset.act; if(!act) return;
@@ -2380,6 +2602,68 @@
     renderRanking();
   });
   $('ranking-visivel').addEventListener('change', function(e){ state.rankingPublico = e.target.checked; renderRanking(); });
+
+  // ---- Reengajar agora: banco de desafios relâmpago + detecção de grupo parado ----
+  var DESAFIOS_RELAMPAGO = [
+    'Peça que cada grupo resuma o que já entendeu até agora em uma frase de no máximo 10 palavras.',
+    'Desafie os grupos a ensinar o conceito da aula pro grupo vizinho em 60 segundos.',
+    'Rodada relâmpago: cada grupo tem 30 segundos pra citar um exemplo real do que está sendo estudado.',
+    'Proponha uma mini-competição: o primeiro grupo a levantar a mão com a resposta certa ganha o bônus.',
+    'Peça que um integrante de cada grupo represente o conceito da aula com mímica, sem falar.',
+    'Lance uma pergunta-pegadinha sobre o tema e veja qual grupo identifica o erro primeiro.',
+    'Peça pra cada grupo criar um nome ou slogan engraçado pro que estão produzindo agora.',
+    'Desafie dois grupos a trocar de lugar e continuar o trabalho um do outro por 2 minutos.',
+    'Proponha 60 segundos de silêncio total pra concentração, seguidos de uma rodada de perguntas rápidas.',
+    'Peça que cada grupo aponte em voz alta o que já entendeu bem e o que ainda está confuso.',
+    'Sorteie um integrante de cada grupo pra apresentar o progresso do grupo em 20 segundos.',
+    'Ofereça um bônus extra pro grupo que ajudar outro grupo que está travado.',
+    'Peça pra cada grupo formular uma pergunta pro professor sobre o que ainda não entendeu.',
+    'Troque um integrante entre dois grupos por 3 minutos e veja o que muda na dinâmica.',
+    'Peça que os grupos classifiquem, de 1 a 5, o quanto avançaram até agora — e por quê.',
+    'Ligue um cronômetro visível de 3 minutos pra criar senso de urgência na etapa atual.'
+  ];
+  var liveStartTs = null, desafioAtualIdx = null;
+
+  function renderDesafioGrupoSelect(){
+    $('desafio-grupo-select').innerHTML = state.groups.map(function(g, i){ return '<option value="' + i + '">' + esc(g.nome) + '</option>'; }).join('');
+  }
+  function renderDesafioCard(){
+    if(desafioAtualIdx == null){
+      $('desafio-texto').textContent = 'Toque em "Sortear desafio" pra reengajar a turma na hora.';
+      $('desafio-aplicar-row').hidden = true;
+      return;
+    }
+    $('desafio-texto').textContent = DESAFIOS_RELAMPAGO[desafioAtualIdx];
+    renderDesafioGrupoSelect();
+    $('desafio-aplicar-row').hidden = false;
+  }
+  function sortearDesafio(){
+    var idx;
+    do{ idx = Math.floor(Math.random() * DESAFIOS_RELAMPAGO.length); }while(idx === desafioAtualIdx && DESAFIOS_RELAMPAGO.length > 1);
+    desafioAtualIdx = idx;
+    renderDesafioCard();
+  }
+  $('desafio-sortear-btn').addEventListener('click', sortearDesafio);
+  $('desafio-aplicar-btn').addEventListener('click', function(){
+    var idx = +$('desafio-grupo-select').value;
+    if(state.groups[idx]){ state.groups[idx].pontos += 2; renderRanking(); }
+    desafioAtualIdx = null; renderDesafioCard();
+  });
+  $('desafio-descartar-btn').addEventListener('click', function(){ desafioAtualIdx = null; renderDesafioCard(); });
+
+  function checkEngajamentoNudge(){
+    var nudgeEl = $('engajamento-nudge'); if(!nudgeEl) return;
+    if(!liveStartTs || state.groups.length < 2){ nudgeEl.innerHTML = ''; return; }
+    var elapsedMin = (Date.now() - liveStartTs) / 60000;
+    var maxPts = Math.max.apply(null, state.groups.map(function(g){ return g.pontos; }));
+    var parados = state.groups.filter(function(g){ return g.pontos === 0; });
+    if(elapsedMin >= 5 && maxPts > 0 && parados.length){
+      var nomes = parados.map(function(g){ return g.nome; }).join(', ');
+      nudgeEl.innerHTML = '<div class="engajamento-nudge-msg">' + esc(parados.length > 1 ? 'Os grupos ' + nomes + ' ainda não pontuaram' : 'O grupo ' + nomes + ' ainda não pontuou') + ' enquanto os outros avançam — que tal sortear um desafio relâmpago pra reengajar?</div>';
+    } else {
+      nudgeEl.innerHTML = '';
+    }
+  }
 
   // ---- Medidor de barulho (bolinhas que saltam com o volume do microfone) ----
   var NOISE_COLOR_VARS = ['--g1', '--g2', '--g3', '--g4', '--g5', '--g6'];
@@ -2855,6 +3139,8 @@
       state.checklist = checklistItemLines().map(function(){ return false; });
       state.poll = { round:1, votes1:[], votes2:[] };
       state.reportSavedThisClass = false;
+      liveStartTs = Date.now();
+      desafioAtualIdx = null;
     }
     state.secondsLeft = state.stages[state.currentStage].min * 60;
     state.timerRunning = false;
@@ -2862,9 +3148,11 @@
     $('timer-section').hidden = !state.timerAtivo;
     $('stage-info-wrap').hidden = !state.timerAtivo;
     $('ranking-card').hidden = !state.rankingAtivo;
+    $('engajamento-card').hidden = !state.rankingAtivo;
     $('timer-pal').hidden = !state.timerPalAtivo;
     $('timer-pal').className = 'timer-pal pal-' + state.faixaEtaria;
     renderLiveHeader(); renderStageDots(); renderStageName(); renderTimer(); renderRanking(); renderNudge();
+    renderDesafioCard();
     updateStartPauseLabel(); updateNextStageButtonLabel(); renderMethodologyPanel(); renderLiveTools();
   }
 
@@ -3014,7 +3302,9 @@
     licoes: { title:'Como funcionam as lições interativas?',
       body:'Monte uma lição com objetivo, fontes e seções de conteúdo, mais um quiz de verificação. No modo apresentação, o quiz funciona como uma checagem de verdade: a turma só avança pra próxima etapa depois de acertar a pergunta (pode errar e tentar de novo). Na tela "Ao vivo", o botão de lição (ícone de livro) abre direto a última lição — ou a lista, se você tiver mais de uma — sem precisar trocar de aba.' },
     scribble: { title:'Como funciona o bloco de anotações?',
-      body:'É um quadro em branco pra você escrever ou desenhar à mão livre durante a aula — pra explicar algo rápido sem precisar de outro app. Escolha a cor da caneta, use a borracha se errar, e toque em "Amassar e limpar" quando quiser recomeçar do zero (a folha se amassa e some, como papel de verdade). Nada é salvo — some ao amassar ou ao fechar a aula.' }
+      body:'É um quadro em branco pra você escrever ou desenhar à mão livre durante a aula — pra explicar algo rápido sem precisar de outro app. Escolha a cor da caneta, use a borracha se errar, e toque em "Amassar e limpar" quando quiser recomeçar do zero (a folha se amassa e some, como papel de verdade). Nada é salvo — some ao amassar ou ao fechar a aula.' },
+    engajamento: { title:'Como funciona o reengajamento?',
+      body:'Toque em "Sortear desafio relâmpago" pra receber uma dinâmica curta (1-2 minutos) pra recuperar a atenção da turma na hora, sem precisar improvisar. Se algum grupo passar um tempo sem pontuar enquanto os outros avançam, um aviso aparece aqui sugerindo um desafio pra aquele grupo especificamente. Ao aplicar um desafio, o grupo escolhido ganha um bônus de pontos.' }
   };
   var FS_LEVELS = [1, 1.15, 1.3];
   var fsIndex = 0;
@@ -3888,6 +4178,7 @@
     $('f-turma').value = t.nome;
     $('f-disciplina').value = t.disciplina || '';
     state.turma = t.nome; state.disciplina = t.disciplina || '';
+    if(t.quantidade_alunos){ autodivState.qtd = t.quantidade_alunos; renderAutodivControls(); }
     saveLocal();
   });
 
