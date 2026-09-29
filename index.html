@@ -914,6 +914,11 @@
           </div>
         </div>
 
+        <div id="report-methodology-section">
+          <div class="section-title" id="report-methodology-title">Resultado da metodologia</div>
+          <div id="report-methodology-body"></div>
+        </div>
+
         <div id="report-ranking-section">
           <div class="section-title">Ranking final</div>
           <div class="table-wrap">
@@ -1271,22 +1276,28 @@
   var METODOLOGIAS = {
     invertida: { nome:'Sala de aula invertida', desc:'Os alunos estudam o conteúdo antes da aula (vídeo ou texto); o tempo em sala vira prática e tira-dúvidas.',
       contextLabel:'O que os alunos deveriam ter estudado antes (um item por linha)', contextPlaceholder:'Ex.: Assistir ao vídeo sobre fotossíntese',
-      panelTitle:'Verificação do estudo prévio', evidTier:'mid', evidLabel:'Evidência moderada · depende de adesão prévia dos alunos' },
+      panelTitle:'Verificação do estudo prévio', evidTier:'mid', evidLabel:'Evidência moderada · depende de adesão prévia dos alunos',
+      checklistLabel:'confirmados', resultLabel:'Resultado: verificação do estudo prévio' },
     pbl: { nome:'Aprendizagem Baseada em Problemas (PBL)', desc:'A turma investiga um problema real ou simulado e constrói a solução em grupo.',
       contextLabel:'Problema que os grupos vão resolver (1ª linha) e critérios (linhas seguintes)', contextPlaceholder:'Ex.: Como reduzir o desperdício de água na escola?',
-      panelTitle:'Problema da aula', evidTier:'high', evidLabel:'Evidência moderada · alto custo de planejamento' },
+      panelTitle:'Problema da aula', evidTier:'high', evidLabel:'Evidência moderada · alto custo de planejamento',
+      checklistLabel:'critérios atendidos', resultLabel:'Resultado: critérios do problema' },
     gamificacao: { nome:'Gamificação', desc:'Regras de jogo, pontos e desafios dão ritmo à atividade — combina direto com o ranking.',
       contextLabel:'Missão da aula (1ª linha) e regras do jogo (linhas seguintes)', contextPlaceholder:'Ex.: Complete 3 desafios para ganhar o bônus final',
-      panelTitle:'Desafio de hoje', evidTier:'mid', evidLabel:'Forte no curto prazo · efeito cai após semanas, defina critério de saída' },
+      panelTitle:'Desafio de hoje', evidTier:'mid', evidLabel:'Forte no curto prazo · efeito cai após semanas, defina critério de saída',
+      checklistLabel:'desafios concluídos', resultLabel:'Resultado: desafios da gamificação' },
     pares: { nome:'Peer Instruction', desc:'Pergunta conceitual, votação individual, discussão em duplas e nova votação.',
       contextLabel:'Pergunta (1ª linha) e alternativas (uma por linha)', contextPlaceholder:'Pergunta\nA) alternativa 1\nB) alternativa 2\nC) alternativa 3',
-      panelTitle:'Peer Instruction — votação', evidTier:'low', evidLabel:'Evidência forte · baixo custo · recomendado para turmas grandes' },
+      panelTitle:'Peer Instruction — votação', evidTier:'low', evidLabel:'Evidência forte · baixo custo · recomendado para turmas grandes',
+      resultLabel:'Resultado: votação (Peer Instruction)' },
     estacoes: { nome:'Rotação por estações', desc:'A turma se divide em grupos que passam por estações com tarefas diferentes.',
       contextLabel:'Estações (uma por linha)', contextPlaceholder:'Ex.: Estação 1 — Leitura dirigida',
-      panelTitle:'Mapa de rotação', evidTier:'high', evidLabel:'Evidência incipiente · alto custo de planejamento e logística' },
+      panelTitle:'Mapa de rotação', evidTier:'high', evidLabel:'Evidência incipiente · alto custo de planejamento e logística',
+      resultLabel:'Resultado: itinerário das estações' },
     caso: { nome:'Estudo de caso', desc:'Um caso concreto é analisado em grupo para aplicar o conteúdo da aula.',
       contextLabel:'Caso (1ª linha) e perguntas norteadoras (linhas seguintes)', contextPlaceholder:'Ex.: Descreva a situação e as perguntas que os grupos devem responder',
-      panelTitle:'Estudo de caso', evidTier:'mid', evidLabel:'Evidência moderada e heterogênea · custo médio de planejamento' }
+      panelTitle:'Estudo de caso', evidTier:'mid', evidLabel:'Evidência moderada e heterogênea · custo médio de planejamento',
+      checklistLabel:'perguntas discutidas', resultLabel:'Resultado: estudo de caso' }
   };
 
   var METHOD_ICONS = {
@@ -1846,6 +1857,15 @@
 
   // Methodology-specific live panel
   function contextLines(){ return (state.contexto || '').split('\n').map(function(s){ return s.trim(); }).filter(Boolean); }
+  // Itens que viram checklist interativo ao vivo: pra "invertida" é toda linha; pra pbl/gamificação/caso
+  // a 1ª linha é o enunciado (problema/missão/caso) e as demais viram os itens marcáveis.
+  function checklistItemLines(){
+    var lines = contextLines();
+    var key = state.metodologia;
+    if(key === 'invertida') return lines;
+    if(key === 'pbl' || key === 'gamificacao' || key === 'caso') return lines.length > 1 ? lines.slice(1) : [];
+    return [];
+  }
   function ensurePollArrays(n){
     while(state.poll.votes1.length < n) state.poll.votes1.push(0);
     while(state.poll.votes2.length < n) state.poll.votes2.push(0);
@@ -1857,20 +1877,22 @@
     var lines = contextLines();
     var html = '<h2>' + esc(cfg.panelTitle) + '</h2>';
 
-    if(key === 'invertida'){
-      if(!lines.length){ html += '<p class="hint">Adicione os itens de verificação na etapa de configuração.</p>'; }
-      else {
-        var doneCount = state.checklist.filter(Boolean).length;
-        html += '<p class="hint">' + doneCount + ' de ' + lines.length + ' confirmados</p>';
-        html += '<div class="checklist">' + lines.map(function(l, i){
-          return '<label class="check-row"><input type="checkbox" data-idx="' + i + '"' + (state.checklist[i] ? ' checked' : '') + '><span>' + esc(l) + '</span></label>';
-        }).join('') + '</div>';
-      }
-    } else if(key === 'pbl' || key === 'gamificacao' || key === 'caso'){
+    if(key === 'invertida' || key === 'pbl' || key === 'gamificacao' || key === 'caso'){
       if(!lines.length){ html += '<p class="hint">Adicione o texto na etapa de configuração.</p>'; }
       else {
-        html += '<p class="context-lead">' + esc(lines[0]) + '</p>';
-        if(lines.length > 1){ html += '<ul class="context-list">' + lines.slice(1).map(function(l){ return '<li>' + esc(l) + '</li>'; }).join('') + '</ul>'; }
+        var leadLine = key === 'invertida' ? null : lines[0];
+        var items = checklistItemLines();
+        if(leadLine){ html += '<p class="context-lead">' + esc(leadLine) + '</p>'; }
+        if(!items.length){
+          var itemNoun = key === 'pbl' ? 'os critérios' : key === 'gamificacao' ? 'as regras do jogo' : key === 'caso' ? 'as perguntas norteadoras' : 'os itens de verificação';
+          html += '<p class="hint">Adicione ' + itemNoun + ' (uma por linha' + (leadLine ? ', depois da primeira' : '') + ') na etapa de configuração.</p>';
+        } else {
+          var doneCount = state.checklist.filter(Boolean).length;
+          html += '<p class="hint">' + doneCount + ' de ' + items.length + ' ' + cfg.checklistLabel + '</p>';
+          html += '<div class="checklist">' + items.map(function(l, i){
+            return '<label class="check-row"><input type="checkbox" data-idx="' + i + '"' + (state.checklist[i] ? ' checked' : '') + '><span>' + esc(l) + '</span></label>';
+          }).join('') + '</div>';
+        }
       }
     } else if(key === 'pares'){
       if(lines.length < 2){ html += '<p class="hint">Escreva a pergunta na primeira linha e as alternativas nas linhas seguintes.</p>'; }
@@ -2357,6 +2379,37 @@
     refreshAfterDocChange();
   });
 
+  // Versão em texto simples do resultado da metodologia, pro relatório salvo automaticamente como documento.
+  function methodologyResultLine(){
+    var key = state.metodologia;
+    var cfg = METODOLOGIAS[key];
+    if(key === 'invertida' || key === 'pbl' || key === 'gamificacao' || key === 'caso'){
+      var items = checklistItemLines();
+      if(!items.length) return null;
+      var doneCount = state.checklist.filter(Boolean).length;
+      return doneCount + ' de ' + items.length + ' ' + (cfg && cfg.checklistLabel ? cfg.checklistLabel : 'itens concluídos');
+    }
+    if(key === 'pares'){
+      var lines = contextLines();
+      if(lines.length < 2) return null;
+      var options = lines.slice(1);
+      ensurePollArrays(options.length);
+      var t1 = state.poll.votes1.reduce(function(a, b){ return a + b; }, 0);
+      var t2 = state.poll.votes2.reduce(function(a, b){ return a + b; }, 0);
+      if(!t1 && !t2) return null;
+      return options.map(function(opt, i){
+        return opt + ' (R1: ' + (state.poll.votes1[i] || 0) + (t2 ? ', R2: ' + (state.poll.votes2[i] || 0) : '') + ')';
+      }).join(' · ');
+    }
+    if(key === 'estacoes'){
+      var lines2 = contextLines();
+      var stations = lines2.length ? lines2 : state.stages.map(function(s){ return s.nome; });
+      if(!stations.length || !state.groups.length) return null;
+      return state.groups.map(function(g, i){ return g.nome + ' → ' + stations[state.currentStage % stations.length]; }).join(' · ');
+    }
+    return null;
+  }
+
   function autoSaveReportDoc(){
     var sorted = state.groups.slice().sort(function(a, b){ return b.pontos - a.pontos; });
     var linhas = [];
@@ -2365,6 +2418,8 @@
     linhas.push('Atividade: ' + state.atividade);
     linhas.push('Metodologia: ' + (METODOLOGIAS[state.metodologia] ? METODOLOGIAS[state.metodologia].nome : '—'));
     linhas.push('Data: ' + new Date().toLocaleDateString('pt-BR'));
+    var methResult = methodologyResultLine();
+    if(methResult) linhas.push((METODOLOGIAS[state.metodologia] && METODOLOGIAS[state.metodologia].resultLabel ? METODOLOGIAS[state.metodologia].resultLabel : 'Resultado da metodologia') + ': ' + methResult);
     if(state.bncc.length) linhas.push('BNCC: ' + state.bncc.join(' | '));
     if(state.rankingAtivo) linhas.push('Ranking final: ' + sorted.map(function(g, i){ return (i + 1) + 'º ' + g.nome + ' (' + g.pontos + ' pts)'; }).join(', '));
     if(state.evidenciaFormativa) linhas.push('Evidência de aprendizagem: ' + state.evidenciaFormativa);
@@ -2399,7 +2454,7 @@
   function prepareLive(resetPoints){
     if(resetPoints){
       state.groups.forEach(function(g){ g.pontos = 0; }); state.currentStage = 0;
-      state.checklist = contextLines().map(function(){ return false; });
+      state.checklist = checklistItemLines().map(function(){ return false; });
       state.poll = { round:1, votes1:[], votes2:[] };
       state.reportSavedThisClass = false;
     }
@@ -2419,6 +2474,72 @@
     collectSetupIntoState(); saveLocal(); prepareLive(true); switchView('live');
   });
 
+  // Resultado da metodologia no relatório — cada metodologia produz um resultado concreto, não só o nome escolhido.
+  function renderMethodologyReport(){
+    var key = state.metodologia;
+    var cfg = METODOLOGIAS[key];
+    var section = $('report-methodology-section');
+    var body = $('report-methodology-body');
+    $('report-methodology-title').textContent = cfg && cfg.resultLabel ? cfg.resultLabel : 'Resultado da metodologia';
+
+    if(key === 'invertida' || key === 'pbl' || key === 'gamificacao' || key === 'caso'){
+      var lines = contextLines();
+      var leadLine = key === 'invertida' ? null : lines[0];
+      var items = checklistItemLines();
+      if(!items.length){ section.hidden = true; return; }
+      section.hidden = false;
+      var doneCount = state.checklist.filter(Boolean).length;
+      var html = '';
+      if(leadLine){ html += '<p class="hint">' + esc(leadLine) + '</p>'; }
+      html += '<p class="hint">' + doneCount + ' de ' + items.length + ' ' + cfg.checklistLabel + '</p>';
+      html += '<div class="table-wrap"><table><thead><tr><th>Item</th><th>Status</th></tr></thead><tbody>' +
+        items.map(function(l, i){ return '<tr><td>' + esc(l) + '</td><td>' + (state.checklist[i] ? '✓ Concluído' : '— Pendente') + '</td></tr>'; }).join('') +
+      '</tbody></table></div>';
+      body.innerHTML = html;
+    } else if(key === 'pares'){
+      var lines2 = contextLines();
+      if(lines2.length < 2){ section.hidden = true; return; }
+      var pergunta = lines2[0], options = lines2.slice(1);
+      ensurePollArrays(options.length);
+      var t1 = state.poll.votes1.reduce(function(a, b){ return a + b; }, 0);
+      var t2 = state.poll.votes2.reduce(function(a, b){ return a + b; }, 0);
+      section.hidden = false;
+      var html2 = '<p class="hint">' + esc(pergunta) + '</p>';
+      if(!t1 && !t2){
+        html2 += '<p class="hint">Nenhum voto registrado ainda — abra "Ao vivo" e rode a votação com a turma.</p>';
+      } else {
+        html2 += '<div class="table-wrap"><table><thead><tr><th>Alternativa</th><th>Rodada 1</th><th>Rodada 2</th></tr></thead><tbody>' +
+          options.map(function(opt, i){
+            var v1 = state.poll.votes1[i] || 0, v2 = state.poll.votes2[i] || 0;
+            var p1 = t1 ? Math.round(v1 / t1 * 100) : 0, p2 = t2 ? Math.round(v2 / t2 * 100) : 0;
+            return '<tr><td>' + esc(opt) + '</td><td>' + v1 + (t1 ? ' (' + p1 + '%)' : '') + '</td><td>' + (t2 ? (v2 + ' (' + p2 + '%)') : '—') + '</td></tr>';
+          }).join('') +
+        '</tbody></table></div>' +
+        '<p class="hint">Total de votos — rodada 1: ' + t1 + (t2 ? ' · rodada 2: ' + t2 : ' · rodada 2 ainda não rodada') + '</p>';
+      }
+      body.innerHTML = html2;
+    } else if(key === 'estacoes'){
+      var lines3 = contextLines();
+      var stations = lines3.length ? lines3 : state.stages.map(function(s){ return s.nome; });
+      if(!stations.length || !state.groups.length){ section.hidden = true; return; }
+      section.hidden = false;
+      var rotations = state.currentStage + 1;
+      body.innerHTML = '<div class="table-wrap"><table><thead><tr><th>Grupo</th>' +
+        Array.from({ length: rotations }).map(function(_, r){ return '<th>Rotação ' + (r + 1) + '</th>'; }).join('') +
+        '</tr></thead><tbody>' +
+        state.groups.map(function(g, i){
+          var cells = Array.from({ length: rotations }).map(function(_, r){
+            var stIdx = (i + r) % stations.length;
+            return '<td>' + esc(stations[stIdx]) + '</td>';
+          }).join('');
+          return '<tr><td>' + esc(g.nome) + '</td>' + cells + '</tr>';
+        }).join('') +
+      '</tbody></table></div>';
+    } else {
+      section.hidden = true;
+    }
+  }
+
   // Report
   function renderReport(){
     var totalMin = state.stages.reduce(function(sum, s){ return sum + s.min; }, 0);
@@ -2435,6 +2556,8 @@
     $('f-proximo-passo').value = state.proximoPasso;
 
     $('report-bncc').innerHTML = state.bncc.map(function(item){ return '<span class="chip">' + esc(item) + '</span>'; }).join('');
+
+    renderMethodologyReport();
 
     $('report-stages-section').hidden = !state.timerAtivo;
     if(state.timerAtivo){
