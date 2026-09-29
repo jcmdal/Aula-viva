@@ -156,6 +156,7 @@
   .help-btn:active{ transform:scale(.9); }
   .setup-grid{ display:flex; flex-direction:column; }
   .field{ display:flex; align-items:center; justify-content:space-between; gap:14px; padding:11px 0; border-bottom:.5px solid var(--line); }
+  .field[hidden]{ display:none; }
   .setup-grid > .field{ border-bottom:.5px solid var(--line); }
   .card > .field:last-child, .setup-grid > .field:last-child{ border-bottom:none; padding-bottom:0; }
   .field > span{ font-size:.92rem; font-weight:400; color:var(--ink); flex:0 0 auto; }
@@ -577,6 +578,15 @@
   .cal-color-row{ display:flex; flex-wrap:wrap; gap:8px; }
   .cal-color-row .cal-color-dot{ width:26px; height:26px; }
 
+  .cal-weekday-row{ display:flex; flex-wrap:wrap; gap:6px; }
+  .cal-weekday-btn{ border:1.5px solid var(--line); background:var(--surface); color:var(--ink-soft); font:650 .74rem inherit;
+    width:34px; height:34px; border-radius:10px; cursor:pointer; transition:background-color .12s var(--ease-out), color .12s var(--ease-out), border-color .12s var(--ease-out); }
+  .cal-weekday-btn.active{ background:var(--accent); border-color:var(--accent); color:#fff; }
+  .cal-recur-sub{ display:flex; flex-direction:column; gap:10px; background:var(--surface-2); border-radius:12px; padding:12px; margin-top:2px; }
+  .cal-recur-sub.inline{ flex-direction:row; align-items:flex-end; flex-wrap:wrap; }
+  .cal-recur-sub[hidden]{ display:none; }
+  .cal-event-turma-tag{ opacity:.85; font-weight:500; }
+
   /* Mês */
   .cal-month-head{ display:grid; grid-template-columns:repeat(7,1fr); border-bottom:.5px solid var(--line); }
   .cal-month-head span{ padding:8px 4px; text-align:center; font-size:.66rem; font-weight:700; text-transform:uppercase;
@@ -850,6 +860,7 @@
       <span class="wizard-step-dot" data-step-dot="1"></span>
       <span class="wizard-step-dot" data-step-dot="2"></span>
       <span class="wizard-step-dot" data-step-dot="3"></span>
+      <span class="wizard-step-dot" data-step-dot="4"></span>
     </div>
 
     <div class="wizard-step" data-wizard-step="1">
@@ -865,9 +876,22 @@
     </div>
 
     <div class="wizard-step" data-wizard-step="2" hidden>
-      <h2 class="wizard-title">Suas turmas</h2>
-      <p class="wizard-sub">Nome, disciplina e quantidade de alunos de cada turma — dá pra ajustar depois.</p>
-      <div id="wizard-turmas-list"></div>
+      <h2 class="wizard-title">Sobre onde você dá aula</h2>
+      <p class="wizard-sub">Isso ajuda a ajustar algumas funcionalidades — como futuras integrações — ao seu contexto.</p>
+      <label class="wizard-field"><span>Os alunos têm conta do Google for Education ou outro e-mail institucional?</span>
+        <select id="wizard-email-institucional">
+          <option value="google_for_education">Sim, Google for Education</option>
+          <option value="outro_institucional">Sim, outro e-mail institucional</option>
+          <option value="pessoal">Não, usam e-mail pessoal</option>
+          <option value="nao_sei">Não sei</option>
+        </select>
+      </label>
+      <label class="wizard-field"><span>Você dá aula em mais de uma escola?</span>
+        <select id="wizard-multi-escola">
+          <option value="nao">Não, só uma escola</option>
+          <option value="sim">Sim, mais de uma</option>
+        </select>
+      </label>
       <div class="wizard-nav">
         <button type="button" class="btn btn-ghost" id="wizard-step2-back">← Voltar</button>
         <button type="button" class="btn btn-primary" id="wizard-step2-next">Continuar →</button>
@@ -875,11 +899,21 @@
     </div>
 
     <div class="wizard-step" data-wizard-step="3" hidden>
+      <h2 class="wizard-title">Suas turmas</h2>
+      <p class="wizard-sub">Nome, disciplina e quantidade de alunos de cada turma — dá pra ajustar depois.</p>
+      <div id="wizard-turmas-list"></div>
+      <div class="wizard-nav">
+        <button type="button" class="btn btn-ghost" id="wizard-step3-back">← Voltar</button>
+        <button type="button" class="btn btn-primary" id="wizard-step3-next">Continuar →</button>
+      </div>
+    </div>
+
+    <div class="wizard-step" data-wizard-step="4" hidden>
       <h2 class="wizard-title">Tudo pronto!</h2>
       <p class="wizard-sub" id="wizard-summary"></p>
       <p class="auth-error" id="wizard-error" hidden></p>
       <div class="wizard-nav">
-        <button type="button" class="btn btn-ghost" id="wizard-step3-back">← Voltar</button>
+        <button type="button" class="btn btn-ghost" id="wizard-step4-back">← Voltar</button>
         <button type="button" class="btn btn-primary" id="wizard-finish-btn">Começar a usar →</button>
       </div>
     </div>
@@ -1364,9 +1398,31 @@
           <select id="event-categoria"></select>
         </label>
       </div>
+      <label class="field turma-select-field" id="event-turma-wrap" hidden><span>Turma</span>
+        <select id="event-turma"></select>
+      </label>
       <div class="field" style="flex-direction:column; align-items:stretch; gap:8px; margin-top:6px;">
         <span>Cor</span>
         <div class="cal-color-row" id="event-color-row"></div>
+      </div>
+      <div class="field" id="event-recur-field" style="flex-direction:column; align-items:stretch; gap:8px; margin-top:6px;">
+        <span>Repetir</span>
+        <select id="event-recur-mode">
+          <option value="none">Não repetir</option>
+          <option value="weekly">Semanalmente</option>
+          <option value="custom">Personalizado</option>
+        </select>
+        <div class="cal-recur-sub" id="event-recur-weekly" hidden>
+          <div class="cal-weekday-row" id="event-recur-weekdays"></div>
+          <label class="field"><span>Repetir até</span><input type="date" id="event-recur-until"></label>
+        </div>
+        <div class="cal-recur-sub inline" id="event-recur-custom" hidden>
+          <label class="field" style="max-width:96px;"><span>A cada</span><input type="number" id="event-recur-interval" min="1" value="1"></label>
+          <label class="field" style="max-width:150px;"><span>Unidade</span>
+            <select id="event-recur-unit"><option value="days">dia(s)</option><option value="weeks">semana(s)</option></select>
+          </label>
+          <label class="field"><span>Até</span><input type="date" id="event-recur-until-custom"></label>
+        </div>
       </div>
       <label class="field" style="margin-top:12px;"><span>Descrição</span>
         <textarea id="event-descricao" placeholder="Detalhes opcionais…"></textarea>
@@ -1550,14 +1606,19 @@
     function fetchProfile(userId){
       return restRequest('GET', '/profiles?id=eq.' + userId + '&select=*').then(function(rows){ return rows && rows[0]; });
     }
-    function markOnboardingComplete(userId, nome){
-      return restRequest('PATCH', '/profiles?id=eq.' + userId, { nome: nome, onboarding_completo:true }, { 'Prefer':'return=representation' });
+    function markOnboardingComplete(userId, nome, extra){
+      var payload = { nome: nome, onboarding_completo:true };
+      if(extra){
+        if(extra.alunos_email_institucional !== undefined) payload.alunos_email_institucional = extra.alunos_email_institucional;
+        if(extra.multiplas_escolas !== undefined) payload.multiplas_escolas = extra.multiplas_escolas;
+      }
+      return restRequest('PATCH', '/profiles?id=eq.' + userId, payload, { 'Prefer':'return=representation' });
     }
     function fetchTurmas(userId){
       return restRequest('GET', '/turmas?professor_id=eq.' + userId + '&select=*&order=created_at.asc');
     }
     function createTurmas(userId, turmas){
-      var rows = turmas.map(function(t){ return { professor_id:userId, nome:t.nome, disciplina:t.disciplina, quantidade_alunos:t.quantidade_alunos }; });
+      var rows = turmas.map(function(t){ return { professor_id:userId, nome:t.nome, disciplina:t.disciplina, quantidade_alunos:t.quantidade_alunos, escola: t.escola || null }; });
       return restRequest('POST', '/turmas', rows, { 'Prefer':'return=representation' });
     }
     function fetchAppState(userId){
@@ -3040,9 +3101,10 @@
     { key:'rosa', nome:'Rosa', varName:'--g6' }
   ];
   var CAL_CATEGORIES = ['Aula', 'Reunião', 'Avaliação', 'Planejamento', 'Outro'];
+  var CAL_WEEKDAYS = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
   var CAL_HOURS = []; (function(){ for(var h = 6; h <= 21; h++) CAL_HOURS.push(h); })();
   var calState = { date:new Date(), view:'month', filterColors:[], filterCats:[], dragId:null };
-  var eventEditorMode = null, eventEditorColor = CAL_COLORS[0].key;
+  var eventEditorMode = null, eventEditorColor = CAL_COLORS[0].key, eventEditorWeekdays = [];
 
   function pad2(n){ return String(n).padStart(2, '0'); }
   function calCapitalize(s){ return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
@@ -3143,7 +3205,7 @@
       var isOther = day.getMonth() !== d.getMonth();
       var isToday = calSameDay(day, today);
       var pills = dayEvents.slice(0, 3).map(function(ev){
-        return '<span class="cal-pill" draggable="true" data-id="' + ev.id + '" style="background:' + calColorVar(ev.cor) + '">' + esc(ev.titulo) + '</span>';
+        return '<span class="cal-pill" draggable="true" data-id="' + ev.id + '" style="background:' + calColorVar(ev.cor) + '">' + esc(ev.titulo + (ev.turma ? ' · ' + ev.turma : '')) + '</span>';
       }).join('');
       var more = dayEvents.length > 3 ? '<span class="cal-pill-more">+' + (dayEvents.length - 3) + ' mais</span>' : '';
       return '<div class="cal-day-cell' + (isOther ? ' other-month' : '') + (isToday ? ' today' : '') + '" data-date="' + day.toISOString() + '">' +
@@ -3200,7 +3262,7 @@
       var cells = days.map(function(day){
         var hourEvents = events.filter(function(ev){ var s = new Date(ev.inicio); return calSameDay(s, day) && s.getHours() === hour; });
         var blocks = hourEvents.map(function(ev){
-          return '<span class="cal-event-block" draggable="true" data-id="' + ev.id + '" style="background:' + calColorVar(ev.cor) + '">' + esc(ev.titulo) + '</span>';
+          return '<span class="cal-event-block" draggable="true" data-id="' + ev.id + '" style="background:' + calColorVar(ev.cor) + '">' + esc(ev.titulo + (ev.turma ? ' · ' + ev.turma : '')) + '</span>';
         }).join('');
         return '<div class="cal-slot" data-date="' + day.toISOString() + '" data-hour="' + hour + '">' + blocks + '</div>';
       }).join('');
@@ -3216,7 +3278,7 @@
       var hourEvents = events.filter(function(ev){ return new Date(ev.inicio).getHours() === hour; });
       var blocks = hourEvents.map(function(ev){
         return '<span class="cal-event-block" draggable="true" data-id="' + ev.id + '" style="background:' + calColorVar(ev.cor) + '">' +
-          esc(ev.titulo) + ' · ' + fmtHM(new Date(ev.inicio)) + '</span>';
+          esc(ev.titulo + (ev.turma ? ' · ' + ev.turma : '')) + ' · ' + fmtHM(new Date(ev.inicio)) + '</span>';
       }).join('');
       return '<div class="cal-hour-label">' + pad2(hour) + ':00</div>' +
         '<div class="cal-slot" data-date="' + day.toISOString() + '" data-hour="' + hour + '">' + blocks + '</div>';
@@ -3262,7 +3324,7 @@
         return '<div class="cal-list-item" data-id="' + ev.id + '">' +
           '<span class="cal-list-dot" style="background:' + calColorVar(ev.cor) + '"></span>' +
           '<div><div class="cal-list-title">' + esc(ev.titulo) + '</div>' +
-          '<div class="cal-list-meta">' + fmtHM(new Date(ev.inicio)) + '–' + fmtHM(new Date(ev.fim)) + ' · ' + esc(ev.categoria) + '</div></div></div>';
+          '<div class="cal-list-meta">' + fmtHM(new Date(ev.inicio)) + '–' + fmtHM(new Date(ev.fim)) + ' · ' + esc(ev.categoria) + (ev.turma ? ' · ' + esc(ev.turma) : '') + '</div></div></div>';
       }).join('');
       return '<div class="cal-list-group"><div class="cal-list-date">' + label + '</div>' + items + '</div>';
     }).join('') + '</div>';
@@ -3286,6 +3348,36 @@
     eventEditorColor = btn.dataset.color; renderEventColorPicker(eventEditorColor);
   });
 
+  function populateEventTurmaSelect(selectedNome){
+    var sel = $('event-turma');
+    sel.innerHTML = '<option value="">— sem turma —</option>' +
+      currentTurmas.map(function(t){ return '<option value="' + esc(t.nome) + '"' + (t.nome === selectedNome ? ' selected' : '') + '>' + esc(t.nome) + (t.disciplina ? ' · ' + esc(t.disciplina) : '') + '</option>'; }).join('');
+  }
+  function updateEventTurmaVisibility(){
+    var isAula = $('event-categoria').value === 'Aula';
+    $('event-turma-wrap').hidden = !isAula || !currentTurmas.length;
+  }
+  $('event-categoria').addEventListener('change', updateEventTurmaVisibility);
+
+  function renderEventWeekdayPicker(){
+    $('event-recur-weekdays').innerHTML = CAL_WEEKDAYS.map(function(w, i){
+      return '<button type="button" class="cal-weekday-btn' + (eventEditorWeekdays.indexOf(i) !== -1 ? ' active' : '') + '" data-day="' + i + '">' + w + '</button>';
+    }).join('');
+  }
+  $('event-recur-weekdays').addEventListener('click', function(e){
+    var btn = e.target.closest ? e.target.closest('.cal-weekday-btn') : null; if(!btn) return;
+    var day = +btn.dataset.day;
+    var idx = eventEditorWeekdays.indexOf(day);
+    if(idx === -1) eventEditorWeekdays.push(day); else eventEditorWeekdays.splice(idx, 1);
+    renderEventWeekdayPicker();
+  });
+  function updateRecurVisibility(){
+    var mode = $('event-recur-mode').value;
+    $('event-recur-weekly').hidden = mode !== 'weekly';
+    $('event-recur-custom').hidden = mode !== 'custom';
+  }
+  $('event-recur-mode').addEventListener('change', updateRecurVisibility);
+
   function openEventEditor(id, presetStart){
     var ev = id ? state.calendarEvents.filter(function(e){ return e.id === id; })[0] : null;
     eventEditorMode = { id: id };
@@ -3300,6 +3392,22 @@
     $('event-categoria').value = ev ? ev.categoria : CAL_CATEGORIES[0];
     eventEditorColor = ev ? ev.cor : CAL_COLORS[0].key;
     renderEventColorPicker(eventEditorColor);
+    populateEventTurmaSelect(ev ? ev.turma : '');
+    updateEventTurmaVisibility();
+    // Repetição só se aplica ao criar um evento novo — editar mexe só naquela ocorrência.
+    $('event-recur-field').hidden = !!ev;
+    if(!ev){
+      $('event-recur-mode').value = 'none';
+      eventEditorWeekdays = [start.getDay()];
+      renderEventWeekdayPicker();
+      var untilDefault = new Date(start); untilDefault.setMonth(untilDefault.getMonth() + 2);
+      var untilStr = toLocalInputValue(untilDefault).slice(0, 10);
+      $('event-recur-until').value = untilStr;
+      $('event-recur-until-custom').value = untilStr;
+      $('event-recur-interval').value = 1;
+      $('event-recur-unit').value = 'weeks';
+      updateRecurVisibility();
+    }
     $('event-delete').hidden = !ev;
     overlayOpen($('event-editor-backdrop'));
   }
@@ -3316,11 +3424,49 @@
     if(fim <= inicio) fim = new Date(inicio.getTime() + 30 * 60 * 1000);
     var categoria = $('event-categoria').value;
     var descricao = $('event-descricao').value;
+    var turma = (categoria === 'Aula') ? $('event-turma').value : '';
     if(eventEditorMode.id){
       var ev = state.calendarEvents.filter(function(e){ return e.id === eventEditorMode.id; })[0];
-      if(ev){ ev.titulo = titulo; ev.inicio = inicio.toISOString(); ev.fim = fim.toISOString(); ev.categoria = categoria; ev.cor = eventEditorColor; ev.descricao = descricao; }
+      if(ev){ ev.titulo = titulo; ev.inicio = inicio.toISOString(); ev.fim = fim.toISOString(); ev.categoria = categoria; ev.cor = eventEditorColor; ev.descricao = descricao; ev.turma = turma; }
     } else {
-      state.calendarEvents.push({ id:newId(), titulo:titulo, inicio:inicio.toISOString(), fim:fim.toISOString(), categoria:categoria, cor:eventEditorColor, descricao:descricao });
+      var duration = fim.getTime() - inicio.getTime();
+      var occurrences = [inicio];
+      var recurMode = $('event-recur-mode').value;
+      if(recurMode === 'weekly'){
+        var untilVal = $('event-recur-until').value;
+        var until = untilVal ? fromLocalInputValue(untilVal + 'T23:59') : new Date(inicio);
+        var days = eventEditorWeekdays.length ? eventEditorWeekdays : [inicio.getDay()];
+        occurrences = [];
+        var cursor = new Date(inicio.getFullYear(), inicio.getMonth(), inicio.getDate());
+        var guard = 0;
+        while(cursor <= until && guard < 500 && occurrences.length < 104){
+          if(days.indexOf(cursor.getDay()) !== -1){
+            var occ = new Date(cursor); occ.setHours(inicio.getHours(), inicio.getMinutes(), 0, 0);
+            occurrences.push(occ);
+          }
+          cursor.setDate(cursor.getDate() + 1); guard++;
+        }
+        if(!occurrences.length) occurrences = [inicio];
+      } else if(recurMode === 'custom'){
+        var untilVal2 = $('event-recur-until-custom').value;
+        var until2 = untilVal2 ? fromLocalInputValue(untilVal2 + 'T23:59') : new Date(inicio);
+        var interval = Math.max(1, +$('event-recur-interval').value || 1);
+        var unit = $('event-recur-unit').value;
+        occurrences = [];
+        var cur = new Date(inicio);
+        var guard2 = 0;
+        while(cur <= until2 && guard2 < 200){
+          occurrences.push(new Date(cur));
+          if(unit === 'weeks') cur.setDate(cur.getDate() + interval * 7);
+          else cur.setDate(cur.getDate() + interval);
+          guard2++;
+        }
+        if(!occurrences.length) occurrences = [inicio];
+      }
+      occurrences.forEach(function(occStart){
+        var occEnd = new Date(occStart.getTime() + duration);
+        state.calendarEvents.push({ id:newId(), titulo:titulo, inicio:occStart.toISOString(), fim:occEnd.toISOString(), categoria:categoria, cor:eventEditorColor, descricao:descricao, turma:turma });
+      });
     }
     saveCalendarEvents(); closeEventEditor(); renderCalendarBody();
   });
@@ -3789,16 +3935,18 @@
     });
   }
 
-  // ---- Primeiro acesso: nome + turmas ----
-  var wizardTurmasCount = 1;
+  // ---- Primeiro acesso: nome + contexto da escola + turmas ----
+  var wizardTurmasCount = 1, wizardEmailInstitucional = 'nao_sei', wizardMultiEscola = 'nao';
   function prepareWizard(){
     $('wizard-nome').value = (currentProfile && currentProfile.nome) || '';
     $('wizard-qtd-turmas').value = 1;
+    $('wizard-email-institucional').value = 'nao_sei';
+    $('wizard-multi-escola').value = 'nao';
     setFieldMsg('wizard-error', null);
     showWizardStep(1);
   }
   function showWizardStep(n){
-    [1, 2, 3].forEach(function(i){
+    [1, 2, 3, 4].forEach(function(i){
       $('wizard-screen').querySelector('[data-wizard-step="' + i + '"]').hidden = (i !== n);
       $('wizard-screen').querySelector('[data-step-dot="' + i + '"]').classList.toggle('active', i === n);
       $('wizard-screen').querySelector('[data-step-dot="' + i + '"]').classList.toggle('done', i < n);
@@ -3811,11 +3959,18 @@
     if(!(qtd >= 1)) qtd = 1;
     if(qtd > 20) qtd = 20;
     wizardTurmasCount = qtd;
-    renderWizardTurmasList();
     showWizardStep(2);
+  });
+  $('wizard-step2-back').addEventListener('click', function(){ showWizardStep(1); });
+  $('wizard-step2-next').addEventListener('click', function(){
+    wizardEmailInstitucional = $('wizard-email-institucional').value;
+    wizardMultiEscola = $('wizard-multi-escola').value;
+    renderWizardTurmasList();
+    showWizardStep(3);
   });
   function renderWizardTurmasList(){
     var wrap = $('wizard-turmas-list'); wrap.innerHTML = '';
+    var multi = wizardMultiEscola === 'sim';
     for(var i = 0; i < wizardTurmasCount; i++){
       var card = document.createElement('div'); card.className = 'turma-onboard-card';
       card.innerHTML = '<div class="turma-onboard-card-title">Turma ' + (i + 1) + '</div>' +
@@ -3823,15 +3978,16 @@
           '<label class="wizard-field"><span>Nome da turma</span><input type="text" data-wturma="nome" data-idx="' + i + '" placeholder="Ex.: 7º A"></label>' +
           '<label class="wizard-field"><span>Disciplina</span><input type="text" data-wturma="disciplina" data-idx="' + i + '" placeholder="Ex.: Ciências"></label>' +
           '<label class="wizard-field"><span>Quantidade de alunos</span><input type="number" min="1" data-wturma="quantidade_alunos" data-idx="' + i + '" placeholder="Ex.: 30"></label>' +
+          (multi ? '<label class="wizard-field"><span>Escola</span><input type="text" data-wturma="escola" data-idx="' + i + '" placeholder="Ex.: EMEF Vila Nova"></label>' : '') +
         '</div>';
       wrap.appendChild(card);
     }
   }
-  $('wizard-step2-back').addEventListener('click', function(){ showWizardStep(1); });
-  $('wizard-step2-next').addEventListener('click', function(){
+  $('wizard-step3-back').addEventListener('click', function(){ showWizardStep(2); });
+  $('wizard-step3-next').addEventListener('click', function(){
     var turmas = collectWizardTurmas();
     $('wizard-summary').textContent = 'Vamos criar ' + turmas.length + ' turma(s) pra ' + ($('wizard-nome').value.trim() || 'você') + '. Dá pra ajustar tudo isso depois em "Configurar".';
-    showWizardStep(3);
+    showWizardStep(4);
   });
   function collectWizardTurmas(){
     var rows = [];
@@ -3839,16 +3995,18 @@
       var nomeEl = document.querySelector('[data-wturma="nome"][data-idx="' + i + '"]');
       var discEl = document.querySelector('[data-wturma="disciplina"][data-idx="' + i + '"]');
       var qtdEl = document.querySelector('[data-wturma="quantidade_alunos"][data-idx="' + i + '"]');
+      var escolaEl = document.querySelector('[data-wturma="escola"][data-idx="' + i + '"]');
       var qtdVal = qtdEl && qtdEl.value ? parseInt(qtdEl.value, 10) : null;
       rows.push({
         nome: (nomeEl && nomeEl.value.trim()) || ('Turma ' + (i + 1)),
         disciplina: (discEl && discEl.value.trim()) || '',
-        quantidade_alunos: (qtdVal && qtdVal > 0) ? qtdVal : null
+        quantidade_alunos: (qtdVal && qtdVal > 0) ? qtdVal : null,
+        escola: (escolaEl && escolaEl.value.trim()) || ''
       });
     }
     return rows;
   }
-  $('wizard-step3-back').addEventListener('click', function(){ showWizardStep(2); });
+  $('wizard-step4-back').addEventListener('click', function(){ showWizardStep(3); });
   $('wizard-finish-btn').addEventListener('click', function(){
     setFieldMsg('wizard-error', null);
     var nome = $('wizard-nome').value.trim();
@@ -3856,10 +4014,12 @@
     var btn = $('wizard-finish-btn');
     btn.disabled = true; btn.textContent = 'Salvando...';
     var userId = currentProfile.id;
-    Cloud.markOnboardingComplete(userId, nome).then(function(){
+    Cloud.markOnboardingComplete(userId, nome, { alunos_email_institucional: wizardEmailInstitucional, multiplas_escolas: wizardMultiEscola === 'sim' }).then(function(){
       return Cloud.createTurmas(userId, turmas);
     }).then(function(){
       currentProfile.nome = nome; currentProfile.onboarding_completo = true;
+      currentProfile.alunos_email_institucional = wizardEmailInstitucional;
+      currentProfile.multiplas_escolas = (wizardMultiEscola === 'sim');
       if(turmas[0]){ state.turma = turmas[0].nome; if(turmas[0].disciplina) state.disciplina = turmas[0].disciplina; }
       return hydrateAndStart();
     }).catch(function(err){
