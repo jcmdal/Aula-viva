@@ -1,18 +1,24 @@
 <title>Aula Viva</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    /* ---- Sistema visual nativo (iOS/macOS), traduzido pra web ---- */
-    --bg:#F2F2F7; --surface:#FFFFFF; --surface-2:rgba(120,120,128,.12);
-    --ink:#1C1C1E; --ink-soft:rgba(60,60,67,.6); --ink-tertiary:rgba(60,60,67,.3);
-    --line:rgba(60,60,67,.29);
-    --accent:#007AFF; --accent-deep:#0060DF; --accent-soft:rgba(0,122,255,.12);
-    --gold:#FFCC00; --gold-soft:rgba(255,204,0,.16);
-    --green:#34C759; --green-soft:rgba(52,199,89,.14);
-    --red:#FF3B30; --red-soft:rgba(255,59,48,.12);
-    --g1:#FF9500; --g2:#34C759; --g3:#FF3B30; --g4:#AF52DE; --g5:#32ADE6; --g6:#FF2D55;
-    --blur-bg:rgba(242,242,247,.78);
-    --radius:14px; --radius-sm:10px; --tabbar-h:58px; --sidebar-w:252px;
-    --shadow:0 1px 2px rgba(0,0,0,.05), 0 1px 1px rgba(0,0,0,.03);
+    /* ---- Identidade visual Aula Viva — versão 1.0 ---- */
+    --bg:#F4F5F7; --surface:#FFFFFF; --surface-2:rgba(100,110,130,.10);
+    --ink:#161A23; --ink-soft:rgba(40,46,64,.62); --ink-tertiary:rgba(40,46,64,.34);
+    --line:rgba(40,46,64,.13);
+    --accent:#4F46E5; --accent-deep:#3730A3; --accent-soft:rgba(79,70,229,.12);
+    --brand-1:#4F46E5; --brand-2:#0EA5A0;
+    --gold:#F5A623; --gold-soft:rgba(245,166,35,.16);
+    --green:#12B76A; --green-soft:rgba(18,183,106,.14);
+    --red:#E5484D; --red-soft:rgba(229,72,77,.12);
+    --g1:#F5A623; --g2:#12B76A; --g3:#E5484D; --g4:#8B5CF6; --g5:#0BA5EC; --g6:#EC4899;
+    --blur-bg:rgba(244,245,247,.78);
+    --radius:14px; --radius-sm:10px; --tabbar-h:58px; --sidebar-w:256px;
+    --shadow:0 1px 2px rgba(22,26,35,.05), 0 1px 1px rgba(22,26,35,.03);
+    --shadow-lg:0 18px 40px -12px rgba(38,34,90,.22), 0 4px 12px rgba(38,34,90,.08);
+    --font-display:'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
     --fs-scale:1;
     /* ---- Movimento: curvas e durações (Emil Kowalski / Apple HIG, traduzidas pra web) ---- */
     --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
@@ -25,35 +31,41 @@
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
-      --bg:#000000; --surface:#1C1C1E; --surface-2:rgba(120,120,128,.24);
-      --ink:#FFFFFF; --ink-soft:rgba(235,235,245,.6); --ink-tertiary:rgba(235,235,245,.3);
-      --line:rgba(84,84,88,.65);
-      --accent:#0A84FF; --accent-deep:#409CFF; --accent-soft:rgba(10,132,255,.18);
-      --gold:#FFD60A; --gold-soft:rgba(255,214,10,.18);
-      --green:#30D158; --green-soft:rgba(48,209,88,.18);
-      --red:#FF453A; --red-soft:rgba(255,69,58,.18);
-      --g1:#FF9F0A; --g2:#30D158; --g3:#FF453A; --g4:#BF5AF2; --g5:#64D2FF; --g6:#FF375F;
-      --blur-bg:rgba(28,28,30,.72);
+      --bg:#0B0C10; --surface:#16181F; --surface-2:rgba(140,148,170,.14);
+      --ink:#F2F3F7; --ink-soft:rgba(224,226,236,.64); --ink-tertiary:rgba(224,226,236,.34);
+      --line:rgba(150,156,180,.22);
+      --accent:#8B85F5; --accent-deep:#A9A4FA; --accent-soft:rgba(139,133,245,.20);
+      --brand-1:#8B85F5; --brand-2:#2DD4CB;
+      --gold:#FFB84D; --gold-soft:rgba(255,184,77,.18);
+      --green:#32D583; --green-soft:rgba(50,213,131,.18);
+      --red:#F97066; --red-soft:rgba(249,112,102,.18);
+      --g1:#FFB84D; --g2:#32D583; --g3:#F97066; --g4:#A78BFA; --g5:#36BFFA; --g6:#F472B6;
+      --blur-bg:rgba(11,12,16,.74);
       --shadow:0 1px 3px rgba(0,0,0,.5);
+      --shadow-lg:0 18px 40px -12px rgba(0,0,0,.5), 0 4px 12px rgba(0,0,0,.3);
     }
   }
   :root[data-theme="dark"]{
-    --bg:#000000; --surface:#1C1C1E; --surface-2:rgba(120,120,128,.24);
-    --ink:#FFFFFF; --ink-soft:rgba(235,235,245,.6); --ink-tertiary:rgba(235,235,245,.3);
-    --line:rgba(84,84,88,.65);
-    --accent:#0A84FF; --accent-deep:#409CFF; --accent-soft:rgba(10,132,255,.18);
-    --gold:#FFD60A; --gold-soft:rgba(255,214,10,.18);
-    --green:#30D158; --green-soft:rgba(48,209,88,.18);
-    --red:#FF453A; --red-soft:rgba(255,69,58,.18);
-    --g1:#FF9F0A; --g2:#30D158; --g3:#FF453A; --g4:#BF5AF2; --g5:#64D2FF; --g6:#FF375F;
-    --blur-bg:rgba(28,28,30,.72);
+    --bg:#0B0C10; --surface:#16181F; --surface-2:rgba(140,148,170,.14);
+    --ink:#F2F3F7; --ink-soft:rgba(224,226,236,.64); --ink-tertiary:rgba(224,226,236,.34);
+    --line:rgba(150,156,180,.22);
+    --accent:#8B85F5; --accent-deep:#A9A4FA; --accent-soft:rgba(139,133,245,.20);
+    --brand-1:#8B85F5; --brand-2:#2DD4CB;
+    --gold:#FFB84D; --gold-soft:rgba(255,184,77,.18);
+    --green:#32D583; --green-soft:rgba(50,213,131,.18);
+    --red:#F97066; --red-soft:rgba(249,112,102,.18);
+    --g1:#FFB84D; --g2:#32D583; --g3:#F97066; --g4:#A78BFA; --g5:#36BFFA; --g6:#F472B6;
+    --blur-bg:rgba(11,12,16,.74);
     --shadow:0 1px 3px rgba(0,0,0,.5);
+    --shadow-lg:0 18px 40px -12px rgba(0,0,0,.5), 0 4px 12px rgba(0,0,0,.3);
   }
   *{box-sizing:border-box;}
   html{ font-size:calc(16px * var(--fs-scale)); }
   body{ color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',Roboto,system-ui,sans-serif;
     font-size:calc(15px * var(--fs-scale)); line-height:1.47; background:var(--bg); min-height:100vh; }
+  h1, h2, h3, .brand-name, .sheet-title, .auth-title, .wizard-title{ font-family:var(--font-display); letter-spacing:-.01em; }
   .app{ display:flex; align-items:stretch; min-height:100vh; }
+  .app[hidden], .gate-screen[hidden]{ display:none !important; }
 
   /* ---- Navegação lateral (sidebar), inspirada em painéis SaaS ---- */
   .sidebar{ position:fixed; top:0; left:0; bottom:0; width:var(--sidebar-w); z-index:35; display:flex; flex-direction:column;
@@ -61,12 +73,24 @@
     padding:calc(16px + env(safe-area-inset-top,0px)) 12px calc(14px + env(safe-area-inset-bottom,0px));
     transition:transform .24s var(--ease-sheet); }
   .sidebar-brand{ display:flex; align-items:center; gap:10px; padding:2px 8px 18px; }
-  .brand-mark{ flex:0 0 auto; width:34px; height:34px; border-radius:10px; background:var(--accent); color:#fff;
-    font-weight:750; font-size:.92rem; letter-spacing:-.02em; display:flex; align-items:center; justify-content:center; }
+  .brand-mark{ flex:0 0 auto; width:36px; height:36px; border-radius:11px; background:linear-gradient(135deg, var(--brand-1), var(--brand-2)); color:#fff;
+    font-weight:750; font-size:.92rem; letter-spacing:-.02em; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 4px 10px -3px rgba(79,70,229,.45); }
   .brand-text{ display:flex; flex-direction:column; gap:3px; min-width:0; }
-  .brand-name{ font-weight:750; font-size:1.05rem; letter-spacing:-.02em; color:var(--ink); line-height:1.15; white-space:nowrap; }
+  .brand-name{ font-weight:750; font-size:1.08rem; letter-spacing:-.02em; color:var(--ink); line-height:1.15; white-space:nowrap; }
   .brand-pill{ align-self:flex-start; font-size:.6rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--accent);
     background:var(--accent-soft); padding:2px 7px; border-radius:999px; }
+  .sidebar-account{ display:flex; align-items:center; gap:9px; padding:9px 8px; margin-bottom:8px; border-radius:10px; background:var(--surface-2); }
+  .sidebar-account-avatar{ flex:0 0 auto; width:30px; height:30px; border-radius:999px; background:linear-gradient(135deg, var(--brand-1), var(--brand-2));
+    color:#fff; font-weight:700; font-size:.8rem; display:flex; align-items:center; justify-content:center; text-transform:uppercase; }
+  .sidebar-account-info{ min-width:0; flex:1 1 auto; }
+  .sidebar-account-name{ font-size:.82rem; font-weight:650; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .sidebar-account-email{ font-size:.68rem; color:var(--ink-tertiary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .sidebar-account-logout{ flex:0 0 auto; border:none; background:transparent; color:var(--ink-tertiary); width:26px; height:26px;
+    border-radius:8px; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+  .sidebar-account-logout svg{ width:16px; height:16px; }
+  @media (hover:hover) and (pointer:fine){ .sidebar-account-logout:hover{ background:var(--red-soft); color:var(--red); } }
+  .sidebar-account-logout:active{ opacity:.7; }
   .side-nav{ display:flex; flex-direction:column; gap:2px; flex:1 1 auto; overflow-y:auto; }
   .side-nav-label{ font-size:.66rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-tertiary); padding:12px 10px 7px; }
   .side-nav-label:first-child{ padding-top:2px; }
@@ -619,13 +643,6 @@
   .lesson-card-actions{ display:flex; flex-direction:column; gap:6px; flex:0 0 auto; align-items:stretch; }
   .lessons-empty{ padding:24px 4px; text-align:center; color:var(--ink-soft); font-size:.87rem; }
 
-  /* ---- Apresentação com IA (2slides.com, via proxy no servidor) ---- */
-  .ai-slides-result-box{ background:var(--surface-2); border-radius:var(--radius-sm); padding:12px 14px;
-    display:flex; flex-direction:column; gap:8px; margin-top:10px; font-size:.87rem; color:var(--ink); }
-  .ai-slides-result-box a{ color:var(--accent); font-weight:600; text-decoration:none; }
-  @media (hover:hover) and (pointer:fine){ .ai-slides-result-box a:hover{ text-decoration:underline; } }
-  .ai-slides-result-box a:active{ opacity:.7; }
-
   .lesson-editor-section{ margin-top:16px; padding-top:14px; border-top:.5px solid var(--line); }
   .lesson-editor-section-head{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:2px; }
   .lesson-fonte-row{ display:flex; gap:8px; align-items:center; padding:7px 0; border-bottom:.5px solid var(--line); }
@@ -697,15 +714,185 @@
     .card{ border:1px solid #ccc; }
     .brand-name{ color:#000; }
   }
+
+  /* ---- Login, cadastro e primeiro acesso ---- */
+  .gate-screen{ min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px;
+    background:
+      radial-gradient(circle at 15% 8%, rgba(79,70,229,.16), transparent 42%),
+      radial-gradient(circle at 88% 92%, rgba(14,165,160,.14), transparent 45%),
+      var(--bg); }
+  .gate-card{ width:100%; max-width:408px; background:var(--surface); border-radius:18px; box-shadow:var(--shadow-lg);
+    padding:30px 26px 26px; border:.5px solid var(--line); }
+  .gate-brand{ display:flex; align-items:center; gap:11px; margin-bottom:22px; }
+  .gate-brand .brand-mark{ width:40px; height:40px; border-radius:12px; font-size:1rem; }
+  .gate-brand-text strong{ display:block; font-size:1.08rem; font-weight:750; letter-spacing:-.02em; color:var(--ink); }
+  .gate-brand-text span{ font-size:.76rem; color:var(--ink-soft); }
+  .auth-title{ font-size:1.28rem; font-weight:750; margin:0 0 4px; color:var(--ink); }
+  .auth-sub{ margin:0 0 20px; font-size:.86rem; color:var(--ink-soft); }
+  .auth-tabs{ display:flex; gap:4px; background:var(--surface-2); border-radius:10px; padding:3px; margin-bottom:20px; }
+  .auth-tab{ flex:1 1 0; border:none; background:transparent; padding:8px 10px; border-radius:8px; font-size:.83rem; font-weight:650;
+    color:var(--ink-soft); cursor:pointer; transition:background-color .16s var(--ease-out), color .16s var(--ease-out), box-shadow .16s var(--ease-out); }
+  .auth-tab.active{ background:var(--surface); color:var(--accent); box-shadow:var(--shadow); }
+  .auth-form{ display:flex; flex-direction:column; gap:14px; }
+  .auth-form[hidden]{ display:none; }
+  .auth-field{ display:flex; flex-direction:column; gap:6px; }
+  .auth-field span{ font-size:.78rem; font-weight:650; color:var(--ink-soft); }
+  .auth-field input{ border:1px solid var(--line); border-radius:10px; padding:10px 12px; font-size:.92rem; color:var(--ink);
+    background:var(--surface); font-family:inherit; }
+  .auth-field input:focus{ outline:2px solid var(--accent-soft); border-color:var(--accent); }
+  .auth-error{ font-size:.8rem; color:var(--red); background:var(--red-soft); border-radius:8px; padding:9px 11px; margin:0; }
+  .auth-error[hidden]{ display:none; }
+  .auth-success{ font-size:.8rem; color:var(--green); background:var(--green-soft); border-radius:8px; padding:9px 11px; margin:0; }
+  .auth-success[hidden]{ display:none; }
+  .auth-hint{ font-size:.76rem; color:var(--ink-tertiary); margin:0; line-height:1.45; }
+  .auth-link-row{ display:flex; justify-content:flex-end; margin-top:-6px; }
+  .auth-link{ background:none; border:none; padding:0; font-size:.78rem; color:var(--accent); font-weight:600; cursor:pointer; }
+  .auth-link:hover{ text-decoration:underline; }
+  .auth-back-row{ margin-top:16px; text-align:center; }
+  .gate-security-note{ display:flex; align-items:flex-start; gap:8px; margin-top:20px; padding-top:16px; border-top:.5px solid var(--line); }
+  .gate-security-note svg{ flex:0 0 auto; width:16px; height:16px; color:var(--ink-tertiary); margin-top:1px; }
+  .gate-security-note p{ margin:0; font-size:.72rem; color:var(--ink-tertiary); line-height:1.45; }
+
+  /* ---- Assistente de primeiro acesso ---- */
+  .wizard-card{ width:100%; max-width:480px; background:var(--surface); border-radius:18px; box-shadow:var(--shadow-lg);
+    padding:28px 26px 26px; border:.5px solid var(--line); }
+  .wizard-steps{ display:flex; gap:5px; margin-bottom:20px; }
+  .wizard-step-dot{ flex:1 1 0; height:4px; border-radius:999px; background:var(--surface-2); }
+  .wizard-step-dot.done, .wizard-step-dot.active{ background:var(--accent); }
+  .wizard-title{ font-size:1.16rem; font-weight:750; margin:0 0 4px; color:var(--ink); }
+  .wizard-sub{ margin:0 0 20px; font-size:.85rem; color:var(--ink-soft); line-height:1.45; }
+  .wizard-step[hidden]{ display:none; }
+  .wizard-field{ display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
+  .wizard-field span{ font-size:.78rem; font-weight:650; color:var(--ink-soft); }
+  .wizard-field input, .wizard-field select{ border:1px solid var(--line); border-radius:10px; padding:10px 12px; font-size:.92rem;
+    color:var(--ink); background:var(--surface); font-family:inherit; }
+  .wizard-field input:focus, .wizard-field select:focus{ outline:2px solid var(--accent-soft); border-color:var(--accent); }
+  .turma-onboard-card{ border:1px solid var(--line); border-radius:var(--radius-sm); padding:14px; margin-bottom:12px; }
+  .turma-onboard-card-title{ font-size:.8rem; font-weight:700; color:var(--ink); margin-bottom:10px; }
+  .turma-onboard-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .turma-onboard-grid .wizard-field:last-child{ grid-column:1/-1; }
+  .wizard-nav{ display:flex; justify-content:space-between; gap:10px; margin-top:8px; }
+  .wizard-nav .btn-ghost[hidden]{ visibility:hidden; }
+
+  /* ---- Seletor de turma no Configurar ---- */
+  .turma-select-field{ grid-column:1/-1; }
+  .turma-select-field select{ font-family:inherit; }
 </style>
 
-<div class="app">
+<!-- LOGIN / CADASTRO -->
+<div class="gate-screen no-print" id="auth-screen" hidden>
+  <div class="gate-card">
+    <div class="gate-brand">
+      <span class="brand-mark">AV</span>
+      <div class="gate-brand-text">
+        <strong>Aula Viva</strong>
+        <span>Gestão de aulas para professores</span>
+      </div>
+    </div>
+
+    <div class="auth-tabs">
+      <button type="button" class="auth-tab active" id="auth-tab-login">Entrar</button>
+      <button type="button" class="auth-tab" id="auth-tab-signup">Criar conta</button>
+    </div>
+
+    <form class="auth-form" id="auth-form-login">
+      <h2 class="auth-title">Bem-vindo de volta</h2>
+      <p class="auth-sub">Entre com o e-mail e a senha da sua conta de professor.</p>
+      <p class="auth-error" id="login-error" hidden></p>
+      <p class="auth-success" id="login-success" hidden></p>
+      <label class="auth-field"><span>E-mail</span><input type="email" id="login-email" autocomplete="email" required></label>
+      <label class="auth-field"><span>Senha</span><input type="password" id="login-password" autocomplete="current-password" required></label>
+      <div class="auth-link-row"><button type="button" class="auth-link" id="auth-go-forgot">Esqueci minha senha</button></div>
+      <button type="submit" class="btn btn-primary" id="login-submit-btn">Entrar</button>
+    </form>
+
+    <form class="auth-form" id="auth-form-signup" hidden>
+      <h2 class="auth-title">Criar sua conta</h2>
+      <p class="auth-sub">Leva menos de um minuto — depois você configura suas turmas.</p>
+      <p class="auth-error" id="signup-error" hidden></p>
+      <p class="auth-success" id="signup-success" hidden></p>
+      <label class="auth-field"><span>Seu nome</span><input type="text" id="signup-nome" autocomplete="name" required></label>
+      <label class="auth-field"><span>E-mail</span><input type="email" id="signup-email" autocomplete="email" required></label>
+      <label class="auth-field"><span>Senha</span><input type="password" id="signup-password" autocomplete="new-password" minlength="8" required></label>
+      <p class="auth-hint">Mínimo de 8 caracteres. Sua senha é protegida com criptografia — nem a Aula Viva tem acesso a ela.</p>
+      <button type="submit" class="btn btn-primary" id="signup-submit-btn">Criar conta</button>
+    </form>
+
+    <form class="auth-form" id="auth-form-forgot" hidden>
+      <h2 class="auth-title">Recuperar senha</h2>
+      <p class="auth-sub">Enviaremos um link de redefinição para o seu e-mail.</p>
+      <p class="auth-error" id="forgot-error" hidden></p>
+      <p class="auth-success" id="forgot-success" hidden></p>
+      <label class="auth-field"><span>E-mail</span><input type="email" id="forgot-email" autocomplete="email" required></label>
+      <button type="submit" class="btn btn-primary" id="forgot-submit-btn">Enviar link</button>
+      <div class="auth-back-row"><button type="button" class="auth-link" id="auth-back-to-login">← Voltar para o login</button></div>
+    </form>
+
+    <form class="auth-form" id="auth-form-newpass" hidden>
+      <h2 class="auth-title">Defina sua nova senha</h2>
+      <p class="auth-sub">Escolha uma nova senha para continuar.</p>
+      <p class="auth-error" id="newpass-error" hidden></p>
+      <label class="auth-field"><span>Nova senha</span><input type="password" id="newpass-password" autocomplete="new-password" minlength="8" required></label>
+      <button type="submit" class="btn btn-primary" id="newpass-submit-btn">Salvar nova senha</button>
+    </form>
+
+    <div class="gate-security-note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"></path></svg>
+      <p>Seu login é protegido por autenticação segura (Supabase Auth): sua senha nunca fica salva em texto simples, e cada professor só acessa os próprios dados.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PRIMEIRO ACESSO -->
+<div class="gate-screen no-print" id="wizard-screen" hidden>
+  <div class="wizard-card">
+    <div class="wizard-steps">
+      <span class="wizard-step-dot" data-step-dot="1"></span>
+      <span class="wizard-step-dot" data-step-dot="2"></span>
+      <span class="wizard-step-dot" data-step-dot="3"></span>
+    </div>
+
+    <div class="wizard-step" data-wizard-step="1">
+      <h2 class="wizard-title">Vamos configurar sua conta</h2>
+      <p class="wizard-sub">Só algumas perguntas rápidas pra deixar o Aula Viva do seu jeito.</p>
+      <label class="wizard-field"><span>Como podemos te chamar?</span><input type="text" id="wizard-nome"></label>
+      <label class="wizard-field"><span>Quantas turmas você dá aula atualmente?</span>
+        <input type="number" min="1" max="20" id="wizard-qtd-turmas" value="1"></label>
+      <div class="wizard-nav">
+        <button type="button" class="btn btn-ghost" hidden></button>
+        <button type="button" class="btn btn-primary" id="wizard-step1-next">Continuar →</button>
+      </div>
+    </div>
+
+    <div class="wizard-step" data-wizard-step="2" hidden>
+      <h2 class="wizard-title">Suas turmas</h2>
+      <p class="wizard-sub">Nome, disciplina e quantidade de alunos de cada turma — dá pra ajustar depois.</p>
+      <div id="wizard-turmas-list"></div>
+      <div class="wizard-nav">
+        <button type="button" class="btn btn-ghost" id="wizard-step2-back">← Voltar</button>
+        <button type="button" class="btn btn-primary" id="wizard-step2-next">Continuar →</button>
+      </div>
+    </div>
+
+    <div class="wizard-step" data-wizard-step="3" hidden>
+      <h2 class="wizard-title">Tudo pronto!</h2>
+      <p class="wizard-sub" id="wizard-summary"></p>
+      <p class="auth-error" id="wizard-error" hidden></p>
+      <div class="wizard-nav">
+        <button type="button" class="btn btn-ghost" id="wizard-step3-back">← Voltar</button>
+        <button type="button" class="btn btn-primary" id="wizard-finish-btn">Começar a usar →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="app" id="app-shell" hidden>
   <aside class="sidebar no-print" id="sidebar">
     <div class="sidebar-brand">
       <span class="brand-mark">AV</span>
       <div class="brand-text">
         <span class="brand-name">Aula Viva</span>
-        <span class="brand-pill">Versão piloto</span>
+        <span class="brand-pill">Versão 1.0</span>
       </div>
     </div>
     <nav class="side-nav">
@@ -736,6 +923,16 @@
       </button>
     </nav>
     <div class="sidebar-foot">
+      <div class="sidebar-account">
+        <span class="sidebar-account-avatar" id="sidebar-account-avatar">P</span>
+        <div class="sidebar-account-info">
+          <div class="sidebar-account-name" id="sidebar-account-name">Professor(a)</div>
+          <div class="sidebar-account-email" id="sidebar-account-email"></div>
+        </div>
+        <button type="button" class="sidebar-account-logout" id="logout-btn" title="Sair" aria-label="Sair da conta">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+        </button>
+      </div>
       <div class="sidebar-tip">
         <strong>Dica rápida</strong>
         <p>Toque no botão de ferramentas (⊞) no "Ao vivo" pra abrir seus links da aula sem sair da tela.</p>
@@ -773,6 +970,9 @@
         <h2><span class="step-num">1</span>Turma e atividade</h2>
         <p class="hint">Funciona para qualquer disciplina — preencha com a sua próxima aula.</p>
         <div class="setup-grid">
+          <label class="field turma-select-field" id="turma-select-wrap" hidden><span>Selecionar turma cadastrada</span>
+            <select id="turma-select"></select>
+          </label>
           <label class="field"><span>Turma / seção</span><input type="text" id="f-turma"></label>
           <label class="field"><span>Disciplina</span><input type="text" id="f-disciplina"></label>
           <label class="field" style="grid-column:1/-1"><span>Atividade / tema da aula</span><input type="text" id="f-atividade"></label>
@@ -958,11 +1158,6 @@
         </div>
       </div>
 
-      <div class="card" id="ai-slides-card">
-        <h2>Apresentação com IA<button type="button" class="help-btn" data-help="ai-slides" aria-label="Como funciona a apresentação com IA?">?</button></h2>
-        <p class="hint">Gere um arquivo de slides automaticamente a partir de um tema, usando a 2slides.com. Disponível só na versão publicada no Vercel.</p>
-        <div class="btn-row" style="margin-top:0;"><button type="button" class="btn btn-primary btn-sm" id="ai-slides-open-btn">+ Gerar apresentação</button></div>
-      </div>
     </section>
 
     <!-- CALENDÁRIO -->
@@ -1052,34 +1247,6 @@
     </div>
   </div>
 
-  <div class="overlay-backdrop center no-print" id="ai-slides-backdrop" hidden aria-modal="true">
-    <div class="sheet" role="dialog" aria-labelledby="ai-slides-title">
-      <div class="sheet-head">
-        <h3 class="sheet-title" id="ai-slides-title">Gerar apresentação com IA<button type="button" class="help-btn" data-help="ai-slides" aria-label="Como funciona a apresentação com IA?">?</button></h3>
-        <button type="button" class="sheet-close" id="ai-slides-close" aria-label="Fechar">×</button>
-      </div>
-      <div class="field" style="flex-direction:column;align-items:stretch;gap:6px;">
-        <span>Tema / conteúdo da apresentação</span>
-        <textarea id="ai-slides-topic" placeholder="Ex.: Introdução à robótica educacional para o 6º ano, com exemplos de sensores e atuadores"></textarea>
-      </div>
-      <div class="field">
-        <span>Estilo visual</span>
-        <select id="ai-slides-theme">
-          <option value="modern">Moderno</option>
-          <option value="business">Profissional / corporativo</option>
-          <option value="education">Educação / escolar</option>
-          <option value="colorful">Colorido e divertido</option>
-          <option value="creative">Criativo</option>
-          <option value="minimal">Minimalista</option>
-        </select>
-      </div>
-      <div class="hint" id="ai-slides-status" style="margin:4px 0 0;"></div>
-      <div id="ai-slides-result" hidden></div>
-      <div class="btn-row">
-        <button type="button" class="btn btn-primary" id="ai-slides-generate-btn">Gerar</button>
-      </div>
-    </div>
-  </div>
 
   <div class="overlay-backdrop center tools-radial-backdrop no-print" id="tools-radial-backdrop" hidden aria-modal="true">
     <div class="tools-radial-circle" id="tools-radial-circle">
@@ -1273,6 +1440,157 @@
 
 <script>
 (function(){
+
+  // =========================================================================
+  // Cloud: login por professor + persistência dos dados no Supabase.
+  // A chave abaixo é a chave "publicável" (anon/publishable) do projeto —
+  // ela é feita pra ficar no código do site; quem protege os dados de cada
+  // professor é a autenticação (senha com hash seguro, cuidado da própria
+  // Supabase) + Row Level Security no banco (cada professor só enxerga as
+  // próprias linhas, mesmo usando essa mesma chave pública).
+  // =========================================================================
+  var SUPABASE_URL = 'https://lsveexzmtwsfyzlafylm.supabase.co';
+  var SUPABASE_ANON_KEY = 'sb_publishable_baSemEkqa61iGLDdWVLYaQ_XbF0_hMx';
+  var SESSION_KEY = 'aulaviva_session';
+
+  var currentProfile = null;
+  var currentTurmas = [];
+
+  var Cloud = (function(){
+    var session = null;
+
+    function saveSession(s){
+      session = s;
+      try{ if(s) localStorage.setItem(SESSION_KEY, JSON.stringify(s)); else localStorage.removeItem(SESSION_KEY); }catch(e){}
+    }
+    function loadSession(){
+      try{ var raw = localStorage.getItem(SESSION_KEY); session = raw ? JSON.parse(raw) : null; }catch(e){ session = null; }
+      return session;
+    }
+    function authHeaders(){
+      return { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + (session ? session.access_token : SUPABASE_ANON_KEY), 'Content-Type': 'application/json' };
+    }
+    function authUrl(path){ return SUPABASE_URL + '/auth/v1' + path; }
+    function restUrl(path){ return SUPABASE_URL + '/rest/v1' + path; }
+
+    function parseAuthResponse(r){
+      return r.text().then(function(txt){
+        var data = null; try{ data = txt ? JSON.parse(txt) : null; }catch(e){}
+        if(!r.ok){
+          var msg = (data && (data.msg || data.error_description || data.error || data.message)) || 'Não foi possível completar a operação.';
+          throw new Error(msg);
+        }
+        return data;
+      });
+    }
+
+    function applySession(data){
+      if(data && data.access_token){
+        saveSession({ access_token:data.access_token, refresh_token:data.refresh_token,
+          expires_at: Date.now() + ((data.expires_in || 3600) * 1000), user:data.user });
+      }
+      return data;
+    }
+
+    function signUp(email, password, nome){
+      return fetch(authUrl('/signup'), {
+        method:'POST', headers:{ 'apikey':SUPABASE_ANON_KEY, 'Content-Type':'application/json' },
+        body: JSON.stringify({ email:email, password:password, data:{ nome:nome } })
+      }).then(parseAuthResponse).then(applySession);
+    }
+    function signIn(email, password){
+      return fetch(authUrl('/token?grant_type=password'), {
+        method:'POST', headers:{ 'apikey':SUPABASE_ANON_KEY, 'Content-Type':'application/json' },
+        body: JSON.stringify({ email:email, password:password })
+      }).then(parseAuthResponse).then(applySession);
+    }
+    function signOut(){
+      var s = session;
+      saveSession(null);
+      if(!s) return Promise.resolve();
+      return fetch(authUrl('/logout'), { method:'POST', headers:{ 'apikey':SUPABASE_ANON_KEY, 'Authorization':'Bearer '+s.access_token } }).catch(function(){});
+    }
+    function recoverPassword(email){
+      return fetch(authUrl('/recover'), {
+        method:'POST', headers:{ 'apikey':SUPABASE_ANON_KEY, 'Content-Type':'application/json' },
+        body: JSON.stringify({ email:email })
+      }).then(parseAuthResponse);
+    }
+    function updatePassword(newPassword){
+      return fetch(authUrl('/user'), { method:'PUT', headers: authHeaders(), body: JSON.stringify({ password:newPassword }) })
+        .then(parseAuthResponse);
+    }
+    function refreshSession(){
+      if(!session || !session.refresh_token) return Promise.reject(new Error('sem sessão'));
+      return fetch(authUrl('/token?grant_type=refresh_token'), {
+        method:'POST', headers:{ 'apikey':SUPABASE_ANON_KEY, 'Content-Type':'application/json' },
+        body: JSON.stringify({ refresh_token: session.refresh_token })
+      }).then(parseAuthResponse).then(applySession);
+    }
+    function ensureFreshSession(){
+      if(!session) return Promise.reject(new Error('sem sessão'));
+      if(session.expires_at - Date.now() > 60000) return Promise.resolve(session);
+      return refreshSession();
+    }
+
+    function restRequest(method, path, body, extraHeaders){
+      return ensureFreshSession().then(function(){
+        var headers = authHeaders();
+        if(extraHeaders) for(var k in extraHeaders) headers[k] = extraHeaders[k];
+        return fetch(restUrl(path), { method:method, headers:headers, body: body !== undefined ? JSON.stringify(body) : undefined });
+      }).then(function(r){
+        return r.text().then(function(txt){
+          var data = null; try{ data = txt ? JSON.parse(txt) : null; }catch(e){}
+          if(!r.ok){ throw new Error((data && data.message) || 'Erro ao acessar os dados.'); }
+          return data;
+        });
+      });
+    }
+
+    function fetchProfile(userId){
+      return restRequest('GET', '/profiles?id=eq.' + userId + '&select=*').then(function(rows){ return rows && rows[0]; });
+    }
+    function markOnboardingComplete(userId, nome){
+      return restRequest('PATCH', '/profiles?id=eq.' + userId, { nome: nome, onboarding_completo:true }, { 'Prefer':'return=representation' });
+    }
+    function fetchTurmas(userId){
+      return restRequest('GET', '/turmas?professor_id=eq.' + userId + '&select=*&order=created_at.asc');
+    }
+    function createTurmas(userId, turmas){
+      var rows = turmas.map(function(t){ return { professor_id:userId, nome:t.nome, disciplina:t.disciplina, quantidade_alunos:t.quantidade_alunos }; });
+      return restRequest('POST', '/turmas', rows, { 'Prefer':'return=representation' });
+    }
+    function fetchAppState(userId){
+      return restRequest('GET', '/app_state?professor_id=eq.' + userId + '&select=state').then(function(rows){ return rows && rows[0] && rows[0].state; });
+    }
+    function saveAppState(userId, stateBlob){
+      return restRequest('PATCH', '/app_state?professor_id=eq.' + userId, { state: stateBlob }, { 'Prefer':'return=minimal' });
+    }
+
+    return {
+      loadSession:loadSession, getSession:function(){ return session; }, saveSession:saveSession,
+      signUp:signUp, signIn:signIn, signOut:signOut, recoverPassword:recoverPassword, updatePassword:updatePassword,
+      fetchProfile:fetchProfile, markOnboardingComplete:markOnboardingComplete,
+      fetchTurmas:fetchTurmas, createTurmas:createTurmas,
+      fetchAppState:fetchAppState, saveAppState:saveAppState
+    };
+  })();
+
+  function traduzErroAuth(msg){
+    if(!msg) return 'Não foi possível completar a operação. Tente novamente.';
+    var m = msg.toLowerCase();
+    if(m.indexOf('failed to fetch') !== -1 || m.indexOf('networkerror') !== -1 || m.indexOf('load failed') !== -1)
+      return 'Não foi possível conectar ao servidor agora. Verifique sua internet e tente de novo.';
+    if(m.indexOf('invalid login credentials') !== -1) return 'E-mail ou senha incorretos.';
+    if(m.indexOf('already registered') !== -1) return 'Já existe uma conta com esse e-mail. Tente entrar.';
+    if(m.indexOf('email not confirmed') !== -1) return 'Confirme seu e-mail antes de entrar — veja o link que te mandamos por e-mail.';
+    if(m.indexOf('password') !== -1 && (m.indexOf('least') !== -1 || m.indexOf('short') !== -1 || m.indexOf('6 characters') !== -1))
+      return 'A senha precisa ter pelo menos 8 caracteres.';
+    if(m.indexOf('rate limit') !== -1) return 'Muitas tentativas seguidas. Aguarde um instante e tente de novo.';
+    if(m.indexOf('user not found') !== -1) return 'Não encontramos uma conta com esse e-mail.';
+    return msg;
+  }
+
   var METODOLOGIAS = {
     invertida: { nome:'Sala de aula invertida', desc:'Os alunos estudam o conteúdo antes da aula (vídeo ou texto); o tempo em sala vira prática e tira-dúvidas.',
       contextLabel:'O que os alunos deveriam ter estudado antes (um item por linha)', contextPlaceholder:'Ex.: Assistir ao vídeo sobre fotossíntese',
@@ -1369,14 +1687,34 @@
     }, OVERLAY_OUT_MS);
   }
 
-  function saveLocal(){ try{ localStorage.setItem('aulaviva_config', JSON.stringify({
-    turma:state.turma, disciplina:state.disciplina, atividade:state.atividade, metodologia:state.metodologia,
-    faixaEtaria:state.faixaEtaria, timerAtivo:state.timerAtivo, timerPalAtivo:state.timerPalAtivo,
-    rankingAtivo:state.rankingAtivo, liveTools:state.liveTools,
-    bncc:state.bncc, stages:state.stages, groups:state.groups.map(function(g){ return {nome:g.nome, pontos:0, qtd:g.qtd}; }),
-    contexto:state.contexto, producao:state.producao
-  })); }catch(e){} }
+  function buildConfigBlob(){
+    return {
+      turma:state.turma, disciplina:state.disciplina, atividade:state.atividade, metodologia:state.metodologia,
+      faixaEtaria:state.faixaEtaria, timerAtivo:state.timerAtivo, timerPalAtivo:state.timerPalAtivo,
+      rankingAtivo:state.rankingAtivo, liveTools:state.liveTools,
+      bncc:state.bncc, stages:state.stages, groups:state.groups.map(function(g){ return {nome:g.nome, pontos:0, qtd:g.qtd}; }),
+      contexto:state.contexto, producao:state.producao
+    };
+  }
+  function saveLocal(){ try{ localStorage.setItem('aulaviva_config', JSON.stringify(buildConfigBlob())); }catch(e){} queueCloudSync(); }
   function loadLocal(){ try{ var raw = localStorage.getItem('aulaviva_config'); if(raw){ var d = JSON.parse(raw); Object.assign(state, d); } }catch(e){} }
+
+  // ---- Sincronização com a nuvem (Supabase): a fonte de verdade passa a ser
+  // o registro do professor logado; o localStorage continua servindo de cache
+  // rápido pra carregar a tela antes da resposta do servidor chegar. ----
+  var cloudSyncTimer = null;
+  function queueCloudSync(){
+    if(!currentProfile) return;
+    clearTimeout(cloudSyncTimer);
+    cloudSyncTimer = setTimeout(function(){
+      var blob = {
+        config: buildConfigBlob(),
+        docs: state.docs, calendarEvents: state.calendarEvents,
+        lessons: state.lessons, learningRecords: state.learningRecords
+      };
+      Cloud.saveAppState(currentProfile.id, blob).catch(function(){ /* segue só local até a próxima tentativa */ });
+    }, 900);
+  }
 
   var VIEW_META = {
     setup: { title:'Configurar', sub:'Prepare a aula antes de começar' },
@@ -1400,7 +1738,6 @@
     if(name !== 'live') closeToolsRadial();
     if(name !== 'live') closeLessonPicker();
     if(name !== 'docs' && folderOpenCat) closeFolder();
-    if(name !== 'docs') closeAiSlides();
     if(name === 'docs') renderDocsGrid();
     if(name === 'calendar') renderCalendar();
     if(name === 'lessons') renderLessonsView();
@@ -2260,13 +2597,13 @@
   var folderOpenCat = null, docEditorMode = null;
 
   function newId(){ return 'd' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
-  function saveDocs(){ try{ localStorage.setItem('aulaviva_docs', JSON.stringify(state.docs)); }catch(e){} }
+  function saveDocs(){ try{ localStorage.setItem('aulaviva_docs', JSON.stringify(state.docs)); }catch(e){} queueCloudSync(); }
   function loadDocs(){ try{ var raw = localStorage.getItem('aulaviva_docs'); if(raw){ state.docs = JSON.parse(raw) || []; } }catch(e){} }
-  function saveCalendarEvents(){ try{ localStorage.setItem('aulaviva_calendar', JSON.stringify(state.calendarEvents)); }catch(e){} }
+  function saveCalendarEvents(){ try{ localStorage.setItem('aulaviva_calendar', JSON.stringify(state.calendarEvents)); }catch(e){} queueCloudSync(); }
   function loadCalendarEvents(){ try{ var raw = localStorage.getItem('aulaviva_calendar'); if(raw){ state.calendarEvents = JSON.parse(raw) || []; } }catch(e){} }
-  function saveLessons(){ try{ localStorage.setItem('aulaviva_lessons', JSON.stringify(state.lessons)); }catch(e){} }
+  function saveLessons(){ try{ localStorage.setItem('aulaviva_lessons', JSON.stringify(state.lessons)); }catch(e){} queueCloudSync(); }
   function loadLessons(){ try{ var raw = localStorage.getItem('aulaviva_lessons'); if(raw){ state.lessons = JSON.parse(raw) || []; } }catch(e){} }
-  function saveLearningRecords(){ try{ localStorage.setItem('aulaviva_learning_records', JSON.stringify(state.learningRecords)); }catch(e){} }
+  function saveLearningRecords(){ try{ localStorage.setItem('aulaviva_learning_records', JSON.stringify(state.learningRecords)); }catch(e){} queueCloudSync(); }
   function loadLearningRecords(){ try{ var raw = localStorage.getItem('aulaviva_learning_records'); if(raw){ state.learningRecords = JSON.parse(raw) || []; } }catch(e){} }
   function folderSvg(color){
     return '<svg viewBox="0 0 64 48">' +
@@ -2615,8 +2952,6 @@
       body:'Cada pasta guarda um tipo de documento — planejamentos, relatórios e outros. Toque numa pasta pra ver a lista de documentos; toque num documento pra abrir e editar, ou toque em "+ Novo documento" pra criar um. Ao finalizar uma aula, um resumo dela é salvo automaticamente na pasta Relatórios. Tudo fica guardado só no seu navegador, como o resto do app.' },
     licoes: { title:'Como funcionam as lições interativas?',
       body:'Monte uma lição com objetivo, fontes e seções de conteúdo, mais um quiz de verificação. No modo apresentação, o quiz funciona como uma checagem de verdade: a turma só avança pra próxima etapa depois de acertar a pergunta (pode errar e tentar de novo). Na tela "Ao vivo", o botão de lição (ícone de livro) abre direto a última lição — ou a lista, se você tiver mais de uma — sem precisar trocar de aba.' },
-    'ai-slides': { title:'Como funciona a apresentação com IA?',
-      body:'Gera um arquivo de slides (.pptx) automaticamente a partir de um tema, usando o serviço 2slides.com. Essa função só funciona na versão do Aula Viva publicada no Vercel, porque depende de uma chave de API que precisa ficar guardada com segurança em um servidor — nunca dentro do site em si. No preview aqui do Claude (sem servidor), o botão avisa que não é possível gerar.' },
     scribble: { title:'Como funciona o bloco de anotações?',
       body:'É um quadro em branco pra você escrever ou desenhar à mão livre durante a aula — pra explicar algo rápido sem precisar de outro app. Escolha a cor da caneta, use a borracha se errar, e toque em "Amassar e limpar" quando quiser recomeçar do zero (a folha se amassa e some, como papel de verdade). Nada é salvo — some ao amassar ou ao fechar a aula.' }
   };
@@ -3209,55 +3544,6 @@
     if(lesson) startLessonPlayer(lesson);
   });
 
-  // --- Apresentação com IA (2slides.com): a chave de API fica só no servidor (Vercel),
-  // nunca aqui no front-end. O site chama /api/generate-slides, que é quem fala com a 2slides. ---
-  function openAiSlides(){
-    $('ai-slides-topic').value = '';
-    $('ai-slides-theme').value = 'modern';
-    $('ai-slides-status').textContent = '';
-    $('ai-slides-result').hidden = true;
-    $('ai-slides-result').innerHTML = '';
-    $('ai-slides-generate-btn').disabled = false;
-    overlayOpen($('ai-slides-backdrop'));
-  }
-  function closeAiSlides(){ overlayClose($('ai-slides-backdrop')); }
-  $('ai-slides-open-btn').addEventListener('click', openAiSlides);
-  $('ai-slides-close').addEventListener('click', closeAiSlides);
-  $('ai-slides-backdrop').addEventListener('click', function(e){ if(e.target === this) closeAiSlides(); });
-  $('ai-slides-generate-btn').addEventListener('click', function(){
-    var topic = $('ai-slides-topic').value.trim();
-    if(!topic){ $('ai-slides-status').textContent = 'Escreva o tema da apresentação primeiro.'; return; }
-    var themeQuery = $('ai-slides-theme').value || 'modern';
-    $('ai-slides-generate-btn').disabled = true;
-    $('ai-slides-status').textContent = 'Gerando apresentação... isso pode levar até um minuto.';
-    $('ai-slides-result').hidden = true;
-    $('ai-slides-result').innerHTML = '';
-    fetch('/api/generate-slides', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ topic: topic, themeQuery: themeQuery, language: 'pt-BR' })
-    }).then(function(r){
-      return r.json().catch(function(){ return null; }).then(function(data){ return { ok: r.ok, data: data }; });
-    }).then(function(res){
-      $('ai-slides-generate-btn').disabled = false;
-      if(!res.ok || !res.data){
-        $('ai-slides-status').textContent = (res.data && res.data.error) || 'Não foi possível gerar a apresentação agora.';
-        return;
-      }
-      var d = res.data;
-      $('ai-slides-status').textContent = '';
-      $('ai-slides-result').hidden = false;
-      $('ai-slides-result').innerHTML = '<div class="ai-slides-result-box">' +
-        '<div>Apresentação gerada' + (d.slidePageCount ? (' — ' + d.slidePageCount + ' slides') : '') + '.</div>' +
-        (d.downloadUrl ? '<a href="' + esc(d.downloadUrl) + '" target="_blank" rel="noopener">Baixar apresentação (.pptx) — link válido por 1 hora</a>' : '') +
-        (d.jobUrl ? '<a href="' + esc(d.jobUrl) + '" target="_blank" rel="noopener">Abrir e editar no 2slides.com</a>' : '') +
-      '</div>';
-    }).catch(function(){
-      $('ai-slides-generate-btn').disabled = false;
-      $('ai-slides-status').textContent = 'Essa função só funciona na versão do Aula Viva publicada no Vercel, com a chave da 2slides configurada no servidor. Aqui no preview do Claude não há servidor, então não é possível gerar.';
-    });
-  });
-
   function renderLessonPlayerDots(){
     var st = lessonPlayerState;
     $('lesson-player-dots').innerHTML = st.steps.map(function(step, i){
@@ -3400,27 +3686,282 @@
     if(!$('lesson-editor-backdrop').hidden) closeLessonEditor();
     if(!$('lesson-player-backdrop').hidden) closeLessonPlayer();
     if(!$('lesson-picker-backdrop').hidden) closeLessonPicker();
-    if(!$('ai-slides-backdrop').hidden) closeAiSlides();
     if($('sidebar').classList.contains('open')) closeSidebar();
   });
 
-  // Init
-  loadLocal();
-  loadDocs();
-  loadCalendarEvents();
-  loadLessons();
-  loadLearningRecords();
-  populateFormFromState();
-  prepareLive(false);
-  renderReport();
-  renderDocsGrid();
-  switchView('setup');
+  // ---- Acesso: login por professor, primeiro acesso e partida do app ----
+  function showGate(screenId){
+    ['auth-screen', 'wizard-screen', 'app-shell'].forEach(function(id){ $(id).hidden = (id !== screenId); });
+  }
+  function setFieldMsg(id, msg){ var el = $(id); if(!el) return; if(msg){ el.textContent = msg; el.hidden = false; } else { el.hidden = true; } }
 
-  try{ fsIndex = parseInt(localStorage.getItem('aulaviva_fontscale'), 10); }catch(e){ fsIndex = 0; }
-  if(!(fsIndex >= 0 && fsIndex < FS_LEVELS.length)) fsIndex = 0;
-  applyFontScale();
-  var jaViuTutorial = false;
-  try{ jaViuTutorial = localStorage.getItem('aulaviva_onboarded') === '1'; }catch(e){}
-  if(!jaViuTutorial) openOnboard();
+  function parseHashParams(){
+    var hash = window.location.hash || '';
+    if(hash.charAt(0) === '#') hash = hash.slice(1);
+    var params = {};
+    hash.split('&').forEach(function(pair){
+      if(!pair) return;
+      var idx = pair.indexOf('=');
+      if(idx === -1) return;
+      params[decodeURIComponent(pair.slice(0, idx))] = decodeURIComponent(pair.slice(idx + 1).replace(/\+/g, ' '));
+    });
+    return params;
+  }
+
+  function showAuthForm(which){
+    ['login', 'signup', 'forgot', 'newpass'].forEach(function(name){ $('auth-form-' + name).hidden = (name !== which); });
+    $('auth-tab-login').classList.toggle('active', which === 'login');
+    $('auth-tab-signup').classList.toggle('active', which === 'signup');
+  }
+  $('auth-tab-login').addEventListener('click', function(){ showAuthForm('login'); });
+  $('auth-tab-signup').addEventListener('click', function(){ showAuthForm('signup'); });
+  $('auth-go-forgot').addEventListener('click', function(){ showAuthForm('forgot'); });
+  $('auth-back-to-login').addEventListener('click', function(){ showAuthForm('login'); });
+
+  function updateAccountUI(){
+    var sess = Cloud.getSession();
+    var user = sess && sess.user;
+    var nome = (currentProfile && currentProfile.nome) || (user && user.email) || 'Professor(a)';
+    $('sidebar-account-name').textContent = nome;
+    $('sidebar-account-email').textContent = user ? user.email : '';
+    $('sidebar-account-avatar').textContent = (nome || '?').trim().charAt(0).toUpperCase() || 'P';
+  }
+
+  function populateTurmaSelect(){
+    var wrap = $('turma-select-wrap');
+    if(!currentTurmas.length){ wrap.hidden = true; return; }
+    wrap.hidden = false;
+    $('turma-select').innerHTML = '<option value="">— escolher turma cadastrada —</option>' +
+      currentTurmas.map(function(t, i){ return '<option value="' + i + '">' + esc(t.nome) + (t.disciplina ? ' · ' + esc(t.disciplina) : '') + '</option>'; }).join('');
+  }
+  $('turma-select').addEventListener('change', function(e){
+    var idx = e.target.value;
+    if(idx === '') return;
+    var t = currentTurmas[+idx];
+    if(!t) return;
+    $('f-turma').value = t.nome;
+    $('f-disciplina').value = t.disciplina || '';
+    state.turma = t.nome; state.disciplina = t.disciplina || '';
+    saveLocal();
+  });
+
+  $('logout-btn').addEventListener('click', function(){
+    if(cloudSyncTimer) clearTimeout(cloudSyncTimer);
+    Cloud.signOut().then(function(){ location.reload(); }).catch(function(){ location.reload(); });
+  });
+
+  function startApp(){
+    populateFormFromState();
+    prepareLive(false);
+    renderReport();
+    renderDocsGrid();
+    switchView('setup');
+
+    try{ fsIndex = parseInt(localStorage.getItem('aulaviva_fontscale'), 10); }catch(e){ fsIndex = 0; }
+    if(!(fsIndex >= 0 && fsIndex < FS_LEVELS.length)) fsIndex = 0;
+    applyFontScale();
+    var jaViuTutorial = false;
+    try{ jaViuTutorial = localStorage.getItem('aulaviva_onboarded') === '1'; }catch(e){}
+    if(!jaViuTutorial) openOnboard();
+  }
+
+  function hydrateStateFromCloud(cloudState){
+    if(cloudState.config) Object.assign(state, cloudState.config);
+    if(cloudState.docs) state.docs = cloudState.docs;
+    if(cloudState.calendarEvents) state.calendarEvents = cloudState.calendarEvents;
+    if(cloudState.lessons) state.lessons = cloudState.lessons;
+    if(cloudState.learningRecords) state.learningRecords = cloudState.learningRecords;
+  }
+
+  function hydrateAndStart(){
+    loadLocal(); loadDocs(); loadCalendarEvents(); loadLessons(); loadLearningRecords();
+    return Promise.all([
+      Cloud.fetchAppState(currentProfile.id).catch(function(){ return null; }),
+      Cloud.fetchTurmas(currentProfile.id).catch(function(){ return []; })
+    ]).then(function(results){
+      var cloudState = results[0];
+      currentTurmas = results[1] || [];
+      if(cloudState && typeof cloudState === 'object' && Object.keys(cloudState).length){ hydrateStateFromCloud(cloudState); }
+      updateAccountUI();
+      populateTurmaSelect();
+      startApp();
+      showGate('app-shell');
+    });
+  }
+
+  // ---- Primeiro acesso: nome + turmas ----
+  var wizardTurmasCount = 1;
+  function prepareWizard(){
+    $('wizard-nome').value = (currentProfile && currentProfile.nome) || '';
+    $('wizard-qtd-turmas').value = 1;
+    setFieldMsg('wizard-error', null);
+    showWizardStep(1);
+  }
+  function showWizardStep(n){
+    [1, 2, 3].forEach(function(i){
+      $('wizard-screen').querySelector('[data-wizard-step="' + i + '"]').hidden = (i !== n);
+      $('wizard-screen').querySelector('[data-step-dot="' + i + '"]').classList.toggle('active', i === n);
+      $('wizard-screen').querySelector('[data-step-dot="' + i + '"]').classList.toggle('done', i < n);
+    });
+  }
+  $('wizard-step1-next').addEventListener('click', function(){
+    var nome = $('wizard-nome').value.trim();
+    var qtd = parseInt($('wizard-qtd-turmas').value, 10);
+    if(!nome) return;
+    if(!(qtd >= 1)) qtd = 1;
+    if(qtd > 20) qtd = 20;
+    wizardTurmasCount = qtd;
+    renderWizardTurmasList();
+    showWizardStep(2);
+  });
+  function renderWizardTurmasList(){
+    var wrap = $('wizard-turmas-list'); wrap.innerHTML = '';
+    for(var i = 0; i < wizardTurmasCount; i++){
+      var card = document.createElement('div'); card.className = 'turma-onboard-card';
+      card.innerHTML = '<div class="turma-onboard-card-title">Turma ' + (i + 1) + '</div>' +
+        '<div class="turma-onboard-grid">' +
+          '<label class="wizard-field"><span>Nome da turma</span><input type="text" data-wturma="nome" data-idx="' + i + '" placeholder="Ex.: 7º A"></label>' +
+          '<label class="wizard-field"><span>Disciplina</span><input type="text" data-wturma="disciplina" data-idx="' + i + '" placeholder="Ex.: Ciências"></label>' +
+          '<label class="wizard-field"><span>Quantidade de alunos</span><input type="number" min="1" data-wturma="quantidade_alunos" data-idx="' + i + '" placeholder="Ex.: 30"></label>' +
+        '</div>';
+      wrap.appendChild(card);
+    }
+  }
+  $('wizard-step2-back').addEventListener('click', function(){ showWizardStep(1); });
+  $('wizard-step2-next').addEventListener('click', function(){
+    var turmas = collectWizardTurmas();
+    $('wizard-summary').textContent = 'Vamos criar ' + turmas.length + ' turma(s) pra ' + ($('wizard-nome').value.trim() || 'você') + '. Dá pra ajustar tudo isso depois em "Configurar".';
+    showWizardStep(3);
+  });
+  function collectWizardTurmas(){
+    var rows = [];
+    for(var i = 0; i < wizardTurmasCount; i++){
+      var nomeEl = document.querySelector('[data-wturma="nome"][data-idx="' + i + '"]');
+      var discEl = document.querySelector('[data-wturma="disciplina"][data-idx="' + i + '"]');
+      var qtdEl = document.querySelector('[data-wturma="quantidade_alunos"][data-idx="' + i + '"]');
+      var qtdVal = qtdEl && qtdEl.value ? parseInt(qtdEl.value, 10) : null;
+      rows.push({
+        nome: (nomeEl && nomeEl.value.trim()) || ('Turma ' + (i + 1)),
+        disciplina: (discEl && discEl.value.trim()) || '',
+        quantidade_alunos: (qtdVal && qtdVal > 0) ? qtdVal : null
+      });
+    }
+    return rows;
+  }
+  $('wizard-step3-back').addEventListener('click', function(){ showWizardStep(2); });
+  $('wizard-finish-btn').addEventListener('click', function(){
+    setFieldMsg('wizard-error', null);
+    var nome = $('wizard-nome').value.trim();
+    var turmas = collectWizardTurmas();
+    var btn = $('wizard-finish-btn');
+    btn.disabled = true; btn.textContent = 'Salvando...';
+    var userId = currentProfile.id;
+    Cloud.markOnboardingComplete(userId, nome).then(function(){
+      return Cloud.createTurmas(userId, turmas);
+    }).then(function(){
+      currentProfile.nome = nome; currentProfile.onboarding_completo = true;
+      if(turmas[0]){ state.turma = turmas[0].nome; if(turmas[0].disciplina) state.disciplina = turmas[0].disciplina; }
+      return hydrateAndStart();
+    }).catch(function(err){
+      btn.disabled = false; btn.textContent = 'Começar a usar →';
+      setFieldMsg('wizard-error', 'Não foi possível salvar agora. Tente novamente em instantes.');
+    });
+  });
+
+  // ---- Login / cadastro / recuperação de senha ----
+  $('auth-form-login').addEventListener('submit', function(e){
+    e.preventDefault();
+    setFieldMsg('login-error', null); setFieldMsg('login-success', null);
+    var email = $('login-email').value.trim(); var pass = $('login-password').value;
+    if(!email || !pass) return;
+    var btn = $('login-submit-btn'); btn.disabled = true; btn.textContent = 'Entrando...';
+    Cloud.signIn(email, pass).then(function(){
+      btn.disabled = false; btn.textContent = 'Entrar';
+      bootstrap();
+    }).catch(function(err){
+      btn.disabled = false; btn.textContent = 'Entrar';
+      setFieldMsg('login-error', traduzErroAuth(err.message));
+    });
+  });
+
+  $('auth-form-signup').addEventListener('submit', function(e){
+    e.preventDefault();
+    setFieldMsg('signup-error', null); setFieldMsg('signup-success', null);
+    var nome = $('signup-nome').value.trim();
+    var email = $('signup-email').value.trim();
+    var pass = $('signup-password').value;
+    if(!nome || !email || pass.length < 8){ setFieldMsg('signup-error', 'Preencha nome, e-mail e uma senha com pelo menos 8 caracteres.'); return; }
+    var btn = $('signup-submit-btn'); btn.disabled = true; btn.textContent = 'Criando...';
+    Cloud.signUp(email, pass, nome).then(function(data){
+      btn.disabled = false; btn.textContent = 'Criar conta';
+      if(data && data.access_token){
+        bootstrap();
+      } else {
+        setFieldMsg('signup-success', 'Conta criada! Confira seu e-mail (' + email + ') pra confirmar o cadastro e depois faça login.');
+        showAuthForm('login');
+      }
+    }).catch(function(err){
+      btn.disabled = false; btn.textContent = 'Criar conta';
+      setFieldMsg('signup-error', traduzErroAuth(err.message));
+    });
+  });
+
+  $('auth-form-forgot').addEventListener('submit', function(e){
+    e.preventDefault();
+    setFieldMsg('forgot-error', null); setFieldMsg('forgot-success', null);
+    var email = $('forgot-email').value.trim();
+    if(!email) return;
+    var btn = $('forgot-submit-btn'); btn.disabled = true;
+    var done = function(){ btn.disabled = false; setFieldMsg('forgot-success', 'Se esse e-mail estiver cadastrado, enviamos um link de redefinição de senha.'); };
+    Cloud.recoverPassword(email).then(done).catch(done);
+  });
+
+  $('auth-form-newpass').addEventListener('submit', function(e){
+    e.preventDefault();
+    setFieldMsg('newpass-error', null);
+    var pass = $('newpass-password').value;
+    if(pass.length < 8){ setFieldMsg('newpass-error', 'A senha deve ter pelo menos 8 caracteres.'); return; }
+    var btn = $('newpass-submit-btn'); btn.disabled = true;
+    Cloud.updatePassword(pass).then(function(userData){
+      var sess = Cloud.getSession();
+      if(sess){ sess.user = userData; Cloud.saveSession(sess); }
+      btn.disabled = false;
+      bootstrap();
+    }).catch(function(err){
+      btn.disabled = false;
+      setFieldMsg('newpass-error', traduzErroAuth(err.message));
+    });
+  });
+
+  // ---- Ponto de entrada ----
+  function bootstrap(){
+    var hashParams = parseHashParams();
+    if(hashParams.type === 'recovery' && hashParams.access_token){
+      Cloud.saveSession({ access_token: hashParams.access_token, refresh_token: hashParams.refresh_token, expires_at: Date.now() + 3600000 });
+      try{ history.replaceState(null, '', window.location.pathname + window.location.search); }catch(e){}
+      showAuthForm('newpass');
+      showGate('auth-screen');
+      return;
+    }
+
+    var session = Cloud.loadSession();
+    if(!session || !session.user){ showGate('auth-screen'); showAuthForm('login'); return; }
+
+    Cloud.fetchProfile(session.user.id).then(function(profile){
+      if(!profile) throw new Error('perfil não encontrado');
+      currentProfile = profile;
+      if(!profile.onboarding_completo){
+        prepareWizard();
+        showGate('wizard-screen');
+        return;
+      }
+      return hydrateAndStart();
+    }).catch(function(){
+      Cloud.saveSession(null);
+      showGate('auth-screen'); showAuthForm('login');
+    });
+  }
+
+  bootstrap();
 })();
 </script>
